@@ -1,0 +1,47 @@
+import plotly.plotly as py
+import plotly
+import plotly.graph_objs as go
+
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv('exp3.csv')
+print df.head()
+print '----------'
+df1 = df.groupby(by=['wl', 'n']).mean()
+
+print df1
+print df1['n']
+print df1['wl']
+print df1['RunTime(ms)']
+
+trace1 = go.Bar(
+    x=df1['n'],
+    y=df1['RunTime(ms)'],
+    name='name here'
+)
+
+trace2 = go.Bar(
+    x=['500K', '800K', '1M'],
+    y=[30351.0, 35712.0, 43763.0],
+    name='3 Nodes'
+)
+trace3 = go.Bar(
+    x=['500K', '800K', '1M'],
+    y=[18806.0, 25775.0, 29258.0],
+    name='6 Nodes'
+)
+
+# data = [trace1, trace2, trace3]
+data = [trace1]
+
+layout = go.Layout(
+    barmode='group',
+    title="Execution Time of workload A",
+    yaxis=dict(title='execution time for 10000 operations (milliseconds)'),
+    xaxis=dict(title='size of database')
+)
+
+fig = go.Figure(data=data, layout=layout)
+plotly.offline.plot(fig, filename='grouped-bar.html')
+
