@@ -264,5 +264,66 @@ def analysis5():
 
     return 0
 
-analysis4()
-analysis5()
+# This will provide the three (3) graphs that John Pecarina is looking for.
+# This was adapted from analysis 1
+
+def analysis6():
+
+
+    data = []
+    data1 = {}
+    traceref = {}
+
+    data_from_abramova_paper = {
+        'a-1': 58.43,
+        'a-3': 65.65,
+        'a-6': 87.31,
+        'c-1': 88,
+        'c-3': 90.21,
+        'c-6': 118.09,
+        'e-1': 223.18,
+        'e-3': 330.82,
+        'e-6': 404.66
+    }
+
+    layout = go.Layout(
+        title="Execution Time for 10,000 Operations",
+        yaxis=dict(title='seconds'),
+        xaxis=dict(title='Workload-Number of Nodes'),
+        font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
+    )
+
+
+
+    # This will create the scatter graphs from the collected data
+    for wl in ['a', 'c', 'e']:
+        traceref[wl] = go.Scatter(
+                                    x=[key for key in sorted(data_from_abramova_paper.keys()) if wl in key],
+                                    y=[value for key, value in sorted(data_from_abramova_paper.items()) if wl in key],
+                                    # mode='markers',
+                                    name='Reference'
+                                    )
+
+        data1[wl] = []
+        for n in [1, 3, 6]:
+            dfa1 = df[(df.wl == wl) & (df.ld == False) & (df.n == n) & (df.dbs == 1000) & (df.ram == '2GB')]
+            data1[wl].append(
+
+             go.Scatter(
+                x=dfa1['wl'] + "-" + dfa1['n'].map(str),
+                y=dfa1['RunTime(s)'],
+                mode='markers',
+                name=wl + '-' + str(n)
+                        )
+            )
+
+        data = data1[wl]
+        data.append(traceref[wl])
+
+        fig = go.Figure(data=data, layout=layout)
+
+        plotly.offline.plot(fig, filename='analysis-6_scatter-' + wl + '.html')
+
+    # print data
+
+analysis6()
