@@ -7,6 +7,7 @@ import pandas as pd
 import numpy as np
 
 df = pd.read_csv('all.csv')
+dfrp = pd.read_csv('all_rp.csv')
 def exp5():
     # df1 = df.groupby(by=['wl', 'n']).mean()
     df1 = df[(df.wl == 'a') & (df.ld == False) & (df.n == 1) & (df.dbs == 1000)]
@@ -269,6 +270,8 @@ def analysis5():
 
 def analysis6():
 
+    make_boxplot = False
+    make_scatter = True
 
     data = []
     data1 = {}
@@ -296,7 +299,7 @@ def analysis6():
 
 
     # This will create the scatter graphs from the collected data
-    for wl in ['a', 'c', 'e']:
+    for wl in ['a','c','e']:
         traceref[wl] = go.Scatter(
                                     x=[key for key in sorted(data_from_abramova_paper.keys()) if wl in key],
                                     y=[value for key, value in sorted(data_from_abramova_paper.items()) if wl in key],
@@ -305,24 +308,85 @@ def analysis6():
                                     )
 
         data1[wl] = []
-        for n in [1, 3, 6]:
-            dfa1 = df[(df.wl == wl) & (df.ld == False) & (df.n == n) & (df.dbs == 1000) & (df.ram == '2GB')]
-            data1[wl].append(
+        for n in [0]: # [1, 3, 6]: Loop is inconsequential
+            for ram in ['1GB', '2GB']:
+                dfa1 = df[(df.wl == wl) & (df.ld == False) & (df.n.isin([1, 3, 6])) & (df.dbs == 1000) & (df.ram == ram)]
+                if make_scatter:
+                    data1[wl].append(
 
-             go.Scatter(
-                x=dfa1['wl'] + "-" + dfa1['n'].map(str),
-                y=dfa1['RunTime(s)'],
-                mode='markers',
-                name=wl + '-' + str(n)
-                        )
-            )
+                     go.Scatter(
+                        x=dfa1['wl'] + "-" + dfa1['n'].map(str),
+                        y=dfa1['RunTime(s)'],
+                        mode='markers',
+                         #marker = dict(
+                           # size = 10,
+                           # color = 'rgba(152, 0, 0, .8)',
+                           # line = dict(
+                           #     width = 2,
+                           #     color = 'rgb(0, 0, 0)'
+                           # )),
+                        name=wl + '-' + str(ram)
+                                )
+                    )
+                if make_boxplot:
+                    data1[wl].append(
+
+                     go.Box(
+                        x=dfa1['wl'] + "-" + dfa1['n'].map(str),
+                        y=dfa1['RunTime(s)'],
+                        # mode='markers',
+                        name=wl + '-' + str(n) + '-' + str(ram)
+                                )
+                    )
 
         data = data1[wl]
         data.append(traceref[wl])
 
         fig = go.Figure(data=data, layout=layout)
 
-        plotly.offline.plot(fig, filename='analysis-6_scatter-' + wl + '.html')
+        plotly.offline.plot(fig, filename='analysis-6-'+str(wl)+'withoutRP.html')
+
+
+        # From the Raspberry Pi
+        data2 = {}
+        data2[wl] = []
+        for n in [0]: # loop is inconsequential
+            ram = '1GB_rp'
+            dfa1 = dfrp[(dfrp.wl == wl) & (dfrp.ld == False) & (df.n.isin([1, 3, 6])) & (dfrp.dbs == 1000) & (dfrp.ram == ram)]
+            if make_scatter:
+                data2[wl].append(
+
+                 go.Scatter(
+                    x=dfa1['wl'] + "-" + dfa1['n'].map(str),
+                    y=dfa1['RunTime(s)'],
+                    mode='markers',
+                    marker= dict(
+                            size = 30,
+                            # color = 'rgba(152, 0, 0, .8)',
+                            line=dict(
+                                width=2,
+                                # color = 'rgb(0, 0, 0)'
+                            )),
+                    name=wl + '-' + str(ram)
+                            )
+                )
+            if make_boxplot:
+                data2[wl].append(
+
+                 go.Box(
+                    x=dfa1['wl'] + "-" + dfa1['n'].map(str),
+                    y=dfa1['RunTime(s)'],
+                    # mode='markers',
+                    name=wl + '-' + str(n) + '-' + str(ram)
+                            )
+                )
+
+        data.extend(data2[wl])
+
+        fig = go.Figure(data=data, layout=layout)
+
+        plotly.offline.plot(fig, filename='analysis-6-'+str(wl)+'withRP.html')
+
 
     # print data
 
