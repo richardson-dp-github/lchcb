@@ -37,6 +37,8 @@ trials_default = [1, 2, 3, 4, 5]
 absolute_path_ycsb = '/home/daniel/Documents/thesis/YCSB/bin/ycsb'
 
 absolute_path_workload = '/home/daniel/Documents/thesis/YCSB/workloads/workload'
+
+absolute_path_here = '/home/daniel/grive/afit/thesis/lchcb/'
 # ---------------------------------------------------
 
 # Connect to the cluster
@@ -123,6 +125,37 @@ def ensure_dir(f):
         os.makedirs(d)
 
 
+# Prerequisites: The YCSB keyspace and ycsb.usertable already need to be created
+def load_ycsb_usertable(num_records=10,
+                        start_empty=False,
+                        absolute_path_ycsb=absolute_path_ycsb,
+                        absolute_path_results=absolute_path_here+'results/',
+                        filename='temp_ld_res.txt'):
+    ensure_dir(absolute_path_results)
+    s = num_records
+    core_workload_insertion_retry_limit=15
+    core_workload_insertion_retry_interval=15
+    w = 'a'    # for loading, it doesn't matter, one of workload a through f just has to be selected
+
+    if start_empty:
+        print "Truncating table usertable in keyspace ycsb..."
+        session.execute("TRUNCATE ycsb.usertable")  # start off empty
+
+    cmd_ld0 = absolute_path_ycsb + \
+              ' load cassandra-cql ' \
+              ' -p hosts="' + cluster_base_node_of_choice + '" ' \
+              ' -p core_workload_insertion_retry_limit=' + str(core_workload_insertion_retry_limit) + ' ' \
+              ' -p core_workload_insertion_retry_interval=' + str(core_workload_insertion_retry_interval) + ' ' \
+              ' -P ' + absolute_path_workload + w +  \
+              ' -s ' \
+              ' -p recordcount=' + str(s) + ' > ' + \
+              absolute_path_results + \
+              filename
+
+    cmd_ld = [cmd_ld0]
+
+    run_command(cmd_ld, verbose=True)
+
 # Run trials
 def run_trials(trials=trials_default, db_sizes=db_sizes_default, workloads=workloads_default, trials_per_load=1,
                predicted_number_of_nodes=0,
@@ -131,13 +164,15 @@ def run_trials(trials=trials_default, db_sizes=db_sizes_default, workloads=workl
                ram_for_filename='unk',
                node_type_for_filename='unk',
                lan_type_for_filename='unk',
-               initial_load=False,
-               time_to_sleep=2):
+               reload_once_per_trial=True,
+               time_to_sleep=2,
+               table_is_already_loaded=True):
     ensure_dir(absolute_path_results)
     for s in db_sizes:
-        if initial_load:
+        if not table_is_already_loaded:
             print "Executing initial load..."
             print "Truncating table usertable in keyspace ycsb..."
+            load_ycsb_usertable(num_records=s)
             time.sleep(time_to_sleep)
             session.execute("TRUNCATE ycsb.usertable")  # start off empty
             time.sleep(time_to_sleep)
@@ -155,17 +190,17 @@ def run_trials(trials=trials_default, db_sizes=db_sizes_default, workloads=workl
             run_command(cmd_ld, verbose=True)
         for t in trials:
             for w in workloads:
-                time.sleep(time_to_sleep)
-                temp_load_file = absolute_path_results + 'temp_ld_res.txt'
-                load_file = standardized_file_name(absolute_path_results,
-                                                   predicted_number_of_nodes, t, w, ld=True, s=s,
-                                                   rf=replication_factor_for_filename,
-                                                   nt=node_type_for_filename, nm=lan_type_for_filename, lt=1,
-                                                   ram=ram_for_filename)
 
-                if not initial_load:
-                    print "Truncating table usertable in keyspace ycsb..."
-                    session.execute("TRUNCATE ycsb.usertable")  # start off empty
+                if reload_once_per_trial:
+                    time.sleep(time_to_sleep)
+                    temp_load_file = absolute_path_results + 'temp_ld_res.txt'
+                    load_file = standardized_file_name(absolute_path_results,
+                                                       predicted_number_of_nodes, t, w, ld=True, s=s,
+                                                       rf=replication_factor_for_filename,
+                                                       nt=node_type_for_filename, nm=lan_type_for_filename, lt=1,
+                                                       ram=ram_for_filename)
+
+                    load_ycsb_usertable(num_records=s, start_empty=True)
                     cmd_ld0 = absolute_path_ycsb + ' load cassandra-cql ' \
                          '-p hosts="' + cluster_base_node_of_choice + '" ' \
                          ' -p core_workload_insertion_retry_limit=15 ' \
@@ -176,41 +211,34 @@ def run_trials(trials=trials_default, db_sizes=db_sizes_default, workloads=workl
                          absolute_path_results + 'temp_ld_res.txt'
                     cmd_ld = [cmd_ld0]
                     run_command(cmd_ld, verbose=True)
-                    for tl in range(1, trials_per_load + 1):
-                        time.sleep(5)
-                        read_file = standardized_file_name(absolute_path_results,
-                                                           predicted_number_of_nodes, t, w, ld=False, s=s,
-                                                           rf=replication_factor_for_filename,
-                                                           nt=node_type_for_filename, nm=lan_type_for_filename, lt=tl,
-                                                           ram=ram_for_filename)
-                        if not test_is_already_done(csvfilename='all.csv', num_nodes=predicted_number_of_nodes,
-                                                    t=t, w=w, ld=False, s=s/1000,
-                                                    lt=tl, rf=replication_factor_for_filename,
-                                                    ram=ram_for_filename,
-                                                    node_type=node_type_for_filename,
-                                                    lan_type=lan_type_for_filename):
+                for tl in range(1, trials_per_load + 1):
+                    time.sleep(5)
+                    read_file = standardized_file_name(absolute_path_results,
+                                                       predicted_number_of_nodes, t, w, ld=False, s=s,
+                                                       rf=replication_factor_for_filename,
+                                                       nt=node_type_for_filename, nm=lan_type_for_filename, lt=tl,
+                                                       ram=ram_for_filename)
+                    if True:
+                        temp_run_file = absolute_path_results + 'temp_' + str(tl) + '_run_res.txt'
 
-                            temp_run_file = absolute_path_results + 'temp_' + str(tl) + '_run_res.txt'
-
-                            cmd_run0 = absolute_path_ycsb + ' run  cassandra-cql ' \
-                                      '-threads 1  ' \
-                                      '-p hosts="' + cluster_base_node_of_choice + '" ' \
-                                      '-P ' + absolute_path_workload + w + \
-                                      ' -s ' \
-                                      '-p operationcount=10000 ' \
-                                      ' > ' + temp_run_file
-                            cmd_run = [cmd_run0]
-                            run_command(cmd_run, verbose=True)
-                            count_of_nodes = count_nodes(temp_run_file, cluster_of_choice)
-                            os.rename(temp_run_file, standardized_file_name(absolute_path_results,
-                                                                            count_of_nodes, t, w, ld=False, s=s,
-                                                                            rf=replication_factor_for_filename,
-                                                                            nt=node_type_for_filename,
-                                                                            nm=lan_type_for_filename, lt=tl,
-                                                                            ram=ram_for_filename))
-                        else:
-                            print read_file, 'already exists'
-                    session.execute("TRUNCATE ycsb.usertable")  # clear for the next iteration
+                        cmd_run0 = absolute_path_ycsb + ' run  cassandra-cql ' \
+                                  '-threads 1  ' \
+                                  '-p hosts="' + cluster_base_node_of_choice + '" ' \
+                                  '-P ' + absolute_path_workload + w + \
+                                  ' -s ' \
+                                  '-p operationcount=10000 ' \
+                                  ' > ' + temp_run_file
+                        cmd_run = [cmd_run0]
+                        run_command(cmd_run, verbose=True)
+                        count_of_nodes = count_nodes(temp_run_file, cluster_of_choice)
+                        os.rename(temp_run_file, standardized_file_name(absolute_path_results,
+                                                                        count_of_nodes, t, w, ld=False, s=s,
+                                                                        rf=replication_factor_for_filename,
+                                                                        nt=node_type_for_filename,
+                                                                        nm=lan_type_for_filename, lt=tl,
+                                                                        ram=ram_for_filename))
+                    else:
+                        print "This situation should logically never happen."
 
                     # Now rename the files
                     #   Rename the load file
@@ -259,6 +287,8 @@ def test_is_already_done(csvfilename='all.csv', num_nodes=0, t=9999, w='_UNK_', 
 
     return x
 
+
+
 def vary_replication():
     for i in [1]:
         try:
@@ -278,17 +308,18 @@ def vary_replication():
                 except:
                     print "Tried sleeping twice...not working"
 
-        run_trials(trials=range(1, 6),    # arbitrarily chosen, need a good number to compare replication
+        run_trials(trials=range(1, 31),    # arbitrarily chosen, need a good number to compare replication
                db_sizes=[1000000],     # seems like a fair number, no need to vary too much, just has to be big
                                       #    enough, this will be the operations for the load
                workloads=['a', 'c', 'e'],  # to possible compare against others
                trials_per_load=1,    # may throw 9 away if there is a significant cache effect into 10 trials
                predicted_number_of_nodes=3,
-               absolute_path_results='/home/daniel/grive/afit/thesis/lchcb/results/exp8_3rps/',
+               absolute_path_results='/home/daniel/grive/afit/thesis/lchcb/results/exp9_3rps_2dtry/',
                replication_factor_for_filename=i,
                node_type_for_filename='rp',
                lan_type_for_filename='eth',
-               ram_for_filename='1GB')
+               ram_for_filename='1GB',
+            )
 
 
-vary_replication()
+load_ycsb_usertable(absolute_path_results=absolute_path_here+'results/exp10_test/', num_records=690312)
