@@ -5,7 +5,102 @@ import re
 main_filename = 'all.csv'
 
 
-def get_record(filename, ram='unk', nm='unk', nt='unk', rf='unk', lt='unk'):
+# This is written to match what will be in the tables.
+def predefined_field_names():
+    x = ['ram',
+         'nm',
+         'nt',
+         'rf',
+         'lt',
+         'nn',
+         't',
+         'wl',
+         'dbs']
+    return x
+
+
+def is_valid_ycsb_output(filename):
+    # Begins with the assumption of validity
+    is_valid = True
+    for x in predefined_field_names():
+        if x not in filename:
+            is_valid = False
+    return is_valid
+
+
+def is_row_of_data(row):
+    return len(row) == 3
+
+
+# This is to standardize the headers throughout the program, so that they match.
+def combine_headers_into_single_string(header_1, header_2):
+    return header_1 + header_2
+
+def get_record_parameter_portion(filename):
+
+    if is_valid_ycsb_output(filename):
+        record = {}
+
+        # Parse the filename in order to get the parameters of the test:
+        x = filename.split('/')[-1]
+
+        p = predefined_field_names()
+
+        # These are all written individually to account for numeric and alphanumeric differences.
+        for i in p:
+            ii = re.search('(?<=_'+i+')\w*?(?=_)', x)
+            if ii:
+                record[i] = ii.group()
+            else:
+                print i, ' not found in ', x
+        return record
+
+def get_field_names(directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10*/*.txt',
+                    verbose='True'):
+    # field_names = []
+
+    field_names = predefined_field_names()
+
+    # Now, actually parse the file
+    for filename in glob.iglob(directory):
+        if verbose:
+            print 'Parsing file for headers: ', filename
+        with open(filename) as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                if is_row_of_data(row):
+                    h = combine_headers_into_single_string(row[0], row[1])
+                    if h not in field_names:
+                        field_names.append(h)
+
+    return field_names
+
+
+# Returns an error if the filename is not properly formatted
+# Returns a dictionary with the proper headers
+# This assumes the operator is already under the impression that the filename fits this naming convention.
+def get_record(filename):
+
+    record = {}
+
+    if is_valid_ycsb_output(filename):
+
+        # Parse the filename in order to get the parameters of the test:
+        x = filename.split('/')[-1]
+
+        # These are all written individually to account for numeric and alphanumeric differences.
+        record = get_record_parameter_portion(filename)
+
+        # Now, actually parse the file
+        with open(filename) as csvfile:
+            reader = csv.reader(csvfile)
+            for row in reader:
+                if is_row_of_data(row):
+                    record[combine_headers_into_single_string(row[0], row[1])] = row[2]
+
+    return record
+
+def get_record_old_version(filename, ram='unk', nm='unk', nt='unk', rf='unk', lt='unk'):
     record = {
         'ram': ram,
         'nm': nm,
@@ -21,7 +116,7 @@ def get_record(filename, ram='unk', nm='unk', nt='unk', rf='unk', lt='unk'):
     # x = filename.split('/')[-1].split("_")[0:5]
     x = filename.split('/')[-1]
 
-    # get database size
+    # These are all written individually to account for numeric and alphanumeric differences.
     record['dbs'] = re.search('(?<=_dbs)\d*(?=_)', x).group()
     record['n'] = re.search('(?<=n)\d*(?=_)', x).group()
     record['t'] = re.search('(?<=_t)\d*(?=_)', x).group()
@@ -69,7 +164,30 @@ def get_record(filename, ram='unk', nm='unk', nt='unk', rf='unk', lt='unk'):
     return record
 
 
-def start_new_file_and_append_records(directory, csvfilename, ram, nt='unk', nm='unk', rf='unk', lt='unk'):
+# This will start a new file and append records
+# fieldnames is a list passed in
+def start_new_file_and_append_records(directory, csvfilename='combined_results.csv',
+                                      verbose=True):
+
+    records=[]
+
+    # get the fieldnames
+
+    fieldnames = get_field_names(directory=directory)
+
+    with open(csvfilename, 'wb') as csvfile:
+
+        for filename in glob.iglob(directory):
+            if verbose:
+                print filename
+            records.append(get_record(filename)) # this will append a dictionary
+
+        spamwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        spamwriter.writeheader()
+        spamwriter.writerows(records)
+
+
+def start_new_file_and_append_records_old(directory, csvfilename, ram, nt='unk', nm='unk', rf='unk', lt='unk'):
 
     records=[]
     with open(csvfilename, 'wb') as csvfile:
@@ -141,4 +259,8 @@ def temp_4():
     return 0
 
 
-append_records('/home/daniel/Documents/thesis/exp8*/*.txt', main_filename)
+# append_records('/home/daniel/Documents/thesis/exp8*/*.txt', main_filename)
+directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10*/*.txt'
+filename='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1rp1GB/_ntrp_nmeth_nn1_ram1GB_wla_dbs1000_rf1_t1_lt1_run_res.txt'
+print filename, get_record_parameter_portion(filename)
+start_new_file_and_append_records(directory=directory)
