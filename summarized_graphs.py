@@ -6,8 +6,8 @@ import scipy
 import pandas as pd
 import numpy as np
 
-df = pd.read_csv('all.csv')
-dfrp = pd.read_csv('all_rp.csv')
+# df = pd.read_csv('all.csv')
+# dfrp = pd.read_csv('all_rp.csv')
 def exp5():
     # df1 = df.groupby(by=['wl', 'n']).mean()
     df1 = df[(df.wl == 'a') & (df.ld == False) & (df.n == 1) & (df.dbs == 1000)]
@@ -390,4 +390,36 @@ def analysis6():
 
     # print data
 
-analysis6()
+def analysis7(csv_file_name='combined_results.csv'):
+
+    df = pd.read_csv(csv_file_name)
+
+    # df_med = df[(df.wl.isin(['a', 'c', 'e'])) & (df.n.isin([1, 3, 6])) & (df.dbs.isin([1000])) &
+    #             (df.ram == '2GB')].sort_values(by=['wl', 'n', 'dbs', 't'])
+
+    df_med = df.median(axis='t')
+
+    # Now, get the median execution time for each trials.
+
+    data_from_abramova_paper = {
+        'a-1': 58.43,
+        'a-3': 65.65,
+        'a-6': 87.31,
+        'c-1': 88,
+        'c-3': 90.21,
+        'c-6': 118.09,
+        'e-1': 223.18,
+        'e-3': 330.82,
+        'e-6': 404.66
+    }
+
+    layout = go.Layout(
+        title="Execution Time for 10,000 Operations",
+        yaxis=dict(title='seconds'),
+        xaxis=dict(title='Workload-Number of Nodes'),
+        font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
+    )
+
+    return 0
+
+analysis7()
