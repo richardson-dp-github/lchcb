@@ -5,6 +5,7 @@ import plotly.graph_objs as go
 import scipy
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 # df = pd.read_csv('all.csv')
 # dfrp = pd.read_csv('all_rp.csv')
@@ -390,14 +391,37 @@ def analysis6():
 
     # print data
 
-def analysis7(csv_file_name='combined_results.csv'):
+def analysis7(csv_file_name='combined_results.csv',
+              verbose=True):
 
     df = pd.read_csv(csv_file_name)
 
-    # df_med = df[(df.wl.isin(['a', 'c', 'e'])) & (df.n.isin([1, 3, 6])) & (df.dbs.isin([1000])) &
-    #             (df.ram == '2GB')].sort_values(by=['wl', 'n', 'dbs', 't'])
+    xx = ['ram',
+          'nm',
+          'nt',
+          'rf',
+          'lt',
+          'nn',
+          't',
+          'wl',
+          'dbs']
 
-    df_med = df.median(axis='t')
+    df.set_index(keys=xx, inplace=True)
+
+    lvl0 = ['ram','nm','nn']
+
+    col_of_interest = '[OVERALL] RunTime(ms)'  # for brevity
+
+    s = df.median(level=lvl0)[col_of_interest]
+
+    df_median = s.to_frame()
+    df_median_unstacked = df_median.reset_index()
+    x=df_median_unstacked['nn']
+    y=df_median_unstacked[col_of_interest]
+
+    # sp = s.plot()
+
+    # plt.show()
 
     # Now, get the median execution time for each trials.
 
@@ -416,10 +440,32 @@ def analysis7(csv_file_name='combined_results.csv'):
     layout = go.Layout(
         title="Execution Time for 10,000 Operations",
         yaxis=dict(title='seconds'),
-        xaxis=dict(title='Workload-Number of Nodes'),
+        xaxis=dict(title='Number of Nodes'),
         font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
     )
 
+    if verbose:
+        print 'Finished with Analysis....returning to main program'
+
+    g = go.Scatter(
+                    x=x,
+                    y=y,
+                    mode='markers',
+                    marker= dict(
+                            size=15,
+                            # color = 'rgba(152, 0, 0, .8)',
+                            line=dict(
+                                width=2,
+                                # color = 'rgb(0, 0, 0)'
+                            )),
+                    name='The only one right now :)'
+                            )
+
+    data = [g]
+
+    fig = go.Figure(data=data, layout=layout)
+
+    plotly.offline.plot(fig, filename='analysis-7.html')
     return 0
 
 analysis7()
