@@ -1,0 +1,37 @@
+Datacenter: dc1; Host: /192.168.1.102; Rack: rack1
+Datacenter: dc1; Host: /192.168.1.103; Rack: rack1
+Datacenter: dc1; Host: /192.168.1.104; Rack: rack1
+Datacenter: dc1; Host: /192.168.1.109; Rack: rack1
+Datacenter: dc1; Host: /192.168.1.100; Rack: rack1
+Datacenter: dc1; Host: /192.168.1.101; Rack: rack1
+[OVERALL], RunTime(ms), 561005.0
+[OVERALL], Throughput(ops/sec), 17.82515307350202
+[TOTAL_GCS_PS_Scavenge], Count, 18.0
+[TOTAL_GC_TIME_PS_Scavenge], Time(ms), 60.0
+[TOTAL_GC_TIME_%_PS_Scavenge], Time(%), 0.010695091844101211
+[TOTAL_GCS_PS_MarkSweep], Count, 0.0
+[TOTAL_GC_TIME_PS_MarkSweep], Time(ms), 0.0
+[TOTAL_GC_TIME_%_PS_MarkSweep], Time(%), 0.0
+[TOTAL_GCs], Count, 18.0
+[TOTAL_GC_TIME], Time(ms), 60.0
+[TOTAL_GC_TIME_%], Time(%), 0.010695091844101211
+[CLEANUP], Operations, 1.0
+[CLEANUP], AverageLatency(us), 2212864.0
+[CLEANUP], MinLatency(us), 2211840.0
+[CLEANUP], MaxLatency(us), 2213887.0
+[CLEANUP], 95thPercentileLatency(us), 2213887.0
+[CLEANUP], 99thPercentileLatency(us), 2213887.0
+[INSERT], Operations, 492.0
+[INSERT], AverageLatency(us), 19487.191056910568
+[INSERT], MinLatency(us), 8080.0
+[INSERT], MaxLatency(us), 63135.0
+[INSERT], 95thPercentileLatency(us), 26495.0
+[INSERT], 99thPercentileLatency(us), 34303.0
+[INSERT], Return=OK, 492
+[SCAN], Operations, 9508.0
+[SCAN], AverageLatency(us), 57648.36432477913
+[SCAN], MinLatency(us), 9520.0
+[SCAN], MaxLatency(us), 235391.0
+[SCAN], 95thPercentileLatency(us), 99455.0
+[SCAN], 99thPercentileLatency(us), 125567.0
+[SCAN], Return=OK, 9508
