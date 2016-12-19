@@ -263,4 +263,3 @@ def temp_4():
 directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10*/*.txt'
 filename='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1rp1GB/_ntrp_nmeth_nn1_ram1GB_wla_dbs1000_rf1_t1_lt1_run_res.txt'
 print filename, get_record_parameter_portion(filename)
-start_new_file_and_append_records(directory=directory)
