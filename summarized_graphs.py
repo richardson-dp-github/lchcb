@@ -394,78 +394,109 @@ def analysis6():
 def analysis7(csv_file_name='combined_results.csv',
               verbose=True):
 
+    plot_multiple_series(include_reference=True, apply_filter={'wl': 'a'})
+    plot_multiple_series(include_reference=True, apply_filter={'wl': 'c'})
+    plot_multiple_series(include_reference=True, apply_filter={'wl': 'e'})
+
+
+    return 0
+
+
+def plot_multiple_series(csv_file_name='combined_results.csv',
+                         y_column='[OVERALL] RunTime(ms)',
+                         series=['ram', 'nm', 'nt', 'rf', 'wl'],
+                         apply_filter=None,
+                         x_column='nn',
+                         include_reference=False,
+                         ref_csv_filename='abramova_results.csv',
+                         output_filename='multiple-series-plot.html',
+                         title="Execution Time for 10,000 Operations",
+                         verbose=True):
+
+    # =============================
+
     df = pd.read_csv(csv_file_name)
 
-    xx = ['ram',
-          'nm',
-          'nt',
-          'rf',
-          'lt',
-          'nn',
-          't',
-          'wl',
-          'dbs']
-
-    df.set_index(keys=xx, inplace=True)
-
-    lvl0 = ['ram','nm','nn']
-
-    col_of_interest = '[OVERALL] RunTime(ms)'  # for brevity
-
-    s = df.median(level=lvl0)[col_of_interest]
-
-    df_median = s.to_frame()
-    df_median_unstacked = df_median.reset_index()
-    x=df_median_unstacked['nn']
-    y=df_median_unstacked[col_of_interest]
-
-    # sp = s.plot()
-
-    # plt.show()
-
-    # Now, get the median execution time for each trials.
-
-    data_from_abramova_paper = {
-        'a-1': 58.43,
-        'a-3': 65.65,
-        'a-6': 87.31,
-        'c-1': 88,
-        'c-3': 90.21,
-        'c-6': 118.09,
-        'e-1': 223.18,
-        'e-3': 330.82,
-        'e-6': 404.66
-    }
-
-    layout = go.Layout(
-        title="Execution Time for 10,000 Operations",
-        yaxis=dict(title='seconds'),
-        xaxis=dict(title='Number of Nodes'),
-        font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
-    )
-
     if verbose:
-        print 'Finished with Analysis....returning to main program'
+        print "Data frame has been imported...header shown below..."
+        print df
 
-    g = go.Scatter(
-                    x=x,
-                    y=y,
-                    mode='markers',
-                    marker= dict(
-                            size=15,
-                            # color = 'rgba(152, 0, 0, .8)',
-                            line=dict(
-                                width=2,
-                                # color = 'rgb(0, 0, 0)'
-                            )),
-                    name='The only one right now :)'
-                            )
+    levels_of_interest = series + [x_column]
 
-    data = [g]
+    # Import and Plot the Reference Data ====
+    if include_reference:
+
+        df_ref = pd.read_csv(ref_csv_filename)
+        df = df.append(df_ref, ignore_index=True)
+
+
+    # ==============================
+
+    df.set_index(keys=levels_of_interest, inplace=True)  # combine extraneous characteristics, like trials
+
+    s = df.median(level=levels_of_interest)[y_column]  # This will replace the median
+
+
+
+    # ===>Do I need to do both
+
+    df_median = s.to_frame()  # convert back to data frame type; it'll be easier to deconstruct and plot with plotly
+
+    # df_median_unstacked = df_median.reset_index()  # reset the index so that the x values are attainable
+
+    if apply_filter:
+        for key, val in apply_filter.items():
+            df_median = df_median.xs(val, level=key, drop_level=False)
+
+    data = []
+
+    for i, j in df_median.groupby(level=series):
+
+        df_median_unstacked = j.reset_index()
+
+        x = df_median_unstacked[x_column]
+        y = df_median_unstacked[y_column]  # pre-select the x and y values here; renders easier debugging process
+
+        if verbose:
+            print i
+            print j
+
+
+        layout = go.Layout(
+            title=title,
+            yaxis=dict(title=y_column),
+            xaxis=dict(title=x_column),
+            font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
+        )
+
+        g = go.Scatter(
+                        x=x,
+                        y=y,
+                        # mode='markers',
+                        marker= dict(
+                                size=15,
+                                # color = 'rgba(152, 0, 0, .8)',
+                                line=dict(
+                                    width=2,
+                                    # color = 'rgb(0, 0, 0)'
+                                )),
+                        name=str(i)
+                                )
+
+        if g:
+            data.append(g)
+
+
 
     fig = go.Figure(data=data, layout=layout)
 
-    plotly.offline.plot(fig, filename='analysis-7.html')
+    plotly.offline.plot(fig, filename=output_filename)
+    return 0
+
+
+# Speedup
+def analysis8():
     return 0
 
 analysis7()
+
