@@ -494,9 +494,96 @@ def plot_multiple_series(csv_file_name='combined_results.csv',
     return 0
 
 
+# Return a data frame that will show the medians, like one had just done a summary groupby query
+def calculate_summary(csv_file_name='combined_results.csv',
+                      read_from_csv=True,
+                      dataframe=None,
+                      measurement_of_interest='[OVERALL] RunTime(ms)',
+                      series_to_group_by=['ram', 'nm', 'nt', 'rf', 'wl'],
+                      return_series_not_data_frame=False,
+                      reset_index_before_returning_data_frame=True,
+                      summary_statistic_of_interest='median'
+                      ):
+
+    # ==PROCESS INPUT====================
+
+    # The user can either read in from a
+    if read_from_csv:
+        df = pd.read_csv(csv_file_name)
+    elif dataframe:
+        df = dataframe
+    else:
+        df = None
+
+    # Set the index.  It's assumed the df has no index
+    df.set_index(keys=series_to_group_by, inplace=True)  # combine extraneous characteristics, like trials or subtrials
+
+    # ==CALCULATE==========================
+
+    if summary_statistic_of_interest == 'median':
+        s = df.median(level=series_to_group_by)[measurement_of_interest]  # This will replace the median
+    else:
+        s = df.median(level=series_to_group_by)[measurement_of_interest]  # Let median be the default calculation
+
+    # ==PROCESS OUTPUT=====================
+
+    # User decides whether to return a series or data frame, whether or not data frame is indexed
+    if return_series_not_data_frame:
+        return s
+    else: # return data frame
+        d = s.to_frame()       # convert to a frame
+        if reset_index_before_returning_data_frame:
+            d = d.reset_index()
+        return d
+
+def test_calculate_summary():
+
+
 # Speedup
 def analysis8():
+
+    # set parameters
+    levels_of_interest = ['ram', 'nm', 'nt', 'rf', 'wl', 'nn']
+    csv_with_main_results = 'combined_results.csv'
+    value_of_interest = '[OVERALL] RunTime(ms)'
+    ref_csv_filename='abramova_results.csv'
+    calculated_value='RelativeRunTime'
+
+
+    # Process the data file to get the median values as defined by the multi-level index
+    df = pd.read_csv(csv_with_main_results)
+    df_ref = pd.read_csv(ref_csv_filename)
+    df = df.append(df_ref, ignore_index=True)
+    df.set_index(keys=levels_of_interest, inplace=True)
+    s = df.median(level=levels_of_interest)[value_of_interest]  # This will replace the median
+    df_median = s.to_frame()  # convert back to data frame type; it'll be easier to deconstruct and plot with plotly
+
+    # print df_median
+
+    # df_median[calculated_value] = df_median[['wl','nn']]
+
+    # levels_for_lookup = ['ram', 'nm', 'nt', 'rf', 'wl', 'nn']
+
+    # df1 = df_median.unstack(level=['ram','nt','nm','rf'])
+
+    # df_median[calculated_value] = df_median.loc[df_median["'"+ram+"'"]]
+
+    df_median['newcol'] = 0
+
+    print 'Printing itertuples...'
+    for i in df_median.itertuples():
+        print i
+        df_median['newcol'] = df_median.loc[i.Index[0], 'unk', 'ref', 'unk', i.Index[4], i.Index[5]][value_of_interest]
+        print ''
+
+    print 'Printing iterrows()'
+    for j in df_median.iterrows():
+        print j
+        print ''
+
+    # print df_median
+
+
     return 0
 
-analysis7()
-
+analysis8()

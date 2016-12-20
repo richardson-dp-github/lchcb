@@ -55,6 +55,7 @@ def get_record_parameter_portion(filename):
                 print i, ' not found in ', x
         return record
 
+
 def get_field_names(directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10*/*.txt',
                     verbose='True'):
     # field_names = []
@@ -180,7 +181,7 @@ def start_new_file_and_append_records(directory, csvfilename='combined_results.c
         for filename in glob.iglob(directory):
             if verbose:
                 print filename
-            records.append(get_record(filename)) # this will append a dictionary
+            records.append(get_record(filename))  # this will append a dictionary
 
         spamwriter = csv.DictWriter(csvfile, fieldnames=fieldnames)
         spamwriter.writeheader()
@@ -261,5 +262,7 @@ def temp_4():
 
 # append_records('/home/daniel/Documents/thesis/exp8*/*.txt', main_filename)
 directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10*/*.txt'
-filename='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1rp1GB/_ntrp_nmeth_nn1_ram1GB_wla_dbs1000_rf1_t1_lt1_run_res.txt'
-print filename, get_record_parameter_portion(filename)
+# filename='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1rp1GB/_ntrp_nmeth_nn1_ram1GB_wla_dbs1000_rf1_t1_lt1_run_res.txt'
+# print filename, get_record_parameter_portion(filename)
+
+start_new_file_and_append_records(directory=directory)

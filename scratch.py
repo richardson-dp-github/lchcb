@@ -201,15 +201,201 @@ def send_file_out(local_filename, out_filename):
     return 0
 
 
-def copy_cassandra_config_files_from_main_node_to_other_nodes(list_of_nodes=['192.168.1.101', '192.168.1.102'], main_node='192.168.1.100'):
+def print_cmd_copy_cassandra_config_files_from_main_node_to_other_nodes(list_of_nodes=['192.168.1.101', '192.168.1.102'], main_node='192.168.1.100'):
     for host in list_of_nodes:
 
         cmd = "scp pi@192.168.1.100:cassandra/apache-cassandra-3.9/conf/cassandra.yaml pi@" + host + ":cassandra/apache-cassandra-3.9/conf/"
         print cmd
-        run_command(cmd, cwd='.')
+        # run_command(cmd, cwd='.')
+
+    return 0
+
+def print_cmd_copy_cassandra_config_files_from_laptop_to_other_nodes(list_of_nodes=['192.168.1.100',
+                                                                                    '192.168.1.101',
+                                                                                    '192.168.1.102',
+                                                                                    '192.168.1.103',
+                                                                                    '192.168.1.104'],
+                                                                     laptop_directory='grive/afit/thesis/lchcb/config/',
+                                                                     config_filename='cassandra.yaml',
+                                                                     verbose=True):
+    if verbose:
+        print "These can be copied into the terminal...then enter the password...."
+
+
+    for host in list_of_nodes:
+
+        cmd = "scp " + laptop_directory + config_filename + " pi@" + host + ":cassandra/apache-cassandra-3.9/conf/"
+        print cmd
+        # run_command(cmd, cwd='.')
+
+    return 0
+
+# This is written to match what will be in the tables.
+def predefined_field_names():
+    x = ['ram',
+         'nm',
+         'nt',
+         'rf',
+         'lt',
+         'n',
+         't',
+         'wl',
+         'dbs']
+    return x
+
+
+def is_valid_ycsb_output(filename):
+    # Begins with the assumption of validity
+    is_valid = True
+    for x in predefined_field_names():
+        if x not in filename:
+            is_valid = False
+    return is_valid
+
+
+def is_row_of_data(row):
+    return len(row) == 3
+
+
+# This is to standardize the headers throughout the program, so that they match.
+def combine_headers_into_single_string(header_1, header_2):
+    return header_1 + header_2
+
+def get_record_parameter_portion(filename, ram='unk', nm='unk', nt='unk', rf='unk', lt='unk'):
+
+    if is_valid_ycsb_output(filename):
+        record = {}
+
+        # Parse the filename in order to get the parameters of the test:
+        x = filename.split('/')[-1]
+
+        p = predefined_field_names()
+
+        # These are all written individually to account for numeric and alphanumeric differences.
+        for i in p:
+            ii = re.search('(?<=_'+i+')\w*?(?=_)', x)
+            if ii:
+                record[i] = ii.group()
+            else:
+                print i, ' not found in ', x
+        print record
+
+
+
+def temp_change_file_names_old(i='n',
+                           newi='nn',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10*/*.txt',
+                           time_to_sleep=0,
+                           verbose=True):
+
+    # directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10*/*.txt'
+    for filename in glob.iglob(directory):
+        x = filename
+        ii = re.search('(?<=_'+i+')\d*?(?=_)', x)
+        if ii:
+            iii = i + ii.group()
+            iiii = newi + ii.group()
+            xx = x.replace(iii, iiii)
+
+            if verbose:
+
+                print 'Replace existing file', x
+                print '        with new file', xx
+                print ''
+
+                time.sleep(time_to_sleep)
+
+                shutil.copy(x, xx)
 
     return 0
 
 
+def temp_change_file_names(i='_ram1GB_',
+                           newi='_ram2GB_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1vm2048/*.txt',
+                           time_to_sleep=0,
+                           verbose=True):
 
-copy_cassandra_config_files_from_main_node_to_other_nodes()
+    # directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10*/*.txt'
+    for filename in glob.iglob(directory):
+        x = filename
+        xx = filename.replace(i, newi)
+
+        if verbose:
+
+            print 'Replace existing file', x
+            print '        with new file', xx
+            print ''
+
+            time.sleep(time_to_sleep)
+
+        if not (x==xx):
+            shutil.copy(x, xx)
+
+
+    return 0
+
+
+# I need to rename some of the files; one-time bookkeeping
+def archive_201612181814():
+    temp_change_file_names(i='exp10_5rp1GB_',
+                           newi='_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_5rp1GB/*.txt',)
+
+    temp_change_file_names(i='_ram1GB_',
+                           newi='_ram2GB_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1vm2048/*.txt',)
+
+    temp_change_file_names(i='_nn3_',
+                           newi='_nn6_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_6rp1GB/*.txt',)
+    temp_change_file_names(i='_dbs0_',
+                           newi='_dbs1000_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_*/*.txt',)
+
+
+def archive_201612181949():
+    temp_change_file_names(i='_dbs0_',
+                           newi='_dbs1000_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_6rp1GB/*.txt',)
+
+
+
+
+
+
+
+
+
+def archive_201612181927():
+    temp_change_file_names(i='_nn3_',
+                           newi='_nn5_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_5rp1GB/*.txt',)
+    temp_change_file_names(i='_dbs0_',
+                           newi='_dbs1000_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_5rp1GB/*.txt',)
+
+
+
+
+
+
+def archive_201612181923():
+    temp_change_file_names(i='_ram1GB_',
+                       newi='_ram4GB_',
+                       directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1vm4096/*.txt',)
+
+
+
+
+def archive_201612181906():
+    temp_change_file_names(i='_ram1GB_',
+                       newi='_ram2GB_',
+                       directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1vm2048/*.txt',)
+
+
+
+change_ram_for_all_machines(1024)
+# print_cmd_copy_cassandra_config_files_from_laptop_to_other_nodes()
+#
+#  experimenting_with_dataframes()
