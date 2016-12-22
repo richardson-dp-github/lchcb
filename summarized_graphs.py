@@ -729,10 +729,26 @@ def analysis9():
 
     return 0
 
+# From http://stackoverflow.com/questions/4843173/how-to-check-if-type-of-a-variable-is-string
+def isstring(s):
+    # if we use Python 3
+    #if (sys.version_info[0] >= 3):
+    #    return isinstance(s, str)
+    # we use Python 2
+    return isinstance(s, basestring)
+
+def isval(v):
+    return str(type(v))=="<type 'int'>" or str(type(v))=="<type 'float'>"
+
+def islist(l):
+    return str(type(l)) == "<type 'list'>"
 
 def return_filtered_dataframe(df, d):
     for key, val in d.iteritems():
-        df = df[(df[key] == val)]
+        if isstring(val) or isval(val):
+            df = df[(df[key] == val)]
+        elif islist(val):
+            df = df[df[key].isin(val)]
 
     return df
 
@@ -821,48 +837,67 @@ def research_question_1_figure_1():
                                     x_column='nn',
                                     y_column='[OVERALL] RunTime(ms)',
                                     s_column=None,
-                                    title='Execution Time for 10k operations, Workload A',
+                                    title='Execution Time for 10k operations, Workload A, Abramova Paper',
                                     mode='markers')
 
-def research_question_1_figure_2():
+# ram,nm,nt,rf,lt,nn,t,wl,dbs are possible columns
+def research_question_1_figure_2_3_utility_fn(csv_file, title):
     for i in ['a']:
         for j in [1]:
-            generate_filtered_graph(csv_with_main_results='experiment_11_magnify_cash_effect',
+            generate_filtered_graph(csv_with_main_results=csv_file,
                                     d={'nm': 'nodal',
                                        'nt': 'vm',
-                                       'rf': 1,
-                                       'lt': 1,
                                        'nn': j,
-                                       'wl': i,
-                                       'dbs': 1000},
+                                       'wl': i},
                                     x_column='t',
                                     y_column='[OVERALL] RunTime(ms)',
                                     s_column='ram',
-                                    title='Execution Time for 1k operations: {} Nodes, Workload {}'.format(j, i),
+                                    title=title,
                                     mode='line')
 
+
+def research_question_1_figure_2():
+    research_question_1_figure_2_3_utility_fn(csv_file='experiment_11_magnify_cash_effect',
+                                              title='Execution Time for 1k operations: {} Nodes, Workload {}'.format(1, 'A'))
 
 def research_question_1_figure_3():
-    for i in ['a']:
-        for j in [1]:
-            generate_filtered_graph(csv_with_main_results='combined_results.csv',
-                                    d={'nm': 'nodal',
-                                       'nt': 'vm',
-                                       'rf': 1,
-                                       'lt': 1,
-                                       'nn': j,
-                                       'wl': i,
-                                       'dbs': 1000},
-                                    x_column='t',
-                                    y_column='[OVERALL] RunTime(ms)',
-                                    s_column='ram',
-                                    title='Execution Time for 10k operations: {} Nodes, Workload {}'.format(j, i),
-                                    mode='line')
-
+    research_question_1_figure_2_3_utility_fn(csv_file='combined_results.csv',
+                                              title='Execution Time for 10k operations: {} Nodes, Workload {}'.format(1, 'A'))
     return 0
 
 
-def research_question_1_figure_4():
+def research_question_1_figure_4_5():
+    df = calculate_summary(input_csv_file_name='combined_results.csv',
+                           read_from_csv=True,
+                           dataframe=None,
+                           measurement_of_interest='[OVERALL] RunTime(ms)',
+                           series_to_group_by=['ram', 'nm', 'nt', 'rf', 'wl', 'nn'],
+                           return_series_not_data_frame=False,
+                           reset_index_before_returning_data_frame=True,
+                           summary_statistic_of_interest='median'
+                           )
+
+    df_ref = pd.read_csv('abramova_results.csv')
+    df_ref = return_filtered_dataframe(df_ref, {'wl': 'a'})
+
+    df = df.append(df_ref, ignore_index=True)
+
+    df['nt-ram'] = df['nt'].map(str) + '-' + df['ram'].map(str)  # for the series name
+
+    for i in ['a']:
+        generate_filtered_graph(df=df,
+                                csv_with_main_results='combined_results.csv',
+                                read_from_csv=False,
+                                d={'wl': i,'nt': ['vm','ref']},
+                                x_column='nn',
+                                y_column='[OVERALL] RunTime(ms)',
+                                s_column='nt-ram',
+                                title='Median Execution Time for 10k operations: Workload {}'.format(i),
+                                mode='marker')
+
+    return 0
+
+def research_question_1_figure_6():
     df = calculate_summary(input_csv_file_name='combined_results.csv',
                            read_from_csv=True,
                            dataframe=None,
@@ -892,4 +927,3 @@ def research_question_1_figure_4():
                                 mode='marker')
 
     return 0
-
