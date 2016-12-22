@@ -134,6 +134,40 @@ def analysis1():
     plotly.offline.plot(fig, filename='analysis-1_scatter.html')
 
 
+# Takes dataframe df and plots a histogram
+def create_histogram(df,
+                     title="Execution Time for 10,000 Operations",
+                     y_axis_label='frequency',
+                     x_axis_label='seconds',
+                     opacity=0.75,
+                     column_of_interest='RunTime(s)',
+                     data_series_name='2GB RAM',
+                     barmode='overlay',
+                     font_name='Courier New, monospace',
+                     font_size=24,
+                     font_color='#7f7f7f'
+                     ):
+
+    data = []
+
+    data.append(go.Histogram(
+        x=df[column_of_interest],
+        opacity=opacity,
+        name=data_series_name
+    ))
+
+    layout = go.Layout(
+        title=title,
+        barmode=barmode,
+        yaxis=dict(title=y_axis_label),
+        xaxis=dict(title=x_axis_label),
+        font=dict(family=font_name, size=font_size, color=font_color)
+    )
+
+    fig = go.Figure(data=data, layout=layout)
+    plotly.offline.plot(fig, filename='analysis-2_scatter.html')
+
+
 def analysis2():
 
     data = []
@@ -495,7 +529,7 @@ def plot_multiple_series(csv_file_name='combined_results.csv',
 
 
 # Return a data frame that will show the medians, like one had just done a summary groupby query
-def calculate_summary(csv_file_name='combined_results.csv',
+def calculate_summary(input_csv_file_name='combined_results.csv',
                       read_from_csv=True,
                       dataframe=None,
                       measurement_of_interest='[OVERALL] RunTime(ms)',
@@ -509,7 +543,7 @@ def calculate_summary(csv_file_name='combined_results.csv',
 
     # The user can either read in from a
     if read_from_csv:
-        df = pd.read_csv(csv_file_name)
+        df = pd.read_csv(input_csv_file_name)
     elif dataframe:
         df = dataframe
     else:
@@ -537,6 +571,7 @@ def calculate_summary(csv_file_name='combined_results.csv',
         return d
 
 def test_calculate_summary():
+    return 0
 
 
 # Speedup
@@ -586,4 +621,275 @@ def analysis8():
 
     return 0
 
-analysis8()
+def trace_name(t):
+    return t.name
+
+# This function creates a scatter plot of interest
+def create_scatter(df,
+                   x_column='',
+                   y_column='',
+                   s_column=None,
+                   marker_size=15,
+                   title='Generic Title',
+                   mode='markers',
+                   series_name='series_name',
+                   filename='genericfilename.html'):
+
+    # sort because otherwise the connecting lines are all scattered
+    if not s_column:
+        df.sort_values(by=[x_column], inplace=True)
+    else:
+        df.sort_values(by=[s_column, x_column], inplace=True)
+
+    if s_column:
+        data=[]
+        for s in list(set(df[s_column])):
+
+            # df_of_interest = df[(df[s_column] == s)]
+            df_of_interest = return_filtered_dataframe(df, {s_column: s})
+
+            x = df_of_interest[x_column]
+            y = df_of_interest[y_column]
+
+            data.append(go.Scatter(
+                            x=x,
+                            y=y,
+                            mode=mode,
+                            marker=dict(
+                                    size=marker_size,
+                                    # color = 'rgba(152, 0, 0, .8)',
+                                    line=dict(
+                                        width=2,
+                                        # color = 'rgb(0, 0, 0)'
+                                    )),
+                            name=s
+                                    )
+            )
+        data.sort(key=trace_name)
+
+
+    else:
+        x = df[x_column]
+        y = df[y_column]
+
+        g = go.Scatter(
+                            x=x,
+                            y=y,
+                            mode=mode,
+                            marker= dict(
+                                    size=marker_size,
+                                    # color = 'rgba(152, 0, 0, .8)',
+                                    line=dict(
+                                        width=2,
+                                        # color = 'rgb(0, 0, 0)'
+                                    )),
+                            name=series_name
+                                    )
+        data = [g]
+
+
+    layout = go.Layout(
+            title=title,
+            yaxis=dict(title=y_column),
+            xaxis=dict(title=x_column),
+            font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
+        )
+
+
+
+    fig = go.Figure(data=data, layout=layout)
+
+    plotly.offline.plot(fig, filename=filename)
+
+    return 0
+
+def analysis9():
+    csv_with_main_results = 'combined_results.csv'
+    df = pd.read_csv(csv_with_main_results)
+
+    df_of_interest = df[
+                         (df['ram'] == '2GB') &
+                         (df['nm'] == 'nodal') &
+                         (df['nt'] == 'vm') &
+                         (df['rf'] == 1) &
+                         (df['lt'] == 1) &
+                         (df['nn'] == 1) &
+                         (df['wl'] == 'a') &
+                         (df['dbs'] == 1000)
+                     ]
+
+    print df_of_interest.head(31)
+
+    create_histogram(df_of_interest,
+                     column_of_interest='[OVERALL] RunTime(ms)')
+
+
+
+    # 4GB,nodal,vm,1,1,3,4,c,1000,
+
+    return 0
+
+
+def return_filtered_dataframe(df, d):
+    for key, val in d.iteritems():
+        df = df[(df[key] == val)]
+
+    return df
+
+def generate_filtered_graph(df=None,
+                            read_from_csv=True,
+                            csv_with_main_results='combined_results.csv',
+                            d=None,
+                            x_column='t',
+                            y_column='[OVERALL] RunTime(ms)',
+                            s_column='ram',
+                            title='Execution Time for 10k operations',
+                            mode='markers'):
+
+    # Import the csv if no dataframe specified
+    if read_from_csv:
+        df = pd.read_csv(csv_with_main_results)
+
+    if d:
+        df = return_filtered_dataframe(df, d)
+
+    print df.head(10)
+
+    create_scatter(df,
+                   x_column=x_column,
+                   y_column=y_column,
+                   s_column=s_column,
+                   title=title,
+                   mode=mode)
+
+
+def analysis10():
+    csv_with_main_results = 'combined_results.csv'
+    df = pd.read_csv(csv_with_main_results)
+
+    for i in []:
+
+        df_of_interest = df[
+                         (df['ram'] == '4GB') &
+                         (df['nm'] == 'nodal') &
+                         (df['nt'] == 'vm') &
+                         (df['rf'] == 1) &
+                         (df['lt'] == 1) &
+                         (df['nn'] == 1) &
+                         (df['wl'] == 'a') &
+                         (df['dbs'] == 1000)
+                     ]
+
+    print df_of_interest.head(31)
+
+    create_scatter(df_of_interest,
+                   x_column='t',
+                   y_column='[OVERALL] RunTime(ms)',
+                   title='Execution Time for 10k operations',
+                   mode='markers')
+
+
+
+
+    # 4GB,nodal,vm,1,1,3,4,c,1000,
+
+    return 0
+
+def analysis11():
+    for i in ['a', 'c', 'e']:
+        for j in [1, 3, 6]:
+            generate_filtered_graph(csv_with_main_results='experiment_11_magnify_cash_effect',
+                                    d={'nm': 'nodal',
+                                       'nt': 'vm',
+                                       'rf': 1,
+                                       'lt': 1,
+                                       'nn': j,
+                                       'wl': i,
+                                       'dbs': 1000},
+                                    x_column='t',
+                                    y_column='[OVERALL] RunTime(ms)',
+                                    s_column='ram',
+                                    title='Execution Time for 10k operations: '+str(i)+str(j),
+                                    mode='markers')
+
+# This is the reference data from the paper only, Workload A only
+def research_question_1_figure_1():
+    generate_filtered_graph(csv_with_main_results='abramova_results.csv',
+                                    d={
+                                       'wl': 'a',
+                                       },
+                                    x_column='nn',
+                                    y_column='[OVERALL] RunTime(ms)',
+                                    s_column=None,
+                                    title='Execution Time for 10k operations, Workload A',
+                                    mode='markers')
+
+def research_question_1_figure_2():
+    for i in ['a']:
+        for j in [1]:
+            generate_filtered_graph(csv_with_main_results='experiment_11_magnify_cash_effect',
+                                    d={'nm': 'nodal',
+                                       'nt': 'vm',
+                                       'rf': 1,
+                                       'lt': 1,
+                                       'nn': j,
+                                       'wl': i,
+                                       'dbs': 1000},
+                                    x_column='t',
+                                    y_column='[OVERALL] RunTime(ms)',
+                                    s_column='ram',
+                                    title='Execution Time for 1k operations: {} Nodes, Workload {}'.format(j, i),
+                                    mode='line')
+
+
+def research_question_1_figure_3():
+    for i in ['a']:
+        for j in [1]:
+            generate_filtered_graph(csv_with_main_results='combined_results.csv',
+                                    d={'nm': 'nodal',
+                                       'nt': 'vm',
+                                       'rf': 1,
+                                       'lt': 1,
+                                       'nn': j,
+                                       'wl': i,
+                                       'dbs': 1000},
+                                    x_column='t',
+                                    y_column='[OVERALL] RunTime(ms)',
+                                    s_column='ram',
+                                    title='Execution Time for 10k operations: {} Nodes, Workload {}'.format(j, i),
+                                    mode='line')
+
+    return 0
+
+
+def research_question_1_figure_4():
+    df = calculate_summary(input_csv_file_name='combined_results.csv',
+                           read_from_csv=True,
+                           dataframe=None,
+                           measurement_of_interest='[OVERALL] RunTime(ms)',
+                           series_to_group_by=['ram', 'nm', 'nt', 'rf', 'wl', 'nn'],
+                           return_series_not_data_frame=False,
+                           reset_index_before_returning_data_frame=True,
+                           summary_statistic_of_interest='median'
+                           )
+
+    df_ref = pd.read_csv('abramova_results.csv')
+    df_ref = return_filtered_dataframe(df_ref, {'wl': 'a'})
+
+    df = df.append(df_ref, ignore_index=True)
+
+    df['nt-ram'] = df['nt'].map(str) + '-' + df['ram'].map(str)  # for the series name
+
+    for i in ['a']:
+        generate_filtered_graph(df=df,
+                                csv_with_main_results='combined_results.csv',
+                                read_from_csv=False,
+                                d={'wl': i},
+                                x_column='nn',
+                                y_column='[OVERALL] RunTime(ms)',
+                                s_column='nt-ram',
+                                title='Median Execution Time for 10k operations: Workload {}'.format(i),
+                                mode='marker')
+
+    return 0
+
