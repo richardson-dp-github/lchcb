@@ -30,13 +30,9 @@ def set_parameter_in_new_config_file(template_file, output_file, look_for, repla
 # Parameters related to the current environment
 # -----------------------------------------------------------------
 absolute_path_cassandra_stress = '/home/daniel/Documents/thesis/apache-cassandra-3.9/tools/bin/'
-# -----------------------------------------------------------------
-
-# -----------------------------------------------------------------
-# How the cluster is defined
-# -----------------------------------------------------------------
-seed_wireless_lan = '192.168.1.109'
-seed_wired_lan = '192.168.1.100'
+absolute_path_ycsb = '/home/daniel/Documents/thesis/YCSB/bin/ycsb'
+absolute_path_workload = '/home/daniel/Documents/thesis/YCSB/workloads/workload'
+absolute_path_here = '/home/daniel/grive/afit/thesis/lchcb/'
 # -----------------------------------------------------------------
 
 # -----------------------------------------------------------------
