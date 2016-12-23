@@ -10,20 +10,9 @@ import glob
 import pandas as pd
 import csv
 
-# ----constants--------------------------------------
-
-rp_wired_cluster_base_node = '192.168.1.100'
-
-vm_cluster_base_node = '192.168.56.100'
-
-vm_cluster = ['192.168.56.100', '192.168.56.101', '192.168.56.102',
-              '192.168.56.103', '192.168.56.104', '192.168.56.105']
-rp_wired_cluster = ['192.168.1.100', '192.168.1.101', '192.168.1.102']
-
 # -------configuration-------------------------------
 
-cluster_of_choice = vm_cluster
-cluster_base_node_of_choice = vm_cluster_base_node
+
 
 num_nodes = 1  # This only affects the naming convention
 
@@ -40,10 +29,6 @@ absolute_path_workload = '/home/daniel/Documents/thesis/YCSB/workloads/workload'
 
 absolute_path_here = '/home/daniel/grive/afit/thesis/lchcb/'
 # ---------------------------------------------------
-
-# Connect to the cluster
-cluster = Cluster(cluster_of_choice)
-session = cluster.connect()
 
 # Sensitivity Testing Involves Changing Something
 cd_cmd = ['cd /home/daniel/Documents/thesis/YCSB/']
