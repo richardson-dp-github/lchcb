@@ -49,6 +49,42 @@ session = cluster.connect()
 cd_cmd = ['cd /home/daniel/Documents/thesis/YCSB/']
 
 
+# connect to the cluster
+def begin_cassandra_cluster(cluster_of_choice):
+    cluster = Cluster(cluster_of_choice)
+    session = cluster.connect()
+
+    return cluster, session
+
+
+# based on the configuration
+def select_cluster(network_type=None):
+    rp_wired_cluster_base_node = '192.168.1.100'
+    rp_wired_cluster = ['192.168.1.100', '192.168.1.101', '192.168.1.102']
+
+    vm_cluster_base_node = '192.168.56.100'
+    vm_cluster = ['192.168.56.100', '192.168.56.101', '192.168.56.102',
+                  '192.168.56.103', '192.168.56.104', '192.168.56.105']
+
+    rp_wireless_cluster_base_node = '192.168.1.100'
+    rp_wireless_cluster = ['192.168.1.100', '192.168.1.101', '192.168.1.102']
+
+    cluster = None
+    cluster_base_node = None
+
+    if network_type=='vm_cluster':
+        cluster = vm_cluster
+        cluster_base_node = vm_cluster_base_node
+    elif network_type=='rp_wireless_cluster':
+        cluster = rp_wireless_cluster
+        cluster_base_node = rp_wireless_cluster_base_node
+    elif network_type=='rp_wired_cluster':
+        cluster = rp_wired_cluster
+        cluster_base_node = rp_wired_cluster_base_node
+
+    return cluster, cluster_base_node
+
+
 # This function will observe the results of the test and count the number of nodes
 # The point of this function is so that one does not have to pre-coordinate the number of nodes prior to running the
 #   script.  The output should report.
@@ -172,6 +208,7 @@ def run_trials(trials=trials_default, db_sizes=db_sizes_default, workloads=workl
                reload_once_per_trial=False,
                time_to_sleep=2,
                table_is_already_loaded=True,
+               num_ops_per_trial=10000,
                verbose=True):
 
     ensure_dir(absolute_path_results)
@@ -241,7 +278,7 @@ def run_trials(trials=trials_default, db_sizes=db_sizes_default, workloads=workl
                               '-p hosts="' + cluster_base_node_of_choice + '" ' \
                               '-P ' + absolute_path_workload + w + \
                               ' -s ' \
-                              '-p operationcount=10000 ' \
+                              '-p operationcount=' + str(num_ops_per_trial) + ' ' \
                               ' > ' + temp_run_file
 
                     cmd_run = [cmd_run0]
@@ -337,6 +374,7 @@ def workloads_from_abramova_paper(verbose=True):
     node_type = 'vm'
     link_type = 'nodal'
     pathname = '/home/daniel/grive/afit/thesis/lchcb/results/exp' + experiment + '_' + nodes + node_type + ram + '/'
+    num_trials = 30
     # Workload e adds records, so the timing is different
     do_workloads_a_and_c = False
     do_workload_e = True
@@ -347,7 +385,7 @@ def workloads_from_abramova_paper(verbose=True):
 
     if do_workloads_a_and_c:
 
-        run_trials(trials=range(1, 31),    # arbitrarily chosen, need a good number to compare replication
+        run_trials(trials=range(1, num_trials + 1),    # arbitrarily chosen, need a good number to compare replication
                    db_sizes=[1000000],     # this is just for naming
                    workloads=['a', 'c'],  # to possible compare against others
                    trials_per_load=1,    # may throw 9 away if there is a significant cache effect into 10 trials
@@ -356,12 +394,13 @@ def workloads_from_abramova_paper(verbose=True):
                    replication_factor_for_filename=1,
                    node_type_for_filename=node_type,
                    lan_type_for_filename=link_type,
-                   ram_for_filename=ram
+                   ram_for_filename=ram,
+
                    )
 
     if do_workload_e:
 
-        run_trials(trials=range(1, 31),    # arbitrarily chosen, need a good number to compare replication
+        run_trials(trials=range(1, num_trials + 1),    # arbitrarily chosen, need a good number to compare replication
                    db_sizes=[1000000],     # seems like a fair number, no need to vary too much, just has to be big
                                           #    enough, this will be the operations for the load
                    workloads=['e'],  # to possible compare against others
@@ -372,11 +411,77 @@ def workloads_from_abramova_paper(verbose=True):
                    node_type_for_filename=node_type,
                    lan_type_for_filename=link_type,
                    ram_for_filename=ram,
-                   reload_once_per_trial=False
+                   reload_once_per_trial=False,
+
                    )
 
     return 0
 
-load_ycsb_usertable(num_records=1000000, start_empty=True, filename='load_file_201612182122')
-workloads_from_abramova_paper()
+def experiment_11_cache_effect():
+
+
+    verbose = True
+    ram = '1GB'
+    experiment = '11'
+    nodes = '6'
+    node_type = 'vm'
+    link_type = 'nodal'
+    pathname = '/home/daniel/grive/afit/thesis/lchcb/results/exp' + experiment + '_' + nodes + node_type + ram + '/'
+    # Workload e adds records, so the timing is different
+    do_load = True
+    do_workloads_a_and_c = True
+    do_workload_e = True
+    num_trials = 120
+    num_ops_per_trial = 1000
+
+
+    if verbose:
+        print "Running Experiment 11: Exploring Cache Effect"
+
+    if do_load:
+        load_ycsb_usertable(num_records=1000000, start_empty=True, filename='load_file_' + datetime.datetime.now().strftime("%y%m%d%I%M"))
+
+
+    if verbose:
+        print "Running..."
+        print "Results will be saved in directory", pathname
+        time.sleep(10)
+
+    if do_workloads_a_and_c:
+
+        run_trials(trials=range(1, num_trials + 1),    # arbitrarily chosen, need a good number to compare replication
+                   db_sizes=[1000000],     # this is just for naming
+                   workloads=['a', 'c'],  # to possible compare against others
+                   trials_per_load=1,    # may throw 9 away if there is a significant cache effect into 10 trials
+                   predicted_number_of_nodes=int(nodes),
+                   absolute_path_results=pathname,
+                   replication_factor_for_filename=1,
+                   node_type_for_filename=node_type,
+                   lan_type_for_filename=link_type,
+                   ram_for_filename=ram,
+                   num_ops_per_trial=num_ops_per_trial
+                   )
+
+    if do_workload_e:
+
+        run_trials(trials=range(1, num_trials + 1),    # arbitrarily chosen, need a good number to compare replication
+                   db_sizes=[1000000],     # seems like a fair number, no need to vary too much, just has to be big
+                                          #    enough, this will be the operations for the load
+                   workloads=['e'],  # to possible compare against others
+                   trials_per_load=1,    # may throw 9 away if there is a significant cache effect into 10 trials
+                   predicted_number_of_nodes=int(nodes),
+                   absolute_path_results=pathname,
+                   replication_factor_for_filename=1,
+                   node_type_for_filename=node_type,
+                   lan_type_for_filename=link_type,
+                   ram_for_filename=ram,
+                   reload_once_per_trial=False,
+                   num_ops_per_trial=num_ops_per_trial
+                   )
+
+    return 0
+
+
+
+experiment_11_cache_effect()
 
