@@ -1,0 +1,23 @@
+com.yahoo.ycsb.DBException: com.datastax.driver.core.exceptions.NoHostAvailableException: All host(s) tried for query failed (tried: /192.168.1.130:9042 (com.datastax.driver.core.exceptions.TransportException: [/192.168.1.130] Cannot connect))
+	at com.yahoo.ycsb.db.CassandraCQLClient.init(CassandraCQLClient.java:193)
+	at com.yahoo.ycsb.DBWrapper.init(DBWrapper.java:99)
+	at com.yahoo.ycsb.ClientThread.run(Client.java:418)
+	at java.lang.Thread.run(Thread.java:745)
+Caused by: com.datastax.driver.core.exceptions.NoHostAvailableException: All host(s) tried for query failed (tried: /192.168.1.130:9042 (com.datastax.driver.core.exceptions.TransportException: [/192.168.1.130] Cannot connect))
+	at com.datastax.driver.core.ControlConnection.reconnectInternal(ControlConnection.java:231)
+	at com.datastax.driver.core.ControlConnection.connect(ControlConnection.java:77)
+	at com.datastax.driver.core.Cluster$Manager.init(Cluster.java:1414)
+	at com.datastax.driver.core.Cluster.getMetadata(Cluster.java:393)
+	at com.yahoo.ycsb.db.CassandraCQLClient.init(CassandraCQLClient.java:180)
+	... 3 more
+[OVERALL], RunTime(ms), 265.0
+[OVERALL], Throughput(ops/sec), 0.0
+[TOTAL_GCS_PS_Scavenge], Count, 0.0
+[TOTAL_GC_TIME_PS_Scavenge], Time(ms), 0.0
+[TOTAL_GC_TIME_%_PS_Scavenge], Time(%), 0.0
+[TOTAL_GCS_PS_MarkSweep], Count, 0.0
+[TOTAL_GC_TIME_PS_MarkSweep], Time(ms), 0.0
+[TOTAL_GC_TIME_%_PS_MarkSweep], Time(%), 0.0
+[TOTAL_GCs], Count, 0.0
+[TOTAL_GC_TIME], Time(ms), 0.0
+[TOTAL_GC_TIME_%], Time(%), 0.0
