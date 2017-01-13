@@ -21,15 +21,23 @@ def produce_graph(fig,
                   html_filename='scatterplot.html',
                   image_filename='plot-image.png',
                   save_image_locally_as_png_=False,
-                  save_image_as_html=True):
+                  save_image_as_html=True,
+                  save_image_as_svg=False,
+                  save_image_as_pdf=False):
 
     if save_image_locally_as_png_:
         save_image_locally_as_png(fig,
                                   save_online=True,
                                   filename=image_filename)
 
+
     if save_image_as_html:
         plotly.offline.plot(fig, filename=html_filename)
+
+    if save_image_as_svg:
+        plotly.offline.plot(fig, filename=html_filename, image_filename=image_filename, image='svg')
+    elif save_image_as_pdf:
+        plotly.offline.plot(fig, filename=html_filename, image_filename=image_filename, image='pdf')
 
 
 # This is a utility function designed specifically for ordering the traces in ascending order of name
@@ -48,6 +56,7 @@ def create_scatter(df,
                    filename='genericfilename.html',
                    image_filename='plot-image',
                    save_image_locally_as_png_=False,
+                   save_image_locally_as_svg_=False,
                    show_zero_line_on_y_axis=False):
 
     # sort because otherwise the connecting lines are all scattered
@@ -120,7 +129,9 @@ def create_scatter(df,
 
     fig = go.Figure(data=data, layout=layout)
 
-    produce_graph(fig, save_image_locally_as_png_=save_image_locally_as_png_,
+    produce_graph(fig,
+                  save_image_locally_as_png_=save_image_locally_as_png_,
+                  save_image_as_svg=save_image_locally_as_svg_,
                   html_filename=filename,
                   image_filename=image_filename)
 
@@ -439,6 +450,8 @@ def calculate_summary(input_csv_file_name='combined_results.csv',
         s = df.median(level=series_to_group_by)[measurement_of_interest]  # This will replace the median
     elif summary_statistic_of_interest == 'variance':
         s = df.var(level=series_to_group_by)[measurement_of_interest]  # This will put the variance in
+    elif summary_statistic_of_interest == 'stdev':
+        s = df.std(level=series_to_group_by)[measurement_of_interest]
     else:
         s = df.median(level=series_to_group_by)[measurement_of_interest]  # Let median be the default calculation
 
