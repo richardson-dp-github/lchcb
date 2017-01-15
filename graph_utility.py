@@ -8,6 +8,17 @@ import plotly
 import plotly.graph_objs as go
 import pandas as pd
 import credentials
+import subprocess
+import os.path
+
+
+# This actually runs the command in the terminal
+#   This is a separate function for convenience so one doesn't have to remember to put the wait down every time.
+def run_command(cmd, verbose=True, cwd='/home/daniel/grive/afit/thesis/lchcb/figures/'):
+    if verbose:
+        print cmd
+    p = subprocess.Popen(cmd, shell=True, cwd=cwd)
+    p.wait()
 
 
 # Given a figure, produce the graph
@@ -17,6 +28,12 @@ import credentials
 #   The file can be saved locally as an html file (.html)
 #    -the option of storing an image is not explored in this particular option
 #    -it results in an obnoxious browser prompt asking one to save
+# The scalable graphics, as opposed to the rasterized ones like .png, have been made a little more difficult,
+#   both by Plotly and Overleaf.  According to my personal experience, Overleaf does not seem to support the svg package
+#   as forums seemed to indicate that it would.  However, I have gotten pdfs to work fine.as
+# Plotly makes it difficult to export as a PDF.  Making a remote procedure call to plotly's servers
+#  to create the pdf using the saveas function results in an 'error'.  As documented, this is because there is a paywall
+#  as indicated by plotly's website.
 def produce_graph(fig,
                   html_filename='scatterplot.html',
                   image_filename='plot-image.png',
@@ -30,14 +47,18 @@ def produce_graph(fig,
                                   save_online=True,
                                   filename=image_filename)
 
+    if save_image_as_pdf:
+        save_image_locally_as_pdf(fig,
+                                  save_online=True,
+                                  filename=image_filename)
+
 
     if save_image_as_html:
         plotly.offline.plot(fig, filename=html_filename)
 
     if save_image_as_svg:
         plotly.offline.plot(fig, filename=html_filename, image_filename=image_filename, image='svg')
-    elif save_image_as_pdf:
-        plotly.offline.plot(fig, filename=html_filename, image_filename=image_filename, image='pdf')
+
 
 
 # This is a utility function designed specifically for ordering the traces in ascending order of name
@@ -128,14 +149,15 @@ def create_scatter(df,
         )
 
     fig = go.Figure(data=data, layout=layout)
-
+    '''
     produce_graph(fig,
                   save_image_locally_as_png_=save_image_locally_as_png_,
                   save_image_as_svg=save_image_locally_as_svg_,
                   html_filename=filename,
                   image_filename=image_filename)
+    '''
 
-    return 0
+    return fig
 
 
 # This function creates a scatter plot of interest
@@ -224,11 +246,14 @@ def create_boxplot(df,
 
     fig = go.Figure(data=data, layout=layout)
 
+    '''
+
     produce_graph(fig, save_image_locally_as_png_=save_image_locally_as_png_,
                   html_filename=filename,
                   image_filename=image_filename)
+    '''
 
-    return 0
+    return fig
 
 # This function creates a scatter plot of interest
 def create_barchart(df,
@@ -291,11 +316,14 @@ def create_barchart(df,
 
     fig = go.Figure(data=data, layout=layout)
 
+    '''
+
     produce_graph(fig, save_image_locally_as_png_=save_image_locally_as_png_,
                   html_filename=filename,
                   image_filename=image_filename)
+    '''
 
-    return 0
+    return fig
 
 # From http://stackoverflow.com/questions/4843173/how-to-check-if-type-of-a-variable-is-string
 def isstring(s):
@@ -337,7 +365,13 @@ def generate_filtered_graph(df=None,
                             image_filename='figures/untitled',
                             image_type='png',
                             type='scatter',
-                            show_zero_line_on_y_axis=False):
+                            show_zero_line_on_y_axis=False,
+                            verbose=True,
+                            html_filename='scatterplot.html',
+                            save_image_locally_as_png_=False,
+                            save_image_as_html=True,
+                            save_image_as_svg=False,
+                            save_image_as_pdf=False):
 
     # Import the csv if no dataframe specified
     if read_from_csv:
@@ -346,9 +380,11 @@ def generate_filtered_graph(df=None,
     if d:
         df = return_filtered_dataframe(df, d)
 
-    print df.head(10)
+    fig = None
+    if verbose:
+        print df.head(10)
     if type == 'scatter':
-        create_scatter(df,
+        fig = create_scatter(df,
                    x_column=x_column,
                    y_column=y_column,
                    s_column=s_column,
@@ -359,7 +395,7 @@ def generate_filtered_graph(df=None,
                    save_image_locally_as_png_=isstring(image_filename),
                    show_zero_line_on_y_axis=show_zero_line_on_y_axis)
     elif type == 'boxplot':
-        create_boxplot(df,
+        fig = create_boxplot(df,
                    x_column=x_column,
                    y_column=y_column,
                    s_column=s_column,
@@ -372,7 +408,7 @@ def generate_filtered_graph(df=None,
                    save_image_locally_as_png_=isstring(image_filename),
                    show_zero_line_on_y_axis=show_zero_line_on_y_axis)
     elif type == 'bar':
-        create_barchart(df,
+        fig = create_barchart(df,
                    x_column=x_column,
                    y_column=y_column,
                    s_column=s_column,
@@ -385,6 +421,20 @@ def generate_filtered_graph(df=None,
                    save_image_locally_as_png_=isstring(image_filename))
     else:
         print "Invalid Chart Type, choose scatter, boxplot, or bar"
+
+    if fig:
+        produce_graph(fig,
+                      html_filename=filename,
+                      image_filename=image_filename,
+                      save_image_locally_as_png_=save_image_locally_as_png_,
+                      save_image_as_html=save_image_as_html,
+                      save_image_as_svg=save_image_as_svg,
+                      save_image_as_pdf=save_image_as_pdf)
+    else:
+        if verbose:
+            print "No figure to produce"
+
+    return 0
 
 
 # Takes dataframe df and plots a histogram
@@ -483,3 +533,23 @@ def save_image_locally_as_png(fig,
             plotly.plotly.image.save_as(fig, filename=filename)
     else:
         print 'invalid filename'
+
+
+# Saves the image locally
+def save_image_locally_as_pdf(fig,
+                              save_online=False,
+                              filename='a-simple-plot.pdf'):
+
+    # This saves file online, assuming a plotly account
+    if '.pdf' not in filename:
+        filename = filename + '.pdf'
+    if save_online:
+            plotly_username = credentials.plotly_credentials['username']
+            plotly_api_code = credentials.plotly_credentials['api_key']
+
+            plotly.plotly.sign_in(plotly_username, plotly_api_code)
+
+            plotly.plotly.image.save_as(fig, filename=filename)
+
+
+

@@ -12,6 +12,12 @@ import glob
 import re
 import shutil
 
+# from local files
+
+import run_ycsb
+# import ycsb_output_to_csv
+# import summarized_graphs
+
 
 # This actually runs the command in the terminal
 #   This is a separate function for convenience so one doesn't have to remember to put the wait down every time.
@@ -216,7 +222,7 @@ def print_cmd_copy_cassandra_config_files_from_laptop_to_other_nodes(list_of_nod
                                                                                     '192.168.1.103',
                                                                                     '192.168.1.104'],
                                                                      laptop_directory='grive/afit/thesis/lchcb/config/',
-                                                                     config_filename='cassandra.yaml',
+                                                                     config_filename='cassandra_config_files/rp_wireless/cassandra.yaml',
                                                                      verbose=True):
     if verbose:
         print "These can be copied into the terminal...then enter the password...."
@@ -361,12 +367,6 @@ def archive_201612181949():
 
 
 
-
-
-
-
-
-
 def archive_201612181927():
     temp_change_file_names(i='_nn3_',
                            newi='_nn5_',
@@ -374,11 +374,6 @@ def archive_201612181927():
     temp_change_file_names(i='_dbs0_',
                            newi='_dbs1000_',
                            directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_5rp1GB/*.txt',)
-
-
-
-
-
 
 def archive_201612181923():
     temp_change_file_names(i='_ram1GB_',
@@ -394,8 +389,73 @@ def archive_201612181906():
                        directory='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1vm2048/*.txt',)
 
 
-
-change_ram_for_all_machines(1024)
 # print_cmd_copy_cassandra_config_files_from_laptop_to_other_nodes()
-#
-#  experimenting_with_dataframes()
+
+def archive_201701090233():
+    print_cmd_copy_cassandra_config_files_from_laptop_to_other_nodes(list_of_nodes=['192.168.1.100',
+                                                                                        '192.168.1.101',
+                                                                                        '192.168.1.102',
+                                                                                        '192.168.1.103',
+                                                                                        '192.168.1.104',
+                                                                                        '192.168.1.109'],
+                                                                         laptop_directory='grive/afit/thesis/lchcb/config/',
+                                                                         config_filename='cassandra_config_files/rp_wired/cassandra.yaml',
+                                                                         verbose=True)
+
+
+def archive_201701090237():
+    temp_change_file_names(i='_nn0_',
+                           newi='_nn1_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp13_1rp1GB/*.txt')
+
+    temp_change_file_names(i='_nn0_',
+                           newi='_nn2_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp13_2rp1GB/*.txt')
+
+
+def archive_201701091824():
+    temp_change_file_names(i='_nn0_',
+                           newi='_nn6_',
+                           directory='/home/daniel/grive/afit/thesis/lchcb/results/exp12_6rp1GB/*.txt')
+
+
+# import plotly.plotly as py
+# fig = {'data': [{'x': [1, 2, 3], 'y': [3, 1, 5], 'type': 'bar'}]}
+# py.image.save_as(figure_or_data=fig, filename='my_image.png', format='png')
+# py.image.save_as(figure_or_data=fig, filename='my_image.jpeg', format='jpeg')
+# py.image.save_as(figure_or_data=fig, filename='my_image.pdf', format='pdf')
+# py.image.save_as(figure_or_data=fig, filename='my_image.svg', format='svg')
+
+# from plotly.offline import plot
+# import plotly.graph_objs as go
+
+# plot([go.Scatter(x=[1, 2, 3], y=[3, 2, 6])], filename='my-graph.html')
+# We can also download an image of the plot by setting the image parameter
+# to the image format we want
+# plot([go.Scatter(x=[1, 2, 3], y=[3, 2, 6])], filename='my-graph.html', image='svg', image_filename='my-graph')
+'''
+run_ycsb.experiment14_workloadi_utility_fn(ram='1GB',
+                                      experiment='15',
+                                      nodes='6',
+                                      node_type='rp',
+                                      link_type='eth',
+                                      num_trials=30,
+                                      cluster_base_node_of_choice='192.168.1.100',
+                                      cluster_of_choice=['192.168.1.100',
+                                                         '192.168.1.101',
+                                                         '192.168.1.102',
+                                                         '192.168.1.103',
+                                                         '192.168.1.104',
+                                                         '192.168.1.109',],
+                                      cluster_description='rp_wired_cluster',
+                                      verbose=True)
+'''
+print_cmd_copy_cassandra_config_files_from_laptop_to_other_nodes(list_of_nodes=['192.168.1.100',
+                                                                                    '192.168.1.101',
+                                                                                    '192.168.1.102',
+                                                                                    '192.168.1.103',
+                                                                                    '192.168.1.104',
+                                                                                    '192.168.1.109'],
+                                                                     laptop_directory='grive/afit/thesis/lchcb/results/',
+                                                                     config_filename='cassandra_config_files/rp_wired/cassandra.yaml',
+                                                                     verbose=True)

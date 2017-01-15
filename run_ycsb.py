@@ -42,6 +42,8 @@ def begin_cassandra_cluster(cluster_of_choice):
     return cluster, session
 
 
+
+
 # based on the configuration
 def select_cluster(network_type=None):
     rp_wired_cluster_base_node = '192.168.1.100'
@@ -51,8 +53,8 @@ def select_cluster(network_type=None):
     vm_cluster = ['192.168.56.100', '192.168.56.101', '192.168.56.102',
                   '192.168.56.103', '192.168.56.104', '192.168.56.105']
 
-    rp_wireless_cluster_base_node = '192.168.1.100'
-    rp_wireless_cluster = ['192.168.1.100', '192.168.1.101', '192.168.1.102']
+    rp_wireless_cluster_base_node = '192.168.1.130'
+    rp_wireless_cluster = ['192.168.1.130', '192.168.1.131', '192.168.1.132']
 
     cluster = None
     cluster_base_node = None
@@ -69,6 +71,7 @@ def select_cluster(network_type=None):
 
     return cluster, cluster_base_node
 
+# cluster, session = begin_cassandra_cluster(select_cluster('rp_wired_cluster')[0])
 
 # This function will observe the results of the test and count the number of nodes
 # The point of this function is so that one does not have to pre-coordinate the number of nodes prior to running the
@@ -110,7 +113,7 @@ def standardized_file_name(path, num_nodes=0, t=9999, w='_UNK_', ld=False, s=0, 
 
 
 # This function assumes the user wants to overwrite any existing YCSB database
-def create_ycsb_database(c=cluster, s=session, rf=3, time_to_sleep=1):
+def create_ycsb_database(c=None, s=None, rf=3, time_to_sleep=1):
     cmd_drop_keyspace = "drop keyspace if exists ycsb"
     cmd_create_keyspace = "create keyspace if not exists ycsb " \
                           "WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor': " + str(rf) + " }"
@@ -146,17 +149,27 @@ def ensure_dir(f):
 
 
 # Prerequisites: The YCSB keyspace and ycsb.usertable already need to be created
-def load_ycsb_usertable(num_records=10,
+def load_ycsb_usertable(num_records=None,
                         start_empty=False,
                         absolute_path_ycsb=absolute_path_ycsb,
                         absolute_path_results=absolute_path_here+'results/',
                         filename='temp_ld_res.txt',
-                        verbose=True):
+                        cluster_base_node_of_choice='192.168.1.100',
+                        cluster_of_choice=None,
+                        workload='a',
+                        verbose=True,
+                        core_workload_insertion_retry_limit=15,
+                        core_workload_insertion_retry_interval=15,
+                        session=None,
+                        threads=None):
+
+    if not cluster_of_choice:
+        cluster_of_choice = ['192.168.56.100', '192.168.56.101', '192.168.56.102',
+                             '192.168.56.103', '192.168.56.104', '192.168.56.105']
+
     ensure_dir(absolute_path_results)
     s = num_records
-    core_workload_insertion_retry_limit=15
-    core_workload_insertion_retry_interval=15
-    w = 'a'    # for loading, it doesn't matter, one of workload a through f just has to be selected
+    w = workload    # for loading, it doesn't matter, one of workload a through f just has to be selected
 
     if start_empty:
         if verbose:
@@ -171,8 +184,9 @@ def load_ycsb_usertable(num_records=10,
               ' -p core_workload_insertion_retry_limit=' + str(core_workload_insertion_retry_limit) + ' ' \
               ' -p core_workload_insertion_retry_interval=' + str(core_workload_insertion_retry_interval) + ' ' \
               ' -P ' + absolute_path_workload + w +  \
-              ' -s ' \
-              ' -p recordcount=' + str(s) + ' > ' + \
+              ' -s ' + \
+              ((' -threads ' + str(threads)) if threads else '') + \
+              ((' -p recordcount=' + str(s)) if s else '') + ' > ' + \
               output_file
 
     cmd_ld = [cmd_ld0]
@@ -194,7 +208,13 @@ def run_trials(trials=trials_default, db_sizes=db_sizes_default, workloads=workl
                time_to_sleep=2,
                table_is_already_loaded=True,
                num_ops_per_trial=10000,
+               cluster_base_node_of_choice='192.168.1.100',
+               cluster_of_choice=None,
                verbose=True):
+
+    if not cluster_of_choice:
+        cluster_of_choice = ['192.168.56.100', '192.168.56.101', '192.168.56.102',
+                             '192.168.56.103', '192.168.56.104', '192.168.56.105']
 
     ensure_dir(absolute_path_results)
 
@@ -351,18 +371,22 @@ def vary_replication():
 
 # This will run the workloads.
 # The actual nature of the cluster (what type of nodes, etc.) must be controlled outside of this function
-def workloads_from_abramova_paper(verbose=True):
+def workloads_from_abramova_paper(ram='1GB',
+                                  experiment='12',
+                                  nodes='6',
+                                  node_type='rp',
+                                  link_type='wlan',
+                                  num_trials=30,
+                                  do_workloads_a_and_c=False,
+                                  do_workload_e=True,
+                                  cluster_base_node_of_choice='192.168.1.100',
+                                  verbose=True):
 
-    ram = '1GB'
-    experiment = '10'
-    nodes = '1'
-    node_type = 'vm'
-    link_type = 'nodal'
+
     pathname = '/home/daniel/grive/afit/thesis/lchcb/results/exp' + experiment + '_' + nodes + node_type + ram + '/'
-    num_trials = 30
+
     # Workload e adds records, so the timing is different
-    do_workloads_a_and_c = False
-    do_workload_e = True
+
     if verbose:
         print "Running..."
         print "Results will be saved in directory", pathname
@@ -380,6 +404,7 @@ def workloads_from_abramova_paper(verbose=True):
                    node_type_for_filename=node_type,
                    lan_type_for_filename=link_type,
                    ram_for_filename=ram,
+                   cluster_base_node_of_choice=cluster_base_node_of_choice,
 
                    )
 
@@ -397,20 +422,19 @@ def workloads_from_abramova_paper(verbose=True):
                    lan_type_for_filename=link_type,
                    ram_for_filename=ram,
                    reload_once_per_trial=False,
-
+                   cluster_base_node_of_choice=cluster_base_node_of_choice
                    )
 
     return 0
 
 def experiment_11_cache_effect():
 
-
     verbose = True
     ram = '1GB'
     experiment = '11'
-    nodes = '6'
-    node_type = 'vm'
-    link_type = 'nodal'
+    nodes = '1'
+    node_type = 'rp'
+    link_type = 'wlan'
     pathname = '/home/daniel/grive/afit/thesis/lchcb/results/exp' + experiment + '_' + nodes + node_type + ram + '/'
     # Workload e adds records, so the timing is different
     do_load = True
@@ -419,13 +443,11 @@ def experiment_11_cache_effect():
     num_trials = 120
     num_ops_per_trial = 1000
 
-
     if verbose:
         print "Running Experiment 11: Exploring Cache Effect"
 
     if do_load:
         load_ycsb_usertable(num_records=1000000, start_empty=True, filename='load_file_' + datetime.datetime.now().strftime("%y%m%d%I%M"))
-
 
     if verbose:
         print "Running..."
@@ -467,6 +489,75 @@ def experiment_11_cache_effect():
     return 0
 
 
+# This will run the workloads.
+# The actual nature of the cluster (what type of nodes, etc.) must be controlled outside of this function
+def experiment14_workloadi_utility_fn(ram='1GB',
+                                      experiment='14',
+                                      nodes='1',
+                                      node_type='vm',
+                                      link_type='nodal',
+                                      num_trials=30,
+                                      cluster_base_node_of_choice='192.168.56.100',
+                                      cluster_of_choice=None,
+                                      cluster_description='vm_cluster',
+                                      verbose=True):
 
-experiment_11_cache_effect()
+    if not cluster_of_choice:
+        cluster_of_choice = ['192.168.56.100', '192.168.56.101', '192.168.56.102',
+                             '192.168.56.103', '192.168.56.104', '192.168.56.105']
 
+    pathname = '/home/daniel/grive/afit/thesis/lchcb/results/exp' + experiment + '_' + nodes + node_type + ram + '/'
+
+    # Workload e adds records, so the timing is different
+
+    workload = 'i'
+
+    # Connect to the database
+    if verbose:
+        print "Connecting to the cluster...", cluster_description
+    cluster, session = begin_cassandra_cluster(select_cluster(cluster_description)[0])
+    if verbose:
+        print "Database "
+
+    print "Creating keyspace ycsb and table usertable..."
+    create_ycsb_database(c=cluster, s=session, rf=1, time_to_sleep=1)
+
+    if verbose:
+        print "Loading the initial data..."
+        print "Results will be saved in directory", pathname
+        time.sleep(10)
+
+    # This is the original load
+    load_ycsb_usertable(num_records=None,
+                        start_empty=True,
+                        absolute_path_ycsb=absolute_path_ycsb,
+                        absolute_path_results=absolute_path_here+'results/',
+                        filename='temp_ld_res.txt',
+                        cluster_base_node_of_choice=cluster_base_node_of_choice,
+                        cluster_of_choice=cluster_of_choice,
+                        workload=workload,
+                        verbose=True,
+                        core_workload_insertion_retry_limit=15,
+                        core_workload_insertion_retry_interval=15,
+                        session=session,
+                        threads=20)
+
+    if verbose:
+        print "Running trials, quantity: ", str(num_trials)
+        print "Results will be saved in directory", pathname
+
+    run_trials(trials=range(1, num_trials + 1),    # arbitrarily chosen, need a good number to compare replication
+               db_sizes=[1000000],     # this is just for naming
+               workloads=[workload],  # to possible compare against others
+               trials_per_load=1,    # may throw 9 away if there is a significant cache effect into 10 trials
+               predicted_number_of_nodes=int(nodes),
+               absolute_path_results=pathname,
+               replication_factor_for_filename=1,
+               node_type_for_filename=node_type,
+               lan_type_for_filename=link_type,
+               ram_for_filename=ram,
+               cluster_base_node_of_choice=cluster_base_node_of_choice
+               )
+
+
+    return 0
