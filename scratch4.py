@@ -31,8 +31,8 @@ def summary_statistics_varying_RAM_for_1_3_and_6_node_configurations():
                                               label='summary_statistics_for_{}_config'.format(n))
     send_to_clipboard(x=x)
 
-
-summary_statistics_varying_RAM_for_1_3_and_6_node_configurations()
+# rqa.set_display_format_for_floats(format_='{:.6g}'.format)
+print rqa.return_summary_statistics_for_rp()
 
 
 

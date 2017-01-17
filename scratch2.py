@@ -2,6 +2,8 @@ import numpy as np
 import graph_utility as sg
 import pandas as pd
 import research_questions_figure_generation as rqfg
+import analysis_forjp as a4jp
+import cassandra_stress_output_to_csv as cso2csv
 # import run_ycsb
 
 
@@ -97,7 +99,10 @@ def run_all_graphs_for_workload_e():
 '''
 run_all_graphs_for_workload_c()
 run_all_graphs_for_workload_e()
-'''
+
 rqfg.research_question_1_figure_9()
 rqfg.research_question_2_figure_9()
 rqfg.research_question_3_figure_9()
+'''
+
+cso2csv.cassandra_stress_output_2_csv()

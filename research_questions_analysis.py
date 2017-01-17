@@ -85,6 +85,39 @@ def return_summary_statistics_for_vms(csv_file='combined_results_revised.csv',
     return v.to_latex(index=False)
 
 
+def return_summary_statistics_for_rp(csv_file='combined_results_revised.csv',
+                                      measurement_of_interest = '[OVERALL] RunTime(ms)',
+                                      d=None,
+                                      wl='a',
+                                      nn=1,
+                                      nt='rp',
+                                      nm='eth'):
+
+    if not d:
+        d={'nm': nm,
+           'nt': nt,
+           'wl': wl,
+           't': range(10, 30+1)}
+
+    df = pd.read_csv(csv_file)
+    df_filtered = rfd(df, d=d)
+
+    df = {}
+    s = {}
+    for k, v in {'1': 1, '3': 3, '6': 6}.iteritems():
+        df[k] = rfd(df_filtered, d={'nn': v})[measurement_of_interest]
+        s[k] = df[k].describe()
+
+    for x in s.itervalues():
+        x['range'] = x['max'] - x['min']
+
+    v = pd.DataFrame(s).reset_index()
+    set_display_format_for_floats(
+        format_='{:.2g}'.format
+    )
+    return v.to_latex(index=False)
+
+
 # This function absorbs the responsibility of spacing out the tables
 def return_latex_tables_for_vm_summary_statistics(wl='a'):
     xx = ''

@@ -700,6 +700,8 @@ def graph_wired_only_replication_factor():
 
 
 
+
+
 # configure the graph
 interval = 0
 x_code = time_
@@ -717,7 +719,3 @@ graph_reads_only_graph_compaction()
 graph_wired_only_compaction()
 graph_wireless_only_compaction()
 '''
-
-import extractdata
-extractdata.extract_data(file0='test_5nodes_201610260920.html')
-graph_wired_only_replication_factor()
