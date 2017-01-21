@@ -1,0 +1,70 @@
+Datacenter: dc1; Host: /192.168.1.130; Rack: rack1
+Datacenter: dc1; Host: /192.168.1.131; Rack: rack1
+Datacenter: dc1; Host: /192.168.1.132; Rack: rack1
+Error reading key: user5817015822998783737
+Error reading key: user5924086538056781122
+Error reading key: user1929277050312078858
+Error reading key: user813420680881880843
+Error reading key: user911405817396529251
+Error reading key: user8838414643419287561
+Error reading key: user3573410791115575481
+Error reading key: user4126884568089250975
+Error reading key: user5430795629885271357
+Error reading key: user3707425928679354135
+Error reading key: user3857507808911614434
+Error reading key: user6621154921724976568
+Error reading key: user7531346480424068200
+Error reading key: user8131099216906959410
+Error reading key: user1587631005831506311
+Error reading key: user4039037303088162071
+Error reading key: user6881563014134440516
+Error reading key: user8585480718294095748
+Error reading key: user8916052459251665076
+Error reading key: user7525514478567377864
+Error reading key: user5857991379824882769
+[OVERALL], RunTime(ms), 140316.0
+[OVERALL], Throughput(ops/sec), 71.26771002594144
+[TOTAL_GCS_PS_Scavenge], Count, 7.0
+[TOTAL_GC_TIME_PS_Scavenge], Time(ms), 37.0
+[TOTAL_GC_TIME_%_PS_Scavenge], Time(%), 0.026369052709598335
+[TOTAL_GCS_PS_MarkSweep], Count, 0.0
+[TOTAL_GC_TIME_PS_MarkSweep], Time(ms), 0.0
+[TOTAL_GC_TIME_%_PS_MarkSweep], Time(%), 0.0
+[TOTAL_GCs], Count, 7.0
+[TOTAL_GC_TIME], Time(ms), 37.0
+[TOTAL_GC_TIME_%], Time(%), 0.026369052709598335
+[READ], Operations, 48.0
+[READ], AverageLatency(us), 24310.666666666668
+[READ], MinLatency(us), 9520.0
+[READ], MaxLatency(us), 82111.0
+[READ], 95thPercentileLatency(us), 41439.0
+[READ], 99thPercentileLatency(us), 82111.0
+[READ], Return=OK, 48
+[READ], Return=NOT_FOUND, 10
+[READ], Return=ERROR, 21
+[CLEANUP], Operations, 1.0
+[CLEANUP], AverageLatency(us), 2210816.0
+[CLEANUP], MinLatency(us), 2209792.0
+[CLEANUP], MaxLatency(us), 2211839.0
+[CLEANUP], 95thPercentileLatency(us), 2211839.0
+[CLEANUP], 99thPercentileLatency(us), 2211839.0
+[INSERT], Operations, 6556.0
+[INSERT], AverageLatency(us), 12136.661683953631
+[INSERT], MinLatency(us), 4744.0
+[INSERT], MaxLatency(us), 690687.0
+[INSERT], 95thPercentileLatency(us), 15175.0
+[INSERT], 99thPercentileLatency(us), 23311.0
+[INSERT], Return=OK, 6556
+[INSERT], Return=ERROR, 3365
+[READ-FAILED], Operations, 31.0
+[READ-FAILED], AverageLatency(us), 11770.064516129032
+[READ-FAILED], MinLatency(us), 6244.0
+[READ-FAILED], MaxLatency(us), 18271.0
+[READ-FAILED], 95thPercentileLatency(us), 16047.0
+[READ-FAILED], 99thPercentileLatency(us), 18271.0
+[INSERT-FAILED], Operations, 3365.0
+[INSERT-FAILED], AverageLatency(us), 13050.596136701337
+[INSERT-FAILED], MinLatency(us), 8072.0
+[INSERT-FAILED], MaxLatency(us), 663039.0
+[INSERT-FAILED], 95thPercentileLatency(us), 14903.0
+[INSERT-FAILED], 99thPercentileLatency(us), 21583.0
