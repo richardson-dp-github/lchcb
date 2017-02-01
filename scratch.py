@@ -11,6 +11,8 @@ import csv
 import glob
 import re
 import shutil
+import ycsb_output_to_csv
+import research_questions_figure_generation
 
 # from local files
 
@@ -232,6 +234,7 @@ def print_cmd_copy_cassandra_config_files_from_laptop_to_other_nodes(list_of_nod
 
         cmd = "scp " + laptop_directory + config_filename + " pi@" + host + ":cassandra/apache-cassandra-3.9/conf/"
         print cmd
+        print ''
         # run_command(cmd, cwd='.')
 
     return 0
@@ -433,29 +436,306 @@ def archive_201701091824():
 # We can also download an image of the plot by setting the image parameter
 # to the image format we want
 # plot([go.Scatter(x=[1, 2, 3], y=[3, 2, 6])], filename='my-graph.html', image='svg', image_filename='my-graph')
-'''
-run_ycsb.experiment14_workloadi_utility_fn(ram='1GB',
-                                      experiment='15',
-                                      nodes='6',
-                                      node_type='rp',
-                                      link_type='eth',
+
+def archive_201701231259():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='1GB',
+                                                  experiment='16',
+                                                  nodes='6',
+                                                  node_type='rp',
+                                                  link_type='wlan',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.1.130',
+                                                  cluster_of_choice=['192.168.1.130',
+                                                                     '192.168.1.131',
+                                                                     '192.168.1.132',
+                                                                     '192.168.1.133',
+                                                                     '192.168.1.134',
+                                                                     '192.168.1.139',],
+                                                  cluster_description='rp_wireless_cluster',
+                                                  verbose=True)
+
+
+def archive_201701252204():
+    filename = 'combined_results_revised.csv'
+    directory='/home/daniel/grive/afit/thesis/lchcb/results/exp1[0,2,3,4,5,6]*/*.txt'
+    ycsb_output_to_csv.start_new_file_and_append_records(directory=directory,
+                                      csvfilename=filename)
+
+
+def archive_201701260828():
+    for j in [15, 16]:
+        for k in [1,2,3,4,5,6]:
+            temp_change_file_names(i='_nn0_',
+                                   newi='_nn{}_'.format(k),
+                                   directory='/home/daniel/grive/afit/thesis/lchcb/results/exp{}_{}rp1GB/*.txt'.format(j, k),
+                                   time_to_sleep=1)
+
+
+def archive_201701260848():
+    research_questions_figure_generation.research_question_4_figure_4()
+    research_questions_figure_generation.research_question_4_figure_5()
+    research_questions_figure_generation.research_question_4_figure_6()
+    research_questions_figure_generation.research_question_4_figure_7()
+    research_questions_figure_generation.research_question_4_figure_8()
+    research_questions_figure_generation.research_question_4_figure_9()
+    research_questions_figure_generation.research_question_4_figure_10()
+
+
+def archive_201701261128():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='2GB',
+                                                  experiment='14',
+                                                  nodes='6',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+
+def archive_201701261131():
+    change_ram_for_all_machines(2048)
+
+
+def archive_201701261216():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='2GB',
+                                                  experiment='14',
+                                                  nodes='5',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+
+def archive_201701261216():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='2GB',
+                                                  experiment='14',
+                                                  nodes='4',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+def archive_201701261306():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='2GB',
+                                                  experiment='14',
+                                                  nodes='3',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+
+def archive_201701261332():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='2GB',
+                                                  experiment='14',
+                                                  nodes='2',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+def archive_201701261401():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='2GB',
+                                                  experiment='14',
+                                                  nodes='1',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+
+def archive_201701261425():
+    change_ram_for_all_machines(4096)
+
+
+def archive_201701261426():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='4GB',
+                                                  experiment='14',
+                                                  nodes='1',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+def archive_201701261538():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='4GB',
+                                                  experiment='14',
+                                                  nodes='2',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+def archive_201701261555():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='4GB',
+                                                  experiment='14',
+                                                  nodes='3',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+
+def archive_201701261614():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='4GB',
+                                                  experiment='14',
+                                                  nodes='4',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+def archive_201701261644():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='4GB',
+                                                  experiment='14',
+                                                  nodes='5',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+
+
+def archive_201701261723():
+    run_ycsb.experiment14_workloadi_utility_fn(ram='4GB',
+                                                  experiment='14',
+                                                  nodes='6',
+                                                  node_type='vm',
+                                                  link_type='nodal',
+                                                  num_trials=30,
+                                                  cluster_base_node_of_choice='192.168.56.100',
+                                                  cluster_of_choice=['192.168.56.100',
+                                                                     '192.168.56.101',
+                                                                     '192.168.56.102',
+                                                                     '192.168.56.103',
+                                                                     '192.168.56.104',
+                                                                     '192.168.56.105',],
+                                                  cluster_description='vm_cluster',
+                                                  verbose=True)
+
+
+def archive_201701292228():
+    run_ycsb.load_ycsb_usertable(num_records=None,
+                        start_empty=False,
+                        filename='temp_ld_res.txt',
+                        cluster_base_node_of_choice='192.168.1.130',
+                        cluster_of_choice=None,
+                        workload='e',
+                        verbose=True,
+                        core_workload_insertion_retry_limit=15,
+                        core_workload_insertion_retry_interval=15,
+                        session=None,
+                        threads=2)
+    run_ycsb.workloads_from_abramova_paper(ram='1GB',
+                                           experiment='12',
+                                           nodes='6',
+                                           node_type='rp',
+                                           link_type='wlan',
+                                           num_trials=30,
+                                           do_workloads_a_and_c=False,
+                                           do_workload_e=True,
+                                           cluster_base_node_of_choice='192.168.1.130',
+                                           verbose=True)
+
+def archive_201701311436():
+    run_ycsb.experiment10_workload_utility_fn_makeup(ram='1GB',
+                                      experiment='10',
+                                      nodes='5',
+                                      node_type='vm',
+                                      link_type='nodal',
                                       num_trials=30,
-                                      cluster_base_node_of_choice='192.168.1.100',
-                                      cluster_of_choice=['192.168.1.100',
-                                                         '192.168.1.101',
-                                                         '192.168.1.102',
-                                                         '192.168.1.103',
-                                                         '192.168.1.104',
-                                                         '192.168.1.109',],
-                                      cluster_description='rp_wired_cluster',
-                                      verbose=True)
-'''
-print_cmd_copy_cassandra_config_files_from_laptop_to_other_nodes(list_of_nodes=['192.168.1.100',
-                                                                                    '192.168.1.101',
-                                                                                    '192.168.1.102',
-                                                                                    '192.168.1.103',
-                                                                                    '192.168.1.104',
-                                                                                    '192.168.1.109'],
-                                                                     laptop_directory='grive/afit/thesis/lchcb/results/',
-                                                                     config_filename='cassandra_config_files/rp_wired/cassandra.yaml',
-                                                                     verbose=True)
+                                      cluster_base_node_of_choice='192.168.56.100',
+                                      cluster_of_choice=None,
+                                      cluster_description='vm_cluster',
+                                      verbose=True,
+                                      workloads=None)
+
+archive_201701311436()
+# change_ram_for_all_machines(1024)

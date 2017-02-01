@@ -9,8 +9,28 @@ import plotly.graph_objs as go
 import pandas as pd
 import credentials
 import subprocess
+import numpy
 import os.path
+import glob
 
+
+def return_convert_cmd(filename_without_extension):
+    return 'rsvg-convert -f pdf -o {}.pdf {}.svg'.format(filename_without_extension, filename_without_extension)
+
+
+# doesn't like parentheses, and I totally don't care.  Filenames shouldn't have parentheses in them.
+def convert_all_svgs_to_pdf(directory='figures/*.svg'):
+    filenames = glob.iglob(directory)
+    for filename in filenames:
+        filename_without_extension = filename.split('/')[-1].replace('.svg', '')
+        if not os.path.exists('{}.pdf'.format(filename_without_extension)):
+            cmd = return_convert_cmd(filename_without_extension=filename_without_extension)
+            run_command(cmd=cmd, cwd=os.path.dirname(filename))
+
+
+
+def return_desired_font_size():
+    return 18
 
 # This actually runs the command in the terminal
 #   This is a separate function for convenience so one doesn't have to remember to put the wait down every time.
@@ -19,6 +39,18 @@ def run_command(cmd, verbose=True, cwd='/home/daniel/grive/afit/thesis/lchcb/fig
         print cmd
     p = subprocess.Popen(cmd, shell=True, cwd=cwd)
     p.wait()
+
+# Meant for boxplots...will sort the series by means in descending order
+def plot_sorted_means(trace0=None,
+                      title="Graph Title",
+                      y_axis_title='operations per second',
+                      boxmode='group'):
+
+    plotly.offline.plot({
+                            "data": sorted(trace0, key=lambda m: numpy.mean(m.y), reverse=True),
+                            "layout": go.Layout(title=title,
+                                                yaxis=dict(title=y_axis_title),
+                                                boxmode=boxmode)})
 
 
 # Given a figure, produce the graph
@@ -40,7 +72,8 @@ def produce_graph(fig,
                   save_image_locally_as_png_=False,
                   save_image_as_html=True,
                   save_image_as_svg=False,
-                  save_image_as_pdf=False):
+                  save_image_as_pdf=False,
+                  ):
 
     if save_image_locally_as_png_:
         save_image_locally_as_png(fig,
@@ -52,12 +85,13 @@ def produce_graph(fig,
                                   save_online=True,
                                   filename=image_filename)
 
-
-    if save_image_as_html:
-        plotly.offline.plot(fig, filename=html_filename)
-
     if save_image_as_svg:
         plotly.offline.plot(fig, filename=html_filename, image_filename=image_filename, image='svg')
+    elif save_image_as_html:
+        plotly.offline.plot(fig, filename=html_filename)
+
+
+
 
 
 
@@ -137,7 +171,7 @@ def create_scatter(df,
             title=title,
             yaxis=dict(title=y_column),
             xaxis=dict(title=x_column),
-            font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
+            font=dict(family='Courier New, monospace', size=return_desired_font_size(), color='#7f7f7f')
         )
 
     if show_zero_line_on_y_axis: # Override
@@ -145,7 +179,7 @@ def create_scatter(df,
             title=title,
             yaxis=dict(title=y_column, rangemode='tozero'),
             xaxis=dict(title=x_column),
-            font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
+            font=dict(family='Courier New, monospace', size=return_desired_font_size(), color='#7f7f7f')
         )
 
     fig = go.Figure(data=data, layout=layout)
@@ -168,11 +202,15 @@ def create_boxplot(df,
                    marker_size=15,
                    title='Generic Title',
                    mode='markers',
+                   boxmean=False,
+                   boxpoints=False,
                    series_name='series_name',
                    filename='genericfilename.html',
                    image_filename='plot-image',
                    save_image_locally_as_png_=False,
-                   show_zero_line_on_y_axis=False):
+                   show_zero_line_on_y_axis=False,
+                   sort_by_means=False
+                   ):
 
     # sort because otherwise the connecting lines are all scattered
     if not s_column:
@@ -194,16 +232,19 @@ def create_boxplot(df,
                             x=x,
                             y=y,
                             #mode=mode,
-                            name=s
+                            name=s,
+                            boxmean=boxmean,
+                            boxpoints=boxpoints
                                     )
             )
         data.sort(key=trace_name)
+
 
         layout = go.Layout(
             title=title,
             yaxis=dict(title=y_column),
             xaxis=dict(title=x_column),
-            font=dict(family='Courier New, monospace', size=24, color='#7f7f7f'),
+            font=dict(family='Courier New, monospace', size=return_desired_font_size(), color='#7f7f7f'),
             boxmode='group'
         )
 
@@ -212,7 +253,7 @@ def create_boxplot(df,
                 title=title,
                 yaxis=dict(title=y_column, rangemode='tozero'),
                 xaxis=dict(title=x_column),
-                font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
+                font=dict(family='Courier New, monospace', size=return_desired_font_size(), color='#7f7f7f')
             )
 
 
@@ -233,16 +274,18 @@ def create_boxplot(df,
                 title=title,
                 yaxis=dict(title=y_column),
                 xaxis=dict(title=x_column),
-                font=dict(family='Courier New, monospace', size=24, color='#7f7f7f'))
+                font=dict(family='Courier New, monospace', size=return_desired_font_size(), color='#7f7f7f'))
 
         if show_zero_line_on_y_axis:  # Override
             layout = go.Layout(
                 title=title,
                 yaxis=dict(title=y_column, rangemode='tozero'),
                 xaxis=dict(title=x_column),
-                font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
+                font=dict(family='Courier New, monospace', size=return_desired_font_size(), color='#7f7f7f')
             )
 
+    if sort_by_means:
+            data = sorted(data, key=lambda m: numpy.mean(m.y), reverse=True)
 
     fig = go.Figure(data=data, layout=layout)
 
@@ -311,7 +354,7 @@ def create_barchart(df,
             title=title,
             yaxis=dict(title=y_column),
             xaxis=dict(title=x_column),
-            font=dict(family='Courier New, monospace', size=24, color='#7f7f7f')
+            font=dict(family='Courier New, monospace', size=return_desired_font_size(), color='#7f7f7f')
         )
 
     fig = go.Figure(data=data, layout=layout)
@@ -361,6 +404,8 @@ def generate_filtered_graph(df=None,
                             s_column='ram',
                             title='Execution Time for 10k operations',
                             mode='markers',
+                            boxmean=False,
+                            boxpoints=False,
                             filename='figures/rq1_fig6.html',
                             image_filename='figures/untitled',
                             image_type='png',
@@ -371,7 +416,8 @@ def generate_filtered_graph(df=None,
                             save_image_locally_as_png_=False,
                             save_image_as_html=True,
                             save_image_as_svg=False,
-                            save_image_as_pdf=False):
+                            save_image_as_pdf=False,
+                            sort_by_means=False):
 
     # Import the csv if no dataframe specified
     if read_from_csv:
@@ -402,11 +448,15 @@ def generate_filtered_graph(df=None,
                    marker_size=15,
                    title=title,
                    mode=mode,
+                   boxmean=boxmean,
+                   boxpoints=boxpoints,
                    series_name='series_name',
                    filename=filename,
                    image_filename=image_filename,
                    save_image_locally_as_png_=isstring(image_filename),
-                   show_zero_line_on_y_axis=show_zero_line_on_y_axis)
+                   show_zero_line_on_y_axis=show_zero_line_on_y_axis,
+                   sort_by_means=sort_by_means
+                   )
     elif type == 'bar':
         fig = create_barchart(df,
                    x_column=x_column,
@@ -429,7 +479,8 @@ def generate_filtered_graph(df=None,
                       save_image_locally_as_png_=save_image_locally_as_png_,
                       save_image_as_html=save_image_as_html,
                       save_image_as_svg=save_image_as_svg,
-                      save_image_as_pdf=save_image_as_pdf)
+                      save_image_as_pdf=save_image_as_pdf,
+                      )
     else:
         if verbose:
             print "No figure to produce"
@@ -447,7 +498,7 @@ def create_histogram(df,
                      data_series_name='2GB RAM',
                      barmode='overlay',
                      font_name='Courier New, monospace',
-                     font_size=24,
+                     font_size=return_desired_font_size(),
                      font_color='#7f7f7f'
                      ):
 

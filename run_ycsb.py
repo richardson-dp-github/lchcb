@@ -113,7 +113,9 @@ def standardized_file_name(path, num_nodes=0, t=9999, w='_UNK_', ld=False, s=0, 
 
 
 # This function assumes the user wants to overwrite any existing YCSB database
-def create_ycsb_database(c=None, s=None, rf=3, time_to_sleep=1):
+def create_ycsb_database(c=None, s=None, rf=3, time_to_sleep=10, verbose=True, do_not_drop_keyspace=False,
+                         do_not_recreate_keyspace=False,
+                         do_not_recreate_table=False):
     cmd_drop_keyspace = "drop keyspace if exists ycsb"
     cmd_create_keyspace = "create keyspace if not exists ycsb " \
                           "WITH REPLICATION = {'class' : 'SimpleStrategy', 'replication_factor': " + str(rf) + " }"
@@ -129,16 +131,31 @@ def create_ycsb_database(c=None, s=None, rf=3, time_to_sleep=1):
                        "field7 varchar," \
                        "field8 varchar," \
                        "field9 varchar);"
-    print "Executing Command", cmd_drop_keyspace
-    time.sleep(time_to_sleep)
-    msg0 = s.execute(cmd_drop_keyspace)
-    print "Executing Command", cmd_create_keyspace
-    time.sleep(time_to_sleep)
-    msg1 = s.execute(cmd_create_keyspace)
-    time.sleep(time_to_sleep)
-    print "Executing Command", create_table_cmd, '...'
-    time.sleep(time_to_sleep)
-    msg2 = s.execute(create_table_cmd)
+    if do_not_drop_keyspace:
+        print "Not dropping keyspace...moving on..."
+    else:
+        print "Executing Command", cmd_drop_keyspace
+        time.sleep(time_to_sleep)
+        msg0 = s.execute(cmd_drop_keyspace)
+        if verbose:
+            print msg0
+    if do_not_recreate_keyspace:
+        print "Not recreating the keyspace...moving on"
+    else:
+        print "Executing Command", cmd_create_keyspace
+        time.sleep(time_to_sleep)
+        msg1 = s.execute(cmd_create_keyspace)
+        if verbose:
+            print msg1
+        time.sleep(time_to_sleep)
+    if do_not_recreate_table:
+        print "Not recreating the table...moving on..."
+    else:
+        print "Executing Command", create_table_cmd, '...'
+        time.sleep(time_to_sleep)
+        msg2 = s.execute(create_table_cmd)
+        if verbose:
+            print msg2
 
 
 # Taken from http://stackoverflow.com/questions/273192/how-to-check-if-a-directory-exists-and-create-it-if-necessary
@@ -302,10 +319,10 @@ def run_trials(trials=trials_default, db_sizes=db_sizes_default, workloads=workl
 
 # This actually runs the command in the terminal
 #   This is a separate function for convenience so one doesn't have to remember to put the wait down every time.
-def run_command(cmd, verbose=True):
+def run_command(cmd, verbose=True, cwd='/home/daniel/Documents/thesis/YCSB/'):
     if verbose:
         print cmd
-    p = subprocess.Popen(cmd, shell=True, cwd='/home/daniel/Documents/thesis/YCSB/')
+    p = subprocess.Popen(cmd, shell=True, cwd=cwd)
     p.wait()
 
 
@@ -520,7 +537,8 @@ def experiment14_workloadi_utility_fn(ram='1GB',
         print "Database "
 
     print "Creating keyspace ycsb and table usertable..."
-    create_ycsb_database(c=cluster, s=session, rf=1, time_to_sleep=1)
+    create_ycsb_database(c=cluster, s=session, rf=1, time_to_sleep=5, do_not_drop_keyspace=True,
+                         do_not_recreate_keyspace=True, do_not_recreate_table=True)
 
     if verbose:
         print "Loading the initial data..."
@@ -540,11 +558,12 @@ def experiment14_workloadi_utility_fn(ram='1GB',
                         core_workload_insertion_retry_limit=15,
                         core_workload_insertion_retry_interval=15,
                         session=session,
-                        threads=20)
+                        threads=30)
 
     if verbose:
         print "Running trials, quantity: ", str(num_trials)
         print "Results will be saved in directory", pathname
+        time.sleep(10)
 
     run_trials(trials=range(1, num_trials + 1),    # arbitrarily chosen, need a good number to compare replication
                db_sizes=[1000000],     # this is just for naming
@@ -556,8 +575,92 @@ def experiment14_workloadi_utility_fn(ram='1GB',
                node_type_for_filename=node_type,
                lan_type_for_filename=link_type,
                ram_for_filename=ram,
-               cluster_base_node_of_choice=cluster_base_node_of_choice
+               cluster_base_node_of_choice=cluster_base_node_of_choice,
+               cluster_of_choice=cluster_of_choice
                )
+
+
+    return 0
+
+
+# Reworking 2, 3, 5
+# Virtual Machines 1GB, 2GB, 4GB
+def experiment10_workload_utility_fn_makeup(ram='1GB',
+                                      experiment='10',
+                                      nodes='1',
+                                      node_type='vm',
+                                      link_type='nodal',
+                                      num_trials=30,
+                                      cluster_base_node_of_choice='192.168.56.100',
+                                      cluster_of_choice=None,
+                                      cluster_description='vm_cluster',
+                                      verbose=True,
+                                      workloads=None):
+
+    if not cluster_of_choice:
+        cluster_of_choice = ['192.168.56.100', '192.168.56.101', '192.168.56.102',
+                             '192.168.56.103', '192.168.56.104', '192.168.56.105']
+
+    if not workloads:
+        workloads = ['a','c','e']
+
+    pathname = '/home/daniel/grive/afit/thesis/lchcb/results/exp' + experiment + '_' + nodes + node_type + ram + '/'
+
+    # Workload e adds records, so the timing is different
+
+
+
+    # Connect to the database
+    if verbose:
+        print "Connecting to the cluster...", cluster_description
+    cluster, session = begin_cassandra_cluster(select_cluster(cluster_description)[0])
+    if verbose:
+        print "Database "
+
+    print "Creating keyspace ycsb and table usertable..."
+    create_ycsb_database(c=cluster, s=session, rf=1, time_to_sleep=5, do_not_drop_keyspace=True,
+                         do_not_recreate_keyspace=True, do_not_recreate_table=True)
+
+    for workload in workloads:
+
+        if verbose:
+            print "Loading the initial data..."
+            print "Results will be saved in directory", pathname
+            time.sleep(10)
+
+        # This is the original load
+        load_ycsb_usertable(num_records=1000000,
+                            start_empty=True,
+                            absolute_path_ycsb=absolute_path_ycsb,
+                            absolute_path_results=absolute_path_here+'results/',
+                            filename='temp_ld_res.txt',
+                            cluster_base_node_of_choice=cluster_base_node_of_choice,
+                            cluster_of_choice=cluster_of_choice,
+                            workload=workload,
+                            verbose=True,
+                            core_workload_insertion_retry_limit=15,
+                            core_workload_insertion_retry_interval=15,
+                            session=session,
+                            threads=30)
+
+        if verbose:
+            print "Running trials, quantity: ", str(num_trials)
+            print "Results will be saved in directory", pathname
+            time.sleep(10)
+
+        run_trials(trials=range(1, num_trials + 1),    # arbitrarily chosen, need a good number to compare replication
+                   db_sizes=[1000000],     # this is just for naming
+                   workloads=[workload],  # to possible compare against others
+                   trials_per_load=1,    # may throw 9 away if there is a significant cache effect into 10 trials
+                   predicted_number_of_nodes=int(nodes),
+                   absolute_path_results=pathname,
+                   replication_factor_for_filename=1,
+                   node_type_for_filename=node_type,
+                   lan_type_for_filename=link_type,
+                   ram_for_filename=ram,
+                   cluster_base_node_of_choice=cluster_base_node_of_choice,
+                   cluster_of_choice=cluster_of_choice
+                   )
 
 
     return 0

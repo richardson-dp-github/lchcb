@@ -2,9 +2,14 @@ import numpy as np
 import graph_utility as sg
 import pandas as pd
 import research_questions_figure_generation as rqfg
+import research_questions_analysis as rqa
 import analysis_forjp as a4jp
 import cassandra_stress_output_to_csv as cso2csv
+import cassandra_stress_analysis as csa
+import glob
+from run_ycsb import run_command
 # import run_ycsb
+import os.path
 
 
 def test_return_filtered_dataframe():
@@ -77,24 +82,53 @@ def run_all_graphs_for_workload_a():
     rqfg.research_question_1_figure_7()
     rqfg.research_question_1_figure_8()
     rqfg.research_question_1_figure_9()
+    rqfg.research_question_1_figure_10()
 
 
 def run_all_graphs_for_workload_c():
+    rqfg.research_question_2_figure_1()
     rqfg.research_question_2_figure_4()
     rqfg.research_question_2_figure_5()
     rqfg.research_question_2_figure_6()
     rqfg.research_question_2_figure_7()
     rqfg.research_question_2_figure_8()
     rqfg.research_question_2_figure_9()
+    rqfg.research_question_2_figure_10()
+
 
 
 def run_all_graphs_for_workload_e():
+    rqfg.research_question_3_figure_1()
     rqfg.research_question_3_figure_4()
     rqfg.research_question_3_figure_5()
     rqfg.research_question_3_figure_6()
     rqfg.research_question_3_figure_7()
     rqfg.research_question_3_figure_8()
     rqfg.research_question_3_figure_9()
+    rqfg.research_question_3_figure_10()
+
+
+def return_convert_cmd(filename_without_extension):
+    return 'rsvg-convert -f pdf -o {}.pdf {}.svg'.format(filename_without_extension, filename_without_extension)
+
+
+# doesn't like parentheses, and I totally don't care.  Filenames shouldn't have parentheses in them.
+def convert_all_svgs_to_pdf(directory='figures/*.svg'):
+    filenames = glob.iglob(directory)
+    for filename in filenames:
+        filename_without_extension = filename.split('/')[-1].replace('.svg', '')
+        if not os.path.exists('{}.pdf'.format(filename_without_extension)):
+            cmd = return_convert_cmd(filename_without_extension=filename_without_extension)
+            run_command(cmd=cmd, cwd=os.path.dirname(filename))
+
+
+
+'''
+for i in ['3','4']:
+    generate_cassandra_stress_graphs(graph_of_choice=i)
+'''
+
+
 
 '''
 run_all_graphs_for_workload_c()
@@ -104,5 +138,46 @@ rqfg.research_question_1_figure_9()
 rqfg.research_question_2_figure_9()
 rqfg.research_question_3_figure_9()
 '''
+'''
+cso2csv.cassandra_stress_output_2_csv(csvfilename='results/exp0_cstress/cassandra_stress_results_compression_strategy.csv',
+                                      html_file_from_which_to_extract='old/test_compression_ops.html',
+                                      extract_from_html=True)
+'''
+'''
+cso2csv.cassandra_stress_output_2_csv(csvfilename='results/exp0_cstress/cassandra_stress_results_compression_strategy.csv')
 
-cso2csv.cassandra_stress_output_2_csv()
+
+print csa.return_summary_statistics()
+'''
+
+'''
+run_all_graphs_for_workload_a()
+run_all_graphs_for_workload_c()
+run_all_graphs_for_workload_e()
+'''
+#rqfg.research_question_1_figure_1()
+#rqfg.research_question_2_figure_1()
+#rqfg.research_question_3_figure_1()
+
+# rqfg.research_question_1_figure_2()
+#rqfg.research_question_1_figure_10()
+#rqfg.research_question_2_figure_10()
+#rqfg.research_question_3_figure_10()
+
+#for i in ['2', '3', '4']:
+#    csa.generate_cassandra_stress_graphs(i)
+
+#convert_all_svgs_to_pdf()
+
+'''
+workload = 'e'
+print rqa.summary_statistics_varying_RAM_for_1_3_and_6_node_configurations(wl=workload)
+print rqa.anova_for_variation_in_ram(wl=workload, nn=1)
+print rqa.anova_for_variation_in_ram(wl=workload, nn=3)
+print rqa.anova_for_variation_in_ram(wl=workload, nn=6)
+print rqa.summary_statistics_rp_for_1_3_and_6_node_configurations(wl=workload)
+print rqa.generate_bound_statements_rp_wired(wl=workload)
+print rqa.generate_bound_statements_rp_wired_and_wireless(wl=workload)
+'''
+
+

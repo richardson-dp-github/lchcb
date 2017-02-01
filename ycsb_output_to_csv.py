@@ -264,8 +264,3 @@ def temp_4():
 
 # filename='/home/daniel/grive/afit/thesis/lchcb/results/exp10_1rp1GB/_ntrp_nmeth_nn1_ram1GB_wla_dbs1000_rf1_t1_lt1_run_res.txt'
 # print filename, get_record_parameter_portion(filename)
-
-filename = 'combined_results_revised.csv'
-directory='/home/daniel/grive/afit/thesis/lchcb/results/exp1[0,2,3]*/*.txt'
-start_new_file_and_append_records(directory=directory,
-                                  csvfilename=filename)

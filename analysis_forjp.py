@@ -39,9 +39,9 @@ def link_type(s):
     return 'none'
 
 def op_type(s):
-    for i in ['insert1', 'simple', 'insert_5_simple1_5']:
+    for i in ['insert_1', 'simple', 'insert_5_simple1_5']:
         if i in s:
-            if i == 'insert1':
+            if i == 'insert_1':
                 return 'writes_only'
             elif i == 'simple':
                 return 'reads_only'

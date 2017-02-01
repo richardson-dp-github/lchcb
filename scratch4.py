@@ -17,23 +17,26 @@ def send_to_clipboard(x):
     print x
 
 
-def summary_statistics_varying_RAM_for_1_3_and_6_node_configurations():
-    rqa.set_display_format_for_floats(format_='{:.6g}'.format)
-    x = ''
 
-    for n in [1, 3, 6]:
-        total_max, total_min, total_range = rqa.return_max_min_range_for_all_levels_of_ram(nn=n)
-        caption = 'Summary Statistics for {}-Node Configuration. ' \
-                  'All values represented fall between {} ms and {} ms, or rather within a span of {} ms.' \
-                  ''.format(n, total_min, total_max, total_range)
-        x += rqa.return_embedded_latex_tables(rqa.return_summary_statistics_for_vms(nn=n),
-                                              caption=caption,
-                                              label='summary_statistics_for_{}_config'.format(n))
-    send_to_clipboard(x=x)
 
 # rqa.set_display_format_for_floats(format_='{:.6g}'.format)
-print rqa.return_summary_statistics_for_rp()
+'''
+x= rqa.return_embedded_latex_tables(latex_table_as_string=rqa.return_summary_statistics_for_rp(),
+                                       label='rp_summary',
+                                       caption='These are the summary statistics for Workload A '
+                                               'executed on the Raspberry Pi wired local area network')
+'''
 
 
+
+# summary_statistics_varying_RAM_for_1_3_and_6_node_configurations(wl='c')
+
+# print rqa.anova_for_variation_in_ram(wl='c', nn=1)
+# print rqa.anova_for_variation_in_ram(wl='c', nn=3)
+# print rqa.anova_for_variation_in_ram(wl='c', nn=6)
+# print rqa.summary_statistics_rp_for_1_3_and_6_node_configurations(wl='c')
+
+# send_to_clipboard(x)
 
 # The whole clipboard thing was from this http://stackoverflow.com/questions/579687/how-do-i-copy-a-string-to-the-clipboard-on-windows-using-python
+

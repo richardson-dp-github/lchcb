@@ -1,6 +1,7 @@
 import data
 from analysis_forjp import compaction_type, compression_type, op_type, replication_factor, link_type
 import csv
+from extractdata import extract_data
 
 # Copied and pasted from
 # http://stackoverflow.com/questions/38987/how-to-merge-two-python-dictionaries-in-a-single-expression
@@ -19,7 +20,14 @@ def get_field_names_from_keys(list_of_dictionaries):
                 list_of_headers.append(key)
     return list_of_headers
 
-def cassandra_stress_output_2_csv(csvfilename='oogabooga.csv'):
+def cassandra_stress_output_2_csv(csvfilename='oogabooga.csv',
+                                  extract_from_html=False,
+                                  html_file_from_which_to_extract='whateverwhatever.html'):
+
+    # Perform extraction if desired.
+    if extract_from_html:
+        extract_data(html_file_from_which_to_extract)
+    import data
 
     # Gather Data
     d = data
