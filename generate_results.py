@@ -4,6 +4,19 @@ from graph_utility import return_filtered_dataframe as rfd
 from research_questions_analysis import *
 
 
+def decode_abbreviation_from_data_for_narrative(code):
+    d = {
+        'rp': 'limited hardware, Raspberry Pi',
+        'vm': 'virtual machine',
+        'eth': 'Ethernet',
+        'wlan': '802.11a/b/g/n',
+        'nodal': 'nodal'
+    }
+
+    return d[code]
+
+
+
 def there_exists_comparison_data(workload):
     if workload in ['a', 'c', 'e']:
         return True
@@ -28,7 +41,7 @@ def return_embedded_latex_tables(latex_table_as_string='',
     x += r'\begin{table}' + '\n'
     x += latex_table_as_string
 
-    x += '\caption{'+caption+'}' + '\n'
+    x += '\caption{' + caption + '}' + '\n'
     x += '\label{table:' + label + '}' + '\n'
     x += '\end{table}' + '\n'
 
@@ -36,36 +49,84 @@ def return_embedded_latex_tables(latex_table_as_string='',
     return xx
 
 
-def return_desired_summary_statistics_table(comparison_description, workload,
+def return_desired_summary_statistics_table(
                                             csv_file='combined_results_revised.csv',
                                             measurement_of_interest = '[OVERALL] RunTime(ms)',
-                                            d=None,
                                             wl='a',
-                                            nn=1,
                                             nt='rp',
                                             nm='eth',
                                             ram='1GB'):
 
-    table = {
-        'vm_v_ref': summary_statistics_varying_RAM_for_1_3_and_6_node_configurations(wl=workload),
-        'ram_v_ram': summary_statistics_varying_RAM_for_1_3_and_6_node_configurations(wl=workload),
-        'rp_only': summary_statistics_rp_for_all_cluster_sizes(wl=workload),
-        'rp_v_ref': summary_statistics_rp_for_1_3_and_6_node_configurations(wl=workload),
-        'rp_v_vm': 'No summary statistics at this time',
-        'wlan_only': 'No summary statistics at this time',
-        'wlan_v_eth': 'No summary statistics at this time'
+    caption = 'Summary Statistics for Workload {workload} performed on a {ram} {nt} node over a(n)' \
+              '{nm} network.  Except for count, ' \
+              'all values are in milliseconds.' \
+              ''.format(workload=wl.capitalize(),
+                        nt=decode_abbreviation_from_data_for_narrative(nt),
+                        nm=decode_abbreviation_from_data_for_narrative(nm),
+                        ram=ram)
+
+    label = 'summary_table_{wl}_{ram}_{nt}_{nm}'.format(wl=wl,
+                                                        ram=ram,
+                                                        nt=nt,
+                                                        nm=nm)
+
+    x = return_summary_statistics_tabular(workload=wl,
+                                          nt=nt,
+                                          ram=ram,
+                                          nm=nm,
+                                          csv_file=csv_file,
+                                          measurement_of_interest=measurement_of_interest)
+
+    xx = return_embedded_latex_tables(latex_table_as_string=x,
+                                      label=label,
+                                      caption=caption)
+
+    return xx
+
+
+def insert_summary_statistics_table(comparison_description, workload):
+
+    rest_of_vms = ''
+
+    for i in ['1GB', '4GB']:
+        rest_of_vms += return_desired_summary_statistics_table(
+                                            csv_file='combined_results_revised.csv',
+                                            measurement_of_interest = '[OVERALL] RunTime(ms)',
+                                            wl=workload,
+                                            nt='vm',
+                                            nm='nodal',
+                                            ram=i)
+        rest_of_vms += '\n'
+
+    d = {
+        'vm_v_ref': return_desired_summary_statistics_table(
+                                            csv_file='combined_results_revised.csv',
+                                            measurement_of_interest = '[OVERALL] RunTime(ms)',
+                                            wl=workload,
+                                            nt='vm',
+                                            nm='nodal',
+                                            ram='2GB'),
+        'ram_v_ram': rest_of_vms,
+        'rp_only': return_desired_summary_statistics_table(
+                                            csv_file='combined_results_revised.csv',
+                                            measurement_of_interest = '[OVERALL] RunTime(ms)',
+                                            wl=workload,
+                                            nt='rp',
+                                            nm='eth',
+                                            ram='1GB'),
+        'wlan_only': return_desired_summary_statistics_table(
+                                            csv_file='combined_results_revised.csv',
+                                            measurement_of_interest = '[OVERALL] RunTime(ms)',
+                                            wl=workload,
+                                            nt='rp',
+                                            nm='wlan',
+                                            ram='1GB'),
+        'rp_v_ref': '',
+        'rp_v_vm': '',
+        'wlan_v_eth': ''
     }
-    caption = 'Summary Statistics for Workload {workload} performed on {.  Except for count,' \
-              'all values are in milliseconds.'.format(workload=workload.capitalize())
-    return_summary_statistics_tabular(workload=wl,
-                                    nt=nt,
-                                    ram=ram,
-                                    nm=nm,
-                                    csv_file=csv_file,
-                                    measurement_of_interest=measurement_of_interest)
 
-
-    return table[comparison_description]
+    return d[comparison_description]
 
 
 # This will be just a dictionary with the text of all initial observations.
@@ -355,6 +416,54 @@ def insert_figures(comparison_type, workload, width=5.5):
     return text
 
 
+# This function returns the sentences that refer to the tables.  It is important that they be standardized and without
+# flaws in every instantiation.  They will be repeated often, so it is best just to insert them as a function.
+def get_sentences_to_refer_to_appropriate_summary_tables(comparison_description, workload):
+    s = '\n'
+    if 'vm' in comparison_description or 'ram' in comparison_description:
+        s += 'The summary statistics for Workload {workload} performed on the virtual machines ' \
+             'are in Tables {ref_1gb}, {ref_2gb}, and {ref_4gb}.' \
+             ''.format(workload=workload.capitalize(),
+                       ref_1gb='\\ref{{{}}}'.format('table:summary_table_{wl}_{ram}_{nt}_{nm}'.format(wl=workload,
+                                                                                               ram='1GB',
+                                                                                               nt='vm',
+                                                                                               nm='nodal')),
+                       ref_2gb='\\ref{{{}}}'.format('table:summary_table_{wl}_{ram}_{nt}_{nm}'.format(wl=workload,
+                                                                                               ram='2GB',
+                                                                                               nt='vm',
+                                                                                               nm='nodal')),
+                       ref_4gb='\\ref{{{}}}'.format('table:summary_table_{wl}_{ram}_{nt}_{nm}'.format(wl=workload,
+                                                                                               ram='4GB',
+                                                                                               nt='vm',
+                                                                                               nm='nodal'))
+                       )
+        s += '\n'
+    if 'rp' in comparison_description or 'eth' in comparison_description:
+        s += 'The summary statistics for Workload {workload} performed on the limited hardware, ' \
+             'Raspberry Pi, on the Ethernet local area network ' \
+             'are in Table {ref_rp_eth}.' \
+             ''.format(workload=workload.capitalize(),
+                       ref_rp_eth='\\ref{{{}}}'.format('table:summary_table_{wl}_{ram}_{nt}_{nm}'.format(wl=workload,
+                                                                                    ram='1GB',
+                                                                                    nt='rp',
+                                                                                    nm='eth')))
+        s += '\n'
+    if 'wlan' in comparison_description:
+        s += 'The summary statistics for Workload {workload} performed on the limited hardware, ' \
+             'Raspberry Pi, on the Ethernet local area network ' \
+             'are in Table {ref_wlan}.' \
+             ''.format(workload=workload.capitalize(),
+                       ref_wlan='\\ref{{{}}}'.format('table:summary_table_{wl}_{ram}_{nt}_{nm}'.format(wl=workload,
+                                                                                                ram='1GB',
+                                                                                                nt='rp',
+                                                                                                nm='wlan')))
+        s += '\n'
+
+    return s
+
+
+
+
 def update_initial_observation(comparison_type, workload):
     s = '\n'
     s += r'\subsubsection{Initial Observations}'
@@ -370,6 +479,8 @@ def update_analysis(comparison_description, workload):
     s = '\n'
     s += r'\subsubsection{Analysis}'
     s += '\n'
+    s += 'This section will take a more in-depth look at the data.'
+    s += '\n'
     s += speedup_analysis_tables(comparison_description=comparison_description,
                                  workload=workload,
                                  csv_file='combined_results_revised.csv')
@@ -383,7 +494,12 @@ def update_ordinal_statistics(comparison_type, workload):
     s = '\n'
     s += r'\subsubsection{Ordinal Statistics}'
     s += '\n'
-    s += return_desired_summary_statistics_table(comparison_description=comparison_type, workload=workload)
+    s += r'This section will describe some of the summary statistics that describe the data.  '
+    s += '\n'
+    s += get_sentences_to_refer_to_appropriate_summary_tables(comparison_description=comparison_type, workload=workload)
+    s += insert_summary_statistics_table(comparison_description=comparison_type, workload=workload)
+
+    s += '\n'
 
     return s
 
@@ -414,15 +530,15 @@ def return_entire_results_section():
     s = '\n\n'
     s += r'\chapter{Results and Evaluation}'
     s += '\n'
-    # for j in ['a', 'c', 'e', 'i']:
-    for j in ['i']:
+    for j in ['a', 'c', 'e', 'i']:
+    # for j in ['i']:
         s += return_single_results_section(j)
 
     return s
 
 
 def save_results_section():
-
+    set_display_format_for_floats()
     f = open('doc/Chapters/Results-all.tex', 'w')
     f.write(return_entire_results_section())
 

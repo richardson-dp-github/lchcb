@@ -42,17 +42,9 @@ def return_df_that_includes_speedup():
     return table
 
 
-# gr.save_results_section()
+gr.save_results_section()
 
 
 # rqfg.research_question_4_figure_8()
 
 # gu.convert_all_svgs_to_pdf()
-
-
-print rqa.return_summary_statistics_table(workload='a',
-                                    nt='vm',
-                                    ram='1GB',
-                                    nm='nodal',
-                                    csv_file='combined_results_revised.csv',
-                                    measurement_of_interest = '[OVERALL] RunTime(ms)')

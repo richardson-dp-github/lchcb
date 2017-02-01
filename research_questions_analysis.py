@@ -160,7 +160,8 @@ def return_embedded_latex_tables(latex_table_as_string='',
     xx = ''
 
     x = '\n\n'
-    x += r'\begin{table}' + '\n'
+    x += r'\begin{table}[H]' + '\n'
+    x += r'\centering' + '\n'
     x += latex_table_as_string
 
     x += '\caption{'+caption+'}' + '\n'
@@ -463,11 +464,16 @@ def return_entire_speedup_table(workload,
 
         speedup_dictionary = return_speedup_stats(x, y)
 
-        speedup_dictionary['cluster_size'] = cluster_size
+        if cluster_size == [1, 2, 3, 4, 5, 6]:
+            speedup_dictionary['cluster_size'] = 'OVERALL'
+        else:
+            speedup_dictionary['cluster_size'] = cluster_size
 
         dd.append(speedup_dictionary)
 
     table_in_dataframe_format = pd.DataFrame(dd)
+
+    table_in_dataframe_format = table_in_dataframe_format.transpose()
 
     return table_in_dataframe_format.to_latex()
 
@@ -504,16 +510,18 @@ def speedup_analysis_tables(csv_file, comparison_description, workload,
 
             df_filtered['ram_in_gb'] = df_filtered['ram'].map(convert_ram_text_to_gb)
 
-            x = df_filtered['ram_in_gb']
-            y = df_filtered[measurement_of_interest]
-            slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+            if not df_filtered.empty:
 
-            dd['slope'].append(slope)
-            dd['intercept'].append(intercept)
-            dd['r_value'].append(r_value)
-            dd['p_value'].append(p_value)
-            dd['std_err'].append(std_err)
-            dd['cluster_size'].append(cluster_size)
+                x = df_filtered['ram_in_gb']
+                y = df_filtered[measurement_of_interest]
+                slope, intercept, r_value, p_value, std_err = stats.linregress(x, y)
+
+                dd['slope'].append(slope)
+                dd['intercept'].append(intercept)
+                dd['r_value'].append(r_value)
+                dd['p_value'].append(p_value)
+                dd['std_err'].append(std_err)
+                dd['cluster_size'].append(cluster_size)
 
         dd = pd.DataFrame(dd)
 
@@ -679,6 +687,8 @@ def speedup_analysis_tables(csv_file, comparison_description, workload,
                                 measurement_of_interest='[OVERALL] RunTime(ms)',
                                 csv_file=csv_file)
 
+
+
         insert1 = return_embedded_latex_tables(latex_table_as_string=entire_speedup_table,
                                                caption=caption_for_speedup,
                                                label=label_for_speedup)
@@ -694,6 +704,8 @@ def return_summary_statistics_tabular(workload='a',
                                     nm='nodal',
                                     csv_file='combined_results_revised.csv',
                                     measurement_of_interest = '[OVERALL] RunTime(ms)'):
+
+
 
     ss = []
 
