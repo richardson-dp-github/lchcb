@@ -1,0 +1,57 @@
+\contentsline {table}{\numberline {1}{\ignorespaces This table describes the predefined workloads available from the \gls {ycsb}\relax }}{13}{table.caption.18}
+\contentsline {table}{\numberline {2}{\ignorespaces Raspberry Pi Alternatives, Depending on Application\relax }}{22}{table.caption.31}
+\contentsline {table}{\numberline {3}{\ignorespaces Results from \cite {Abramova2014} for 1 million record size database\relax }}{28}{table.caption.36}
+\contentsline {table}{\numberline {4}{\ignorespaces Specifications for SD Cards \cite {SanDiskCard}\relax }}{33}{table.caption.40}
+\contentsline {table}{\numberline {5}{\ignorespaces Standard \gls {ycsb} workloads used in this methodology. Workload A consists of 50 percent reads and 50 percent updates. Workload C consists of 100 percent reads. Workload E consists of 100 percent scans.\relax }}{36}{table.caption.43}
+\contentsline {table}{\numberline {6}{\ignorespaces Standard \gls {ycsb} workloads used in this methodology. Workload A consists of 50 percent reads and 50 percent updates. Workload C consists of 100 percent reads. Workload E consists of 100 percent scans. In addition, a custom workload I is summarized, which consists of 99 percent writes and 1 percent reads to represent \gls {iot}.\relax }}{36}{table.caption.44}
+\contentsline {table}{\numberline {7}{\ignorespaces This table summarizes each network topology that was explored in each research question. The \gls {ram} was varied on the Virtual Machines. It was not of interest to attempt to vary the \gls {ram} on the Raspberry Pi nodes.\relax }}{39}{table.caption.45}
+\contentsline {table}{\numberline {8}{\ignorespaces This table describes the \gls {ip} addresses in order to paint a further detailed understanding of network set up. The netmask is 255.255.255.0\relax }}{41}{table.caption.46}
+\contentsline {table}{\numberline {9}{\ignorespaces This table describes the \gls {ip} addresses in order to paint a further detailed understanding of network set up. The netmask is 255.255.255.0\relax }}{41}{table.caption.47}
+\contentsline {table}{\numberline {10}{\ignorespaces This table describes the \gls {ip} addresses in order to paint a further detailed understanding of network set up. The netmask is 255.255.255.0\relax }}{42}{table.caption.49}
+\contentsline {table}{\numberline {11}{\ignorespaces Summary Statistics for Workload A performed on a 2GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{48}{table.caption.54}
+\contentsline {table}{\numberline {12}{\ignorespaces Summary Statistics for Workload A performed on a 1GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{49}{table.caption.59}
+\contentsline {table}{\numberline {13}{\ignorespaces Summary Statistics for Workload A performed on a 4GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{49}{table.caption.60}
+\contentsline {table}{\numberline {14}{\ignorespaces Linear Regression over amount of RAM\relax }}{50}{table.caption.62}
+\contentsline {table}{\numberline {16}{\ignorespaces Linear Regression over Cluster Size, Workload a\relax }}{51}{table.caption.68}
+\contentsline {table}{\numberline {15}{\ignorespaces Summary Statistics for Workload A performed on a 1GB limited hardware, Raspberry Pi node over a(n)Ethernet network. Except for count, all values are in milliseconds.\relax }}{52}{table.caption.66}
+\contentsline {table}{\numberline {17}{\ignorespaces Linear Regression over the effect of limited hardware, Workload A\relax }}{54}{table.caption.76}
+\contentsline {table}{\numberline {18}{\ignorespaces Speedup over the effect of limited hardware, Workload A\relax }}{54}{table.caption.77}
+\contentsline {table}{\numberline {19}{\ignorespaces Summary Statistics for Workload A performed on a 1GB limited hardware, Raspberry Pi node over a(n)802.11a/b/g/n network. Except for count, all values are in milliseconds.\relax }}{56}{table.caption.81}
+\contentsline {table}{\numberline {20}{\ignorespaces Linear Regression over Cluster Size, Workload a\relax }}{56}{table.caption.83}
+\contentsline {table}{\numberline {21}{\ignorespaces Linear Regression over the effect of 802.11 links, Workload A\relax }}{58}{table.caption.89}
+\contentsline {table}{\numberline {22}{\ignorespaces Speedup over the effect of 802.11 links, Workload A\relax }}{59}{table.caption.90}
+\contentsline {table}{\numberline {23}{\ignorespaces Summary Statistics for Workload C performed on a 2GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{62}{table.caption.95}
+\contentsline {table}{\numberline {24}{\ignorespaces Summary Statistics for Workload C performed on a 1GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{62}{table.caption.100}
+\contentsline {table}{\numberline {25}{\ignorespaces Summary Statistics for Workload C performed on a 4GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{62}{table.caption.101}
+\contentsline {table}{\numberline {26}{\ignorespaces Linear Regression over amount of RAM\relax }}{63}{table.caption.103}
+\contentsline {table}{\numberline {28}{\ignorespaces Linear Regression over Cluster Size, Workload c\relax }}{64}{table.caption.109}
+\contentsline {table}{\numberline {27}{\ignorespaces Summary Statistics for Workload C performed on a 1GB limited hardware, Raspberry Pi node over a(n)Ethernet network. Except for count, all values are in milliseconds.\relax }}{65}{table.caption.107}
+\contentsline {table}{\numberline {29}{\ignorespaces Linear Regression over the effect of limited hardware, Workload C\relax }}{67}{table.caption.117}
+\contentsline {table}{\numberline {30}{\ignorespaces Speedup over the effect of limited hardware, Workload C\relax }}{67}{table.caption.118}
+\contentsline {table}{\numberline {31}{\ignorespaces Summary Statistics for Workload C performed on a 1GB limited hardware, Raspberry Pi node over a(n)802.11a/b/g/n network. Except for count, all values are in milliseconds.\relax }}{69}{table.caption.122}
+\contentsline {table}{\numberline {32}{\ignorespaces Linear Regression over Cluster Size, Workload c\relax }}{69}{table.caption.124}
+\contentsline {table}{\numberline {33}{\ignorespaces Linear Regression over the effect of 802.11 links, Workload C\relax }}{71}{table.caption.130}
+\contentsline {table}{\numberline {34}{\ignorespaces Speedup over the effect of 802.11 links, Workload C\relax }}{72}{table.caption.131}
+\contentsline {table}{\numberline {35}{\ignorespaces Summary Statistics for Workload E performed on a 2GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{75}{table.caption.136}
+\contentsline {table}{\numberline {36}{\ignorespaces Summary Statistics for Workload E performed on a 1GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{75}{table.caption.141}
+\contentsline {table}{\numberline {37}{\ignorespaces Summary Statistics for Workload E performed on a 4GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{75}{table.caption.142}
+\contentsline {table}{\numberline {38}{\ignorespaces Linear Regression over amount of RAM\relax }}{76}{table.caption.144}
+\contentsline {table}{\numberline {40}{\ignorespaces Linear Regression over Cluster Size, Workload e\relax }}{77}{table.caption.150}
+\contentsline {table}{\numberline {39}{\ignorespaces Summary Statistics for Workload E performed on a 1GB limited hardware, Raspberry Pi node over a(n)Ethernet network. Except for count, all values are in milliseconds.\relax }}{78}{table.caption.148}
+\contentsline {table}{\numberline {41}{\ignorespaces Linear Regression over the effect of limited hardware, Workload E\relax }}{80}{table.caption.158}
+\contentsline {table}{\numberline {42}{\ignorespaces Speedup over the effect of limited hardware, Workload E\relax }}{80}{table.caption.159}
+\contentsline {table}{\numberline {43}{\ignorespaces Summary Statistics for Workload E performed on a 1GB limited hardware, Raspberry Pi node over a(n)802.11a/b/g/n network. Except for count, all values are in milliseconds.\relax }}{82}{table.caption.163}
+\contentsline {table}{\numberline {44}{\ignorespaces Linear Regression over Cluster Size, Workload e\relax }}{82}{table.caption.165}
+\contentsline {table}{\numberline {45}{\ignorespaces Linear Regression over the effect of 802.11 links, Workload E\relax }}{84}{table.caption.171}
+\contentsline {table}{\numberline {46}{\ignorespaces Speedup over the effect of 802.11 links, Workload E\relax }}{85}{table.caption.172}
+\contentsline {table}{\numberline {47}{\ignorespaces Summary Statistics for Workload I performed on a 1GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{86}{table.caption.176}
+\contentsline {table}{\numberline {48}{\ignorespaces Summary Statistics for Workload I performed on a 4GB virtual machine node over a(n)nodal network. Except for count, all values are in milliseconds.\relax }}{86}{table.caption.177}
+\contentsline {table}{\numberline {49}{\ignorespaces Linear Regression over amount of RAM\relax }}{87}{table.caption.179}
+\contentsline {table}{\numberline {50}{\ignorespaces Summary Statistics for Workload I performed on a 1GB limited hardware, Raspberry Pi node over a(n)Ethernet network. Except for count, all values are in milliseconds.\relax }}{89}{table.caption.183}
+\contentsline {table}{\numberline {51}{\ignorespaces Linear Regression over Cluster Size, Workload i\relax }}{89}{table.caption.185}
+\contentsline {table}{\numberline {52}{\ignorespaces Linear Regression over the effect of limited hardware, Workload I\relax }}{90}{table.caption.189}
+\contentsline {table}{\numberline {53}{\ignorespaces Speedup over the effect of limited hardware, Workload I\relax }}{90}{table.caption.190}
+\contentsline {table}{\numberline {55}{\ignorespaces Linear Regression over Cluster Size, Workload i\relax }}{92}{table.caption.196}
+\contentsline {table}{\numberline {54}{\ignorespaces Summary Statistics for Workload I performed on a 1GB limited hardware, Raspberry Pi node over a(n)802.11a/b/g/n network. Except for count, all values are in milliseconds.\relax }}{93}{table.caption.194}
+\contentsline {table}{\numberline {56}{\ignorespaces Linear Regression over the effect of 802.11 links, Workload I\relax }}{93}{table.caption.202}
+\contentsline {table}{\numberline {57}{\ignorespaces Speedup over the effect of 802.11 links, Workload I\relax }}{94}{table.caption.203}

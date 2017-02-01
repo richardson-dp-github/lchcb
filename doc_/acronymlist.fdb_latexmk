@@ -1,0 +1,11 @@
+# Fdb version 3
+["latex"] 1485123555 "acronymlist.tex" "acronymlist.dvi" "acronymlist" 1485123559
+  "/etc/texmf/web2c/texmf.cnf" 1483896345 1101 af7716885e081ab43982cab7b4672c1a ""
+  "/usr/share/texlive/texmf-dist/web2c/texmf.cnf" 1458942643 31351 b32c45dce4a01cb7b53ed90c546614ca ""
+  "/usr/share/texmf/web2c/texmf.cnf" 1458942643 31351 b32c45dce4a01cb7b53ed90c546614ca ""
+  "/var/lib/texmf/web2c/pdftex/latex.fmt" 1483896405 3853365 e617791debb4818fddab5a71faf888b0 ""
+  "acronymlist.aux" 1485122653 8 a94a2480d3289e625eea47cd1b285758 ""
+  "acronymlist.tex" 1485118249 1648 47671a105b6324702b1904dfa7fd1ebe ""
+  (generated)
+  "acronymlist.dvi"
+  "acronymlist.log"

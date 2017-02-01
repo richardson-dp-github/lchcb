@@ -1,0 +1,164 @@
+\chapter{Introduction}
+
+\section{Background and Motivation}
+
+There is a trend that information technology and electronics generally become cheaper, powerful, and physically smaller as time progresses.  Open source software and limited hardware like the Raspberry Pi embody this trend.  Since information technology costs can limit the innovation of small companies, non-profits, or municipal agencies, such technology has and continues to lower barriers to entry for applied computing, both in terms of required knowledge and cost. Databases are no exception, and it is of interest to port distributed database technology to these lower cost nodes.  At the time of this writing, distributed databases like Cassandra are normally associated with large capacity nodes.
+
+Using Cassandra on nodes like the Raspberry Pi series in \gls{iot} is not without its challenges. First, as one might expect, the computing resources are much more limited in such hardware. The Raspberry Pi 2 Model B, which will be used in this thesis, has 1GB of \gls{ram} available \cite{RaspberryB}.  Storage for a single node depends on the \gls{sd} card, whose disk storage can vary from 8 GB to 256 GB and whose \gls{io} data rates can from 2 MB/s to 30 MB/s at the time of this writing. These amounts pale to the 768GB memory and 74.4 TB storage for, say, the Lenovo Thinkserver RD650 \cite{LENOVORD650} or some other server on the market.  The actual performance of software is something you would want to predict prior to making any kind of hardware purchase.  
+
+Second, using a node like the Raspberry Pi in \gls{iot} can imply a requirement for a finite (primary cell) or periodic (secondary cell) power source. Larger nodes, of course, consume their fair share of power, which comes with its own set of constraints. The prospect of deploying a node in new and unusual places is part of the motivation of porting software to low-power nodes like the Raspberry Pi series.
+
+The prospect of nodes implying less power consumption, less weight, smaller dimensions, and/or maybe even a better price compared to an alternative all do their part to chip away barriers that creative minds would otherwise face in deploying applications for the betterment of mankind.
+
+\subsection{Supply Chain Benefits of Limited Hardware}
+
+Giving up computing power for less in power consumption, weight, dimensions, and price also has potential positive implication for supply chain management.
+
+\subsubsection{Supply Chain - Costs}
+
+In supply chain management, especially in government, there is perpetual interest in items that qualify as \gls{cots}.  This interest, naturally, ties directly to cost and economies of scale.  The more purposes something can serve, the greater demand is likely to be outside of an individual application.  This not only save on the actual unit price, but also engineering and administrative costs that may be incurred by triggering the full acquisition process, say compared to an application specific integrated circuit.  The defense acquisition process is notorious for being overly burdensome, and hardware like the Raspberry Pi exhibits potential for rapid or general schedule acquisition. 
+
+\subsubsection{Supply Chain - Plausible Deniability}
+
+Despite security measures, it can be difficult to completely conceal a supply chain from an interested and skilled third party.  The more application-specific a device is, the more insight it may give an unsavory adversary knowledge of mission parameters, whether it is physically captured, or if technical requirements leave a leaky paper trail.  For example, going through foreign customs, it may be difficult to explain why you have a StingRay, but the almost infinite nature of hardware like the Raspberry Pi 2 or 3 gives one a range of alternative explanations.
+
+\subsection{Mobility}
+
+Computing units like the Raspberry Pi open the idea of a modular unit that is mobile.  It is relatively light, and relatively small, and may even fly.  There may be some applications that are willing to sacrifice performance for mobility.  This work will come up with a rough empirical prediction of what that trade-off might be.
+
+%SELECT THE REPRESENTATIVE – RASPBERRY PI, FOR NOW
+
+%TRANSITION
+
+
+
+
+
+%Paragraph 1 – Problem Statement
+\section{Problem Statement}
+
+To gauge expectation in the variation in how modern distributed databases operate in an \gls{iot} environment, what applications that call or benefit from an open-source distributed database, and what actions or configurations may be required or recommended to be in place for this to happen.
+
+\section{Derived Research Questions}
+
+\subsection{Connecting IoT, Distributed Databases, and Limited Hardware}
+
+\subsubsection{What is \gls{iot}?  What is an IoT device?}
+
+Echoing \cite{LuTan2010}, there is no "standard identification" of \gls{iot} or an \gls{iot} device, although invoking the phrase can identify some archetypes, such as home automation systems or facilities management systems.  All of these incorporate transduction some process over time, such as water pressure, steam pressure, temperature, etc, and may provide indication, such as a thermometer or dashboard, and/or actuation, such as actuation of a furnace or control of a pump.  This concept and its relationship to limited hardware is further addressed in the Chapter \ref{Background and Related Works}.
+
+\subsubsection{Where does the Raspberry Pi fit into \gls{iot}?}
+
+The Raspberry Pi is able to receive digital data, audio signals, and video signals, and thus represents some of the computation and storage that could be attached or otherwise networked to one of these transducers.  This question will be addressed in Chapter \ref{Background and Related Works} through examination of current published work as well as commercial specifications.
+
+\subsubsection{What are some other representatives of limited hardware?}
+
+The Raspberry Pi has no shortage of competitors.  These will be briefly examined in Chapter \ref{Background and Related Works}.  In addition, Chapter \ref{Methodology} will evaluate a virtual machine's performance in comparison to the Raspberry Pi.
+% Reference the work in Cassandra???
+
+\subsubsection{Where does a distributed database fit into \gls{iot}?}
+
+Section \ref{where a distributed database fits in} explains the current use and the benefits of porting said operation to a thicker client.
+
+\subsubsection{Where does networking fit into \gls{iot}?}
+
+There is no shortage of options for networking different hosts together, but the ability to exchange a wired networking medium for a wireless networking medium enables increased mobility and eliminates the possibility of needing equipment (cabling) and the costs of installing said equipment.  Section \ref{networking considerations} discusses further implications of varying the link layer and physical layer.
+
+
+\paragraph{Why Test Wireless Links?}
+
+Often, wireless technology serves as an exchange for what was previously wired, allowing for greater mobility.  From the standpoint of robustness, wireless links utilize electromagnetic waves through space and cannot be interrupted, say, by a scissors.  Allowing for wireless technology may be a critical enabler for some applications that have yet to be seen.
+
+\subsection{Can a distributed database work on limited hardware?}
+
+Distributed database being represented by Cassandra, and limited hardware being represented by virtual machines as well as the Raspberry Pi, the experiments in this work aim toward refining the answer to this question. 
+
+\subsubsection{What is an appropriate database?}
+
+Section \ref{Cassandra} explains the reasoning behind selecting Cassandra as the representative of a distributed database.
+
+\subsubsection{What is an appropriate benchmark?}
+
+Section \ref{YCSB} addresses the reasoning behind the selection of YCSB.
+
+\subsubsection{Does the amount of \gls{ram} affect Cassandra's performance?}
+
+Chapter \ref{Methodology} describes the empirical method used to determine an effect with respect to varying memory.
+
+\subsubsection{What are the implications of using limited hardware?}
+
+Chapter \ref{Methodology} describes the empirical method used to measure the effect of porting Cassandra between a virtual machine the Raspberry Pi.
+
+\subsubsection{What effects on performance result from varying networking strategies?}
+
+Chapter \ref{Methodology} describes the empirical method used to measure the effect of switching between Ethernet links and wireless links.
+
+%Paragraph 2 – General Approach 
+
+\section{General Approach}
+
+%                Sentence 1,2,&3 – 
+% As of now, this was directly from JP
+
+
+
+The general approach to this will be to implement a scientific methodology for understanding the effect of inherent aspects of \gls{iot} networks on factors that limit performance of distributed databases. We are particularly interested in the effects of low memory and processor speed, limited bandwidth and scalability on IoT networked devices. In general, this study follows a template that includes varying configuration and environment settings, performing stress testing, measuring results, and interpreting the results to form a conclusion.                 
+% Paragraph 3 – Research Activity Overview (1-2 sentences)
+\section{Research Activity Overview}
+This paper will apply the \gls{ycsb} benchmarking tool to gauge performance changes over variation in the following: keyspace configuration, network configuration, platform choice, and node scaleup.
+%Sub-bullet 1 – Sensitivity Testing
+\subsection{Sensitivity Testing}
+Cassandra, like other distributed databases, can be configured or "tuned" to suit the application.
+For instance, one can tune the cache parameters of a Cassandra keyspace.
+It may be desirable to know, as the hardware capabilities go down, does this have a proportional or more-than-proportional effect on how application performance sensitivity.
+%Sub-bullet 2 – Bandwidth testing
+\subsection{Bandwidth Testing}
+For many applications, it is desirable to move toward wireless applications.
+
+%Sub-bullet 3 – Platform testing
+\subsection{Platform Testing}
+There are a lot of factors that can go into switching hardware: \gls{cpu}, \gls{ram}, and \gls{io} interfaces.
+
+%Sub-bullet 4 – Scalability testing
+\subsection{Scalability Testing}
+% Paragraph 4 – Research Activity Summary (1-2 sentences)
+A common selling point for distributed databases is an ability to accept additional nodes for storage, as opposed to say, more storage in-situ.
+
+\section{Expected Contributions}
+%Paragraph 1 – Expected Contributions Overview (1-2 sentences)
+This paper is expected to contribute a few points for the reader.
+
+\subsection{Contribution 1}
+First, this paper develops a methodology to leverage existing tools \cite{YahooBenchmark} to evaluate a NoSQL distributed database in \gls{iot}.
+
+%Sub-bullet 1 – Contribution 1
+\subsection{Contribution 2}
+This will expand on such work as \cite{Abramova2014TestingCassandra} and \cite{YahooBenchmark} developing a test methodology to explore the limits of Cassandra, and how its performance is affected by the number of nodes, nature of hardware, and links.
+
+%Sub-bullet 2 – Contribution 2
+\subsection{Contribution 3}
+This paper will also briefly depart from the laboratory mindset in order to demonstrate potential applications in \gls{iot}.
+%Sub-bullet 3 – Contribution 3
+
+
+% 1. First, this paper develops a methodology as well as wraps and expands existing tools to evaluate a NoSQL distributed database.
+% 2. Second, this paper implements that methodology to find empirical evidence for scalability of an applied computer network with respect to variables such as the number of nodes, nature of hardware, and the nature of links.
+% 3. Third, this paper ventures to discuss various applications and how such testing can add confidence and lower barriers to innovation in distributed sensor networks.
+
+%Paragraph 2 – Expected Contributions Summary (1-2 sentences)
+
+Aggregating lower-cost, lightweight hardware spawns a lingering question of possibilities and performance due to lower barriers to proliferation.  With distributed database Cassandra representative of application, and the Raspberry Pi a representative of low-cost hardware, we explore the performance of a distributed database over Raspberry Pi networked clusters. 
+
+\section{Organization}
+
+Chapter \ref{Background and Related Works}, Background and Related Works, describes the background in greater detail. There are many papers that put Cassandra to the test, but literature is few and far between for low cost hardware like the Raspberry Pi 2. We also present the gaps of the current literature to describe the technical goals for the current work.
+	
+Chapter \ref{Methodology} presents a methodology of both deterministic variation with respect to the performance measurement of Execution Time over 10,000 operations.  Deterministic variation will be in terms of hardware (processor, RAM, networking hardware).
+
+Chapter \ref{Results} describes the results of the methodology presented in Chapter \ref{Methodology}.
+
+% In order to give the benchmarking study due relevance, two case studies in Chapter 5 place the benchmarking in comparison to applications in development.  First, we show a distributed streaming application for wireless sniffing as a case study for IoT using Cassandra. The study, patterned off of WiFiPi[cite] is an example of distributed sensing and storage that can be applied to detect open 802.11a/b/g/n signals to gain general situational awareness.  We investigate when Cassandra is working in conjunction with a sensing application.  Second, we show a content based image retrieval application that uses Cassandra on IoT devices for a distributed surveillance application. Images represent a significant data and processing load.  We investigate the Cassandra’s performance when working in conjunction with cloud computing over low-cost hardware. 
+	
+% WiFiPi is an example of distributed sensing and storage that can be applied to detect open 802.11a/b/g/n signals to gain general situational awareness.  We investigate when Cassandra is working in conjunction with a sensing application.
+
+In Chapter 5, this study is brought to a conclusion and future work is discussed.

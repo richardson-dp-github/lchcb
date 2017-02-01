@@ -1,0 +1,91 @@
+\chapter{Conclusion and Future Work}
+
+\section{Conclusion}
+
+One of the selling points of a distributed system, and thus a distributed database, is the option to increase the likelihood of survival of data by spreading nodes geographically.  While servers can and are distributed geographically as well, the light weight of the Raspberry Pi and like devices represents a mobility and flexibility that, in certain contexts, gives these nodes potential competitive advantage over a heavy server-type node.  An open question for an application considering the variance in potential nodes is how the less capable CPU may affect performance.
+
+This work imported some results from \cite{Abramova2014} to form a set of reference points, reference points that for all practical purposes represent a likely candidate platform and network upon which one would nominally use Cassandra.  The fact that the machines in \cite{Abramova2014} were restricted to 2GB was a bonus for this work, as these nodes hinted at getting slightly closer to the lucrative domain of interest: in-situ \gls{iot} storage.  Using these references and some controlled variation within this work, the tests done here can start to paint a picture of what one can expect porting a distributed database like Cassandra to a platform like the Raspberry Pi 2 or 3.  To summarize some of the data collected, this work was able to make the following determinations with respect to the research questions 1 through 4 posed earlier:
+
+\subsection{Research Question 1}
+
+For 21 trials, each consisting of 10,000 operations of workload A (50 percent reads and 50 percent updates)  and performed over 1, 3, and 6-node configurations, the greatest absolute deviation from the reference to the Raspberry Pi configuration was found to be 34851.0 milliseconds, or about 35 second(s). Second, for 10,000 operations of this workload and over 1, 2, 3, 4, 5, and 6-node configurations, the greatest absolute deviation from any given  trial in the wired configuration to an analogous trial using wireless configuration was found to be 367262.0 milliseconds, or about 6.1 minute(s). Third, using this workload and the one-way ANOVA test, it was determined with 95 percent confidence that varying the memory of a device does not necessarily imply a differential in performance.
+
+\subsection{Research Question 2}
+
+For 21 trials, each consisting of 10,000 operations of workload C (100 percent reads)  and performed over 1, 3, and 6-node configurations, the greatest absolute deviation from the reference to the Raspberry Pi configuration was found to be 43025.0 milliseconds, or about 43 second(s). Second, for 10,000 operations of this workload and over 1, 2, 3, 4, 5, and 6-node configurations, the greatest absolute deviation from any given  trial in the wired configuration to an analogous trial using wireless configuration was found to be 211759.0 milliseconds, or about 3.5 minute(s). Third, using this workload and the one-way ANOVA test, it was determined with 95 percent confidence that varying the memory of a device does not necessarily imply a differential in performance.
+
+\subsection{Research Question 3}
+
+For 21 trials, each consisting of 10,000 operations of workload E (100 percent scans)  and performed over 1, 3, and 6-node configurations, the greatest absolute deviation from the reference to the Raspberry Pi configuration was found to be 301019.0 milliseconds, or about 5 minute(s). Second, for 10,000 operations of this workload and over 1, 2, 3, 4, 5, and 6-node configurations, the greatest absolute deviation from any given  trial in the wired configuration to an analogous trial using wireless configuration was found to be 1933941.0 milliseconds, or about 32 minute(s). Third, using this workload and the one-way ANOVA test, it was determined with 95 percent confidence that varying the memory of a device does not necessarily imply a differential in performance.
+
+\subsection{Research Question 4}
+
+For 21 trials, each consisting of 10,000 operations of workload I (99 percent inserts, 1 percent reads) and performed over 1, 3, and 6-node configurations, the greatest absolute deviation from the virtual machine at 1GB to the Raspberry Pi configuration was found to be nan milliseconds, or about nan week(s). Second, for 10,000 operations of this workload and over 1, 2, 3, 4, 5, and 6-node configurations, the greatest absolute deviation from any given  trial in the wired configuration to an analogous trial using wireless configuration was found to be nan milliseconds, or about nan week(s).  Varying the RAM was omitted for Research Question 4.
+
+% \subsubsection{Original Template that Dr. Pecarina Wrote}
+
+% Application developers can expect Cassandra to work in IoT computing platforms. We demonstrated The Yahoo Cloud Benchmark on a Raspberry Pi and determined the following
+
+% 1)      Reduced performance of Workload A is not statistically significant for the reduced memory sizes of IoT like devices
+% 2)      When varying platforms, performance for Workload A tracks the performance of the reference paper. For trials perform, reduced performance of Workload A is within 100ms of the reference paper (abramova) for wired implementations.
+% 3)      When varying communication method, reduced performance of Workload A is within 100ms of the wired platform test (order of magnitude, no greater than 100\% increase in delay)
+ 
+% Then repeat for Workload C and E to find
+% 4)      Reduced performance of Workload C is not statistically significant for the reduced memory sizes of IoT like devices
+% 5)      When varying platforms, reduced performance of Workload C is within 100ms of the reference paper (abramova) for wired implementations
+% 6)      When varying communication method, reduced performance of Workload C is within 100ms of the wired platform test
+% 7)      Reduced performance of Workload E is not statistically significant for the reduced memory sizes of IoT like devices
+% 8)      When varying platforms, reduced performance of Workload E is within 100ms of the reference paper (abramova) for wired implementations
+% 9)      When varying communication method, reduced performance of Workload E is within 100ms of the wired platform test
+
+
+
+\section{Future Work}
+
+\label{Future Work}
+
+
+
+As was alluded to in the introduction, this research seeks to support a number of possible future endeavors.
+
+
+\subsection{Generalized Model}
+
+\subsubsection{Overview/Introduction/Motivation}
+
+Let's say you have a distributed sensor network (thermocouples, radars, pressure sensors or something), and you are already sold on the idea of a distributed database.  It doesn't really have to be Cassandra, but let's say you were already searching for Cassandra research when you came across this report.  The only question is, what kind of nodes do you choose?  There is a lot of hardware out there.  The application in your head narrows this down a bit, and let's further suppose you know you want something that doesn't take a whole lot of space, bringing your attention to the Raspberry Pi series and like devices.
+
+Let's further suppose that after curling up with this document, you've decided the results are enough for you to purchase some Raspberry Pi 2's to handle your database.  Problem solved: Your research phase has ended with this sentence. But, wait. Further suppose that upon logging onto Amazon, you find the Raspberry Pi 2's are out of stock.  Or further suppose both that the stock has depleted, and the devices no longer get manufactured.  Now you have to choose something else.  You might agree on the benefit of having some way to predict performance based on hardware parameters.  That method of prediction would be a mathematical model.
+
+Hold on, you might say, before we get into all this math, what about simulation?  Simulation has its place, naturally, but first of all, the simulator you want may not exist.  But, even if a Google search brings up several options, you have to ask yourself a few questions. How reliable is it?  And can you make the same assumptions about timing?  To what ends are you required to, not to mention willing, to go to verify its utility?  Simulation is certainly not ignored by this paper, however, it is really is just a discrete mathematical model with a lot of computations that comes with its own risks and costs.  The software may be free or affordable, but one must ask, is it really worth your time to learn and to execute, or does an alternative exist?  Sometimes, depending on what you really, truly want to know, you can trade up a small amount of precision or certainty for a dis-proportionally greater amount of your time back.
+
+This generalized mathematical model aims for just that.  The next few paragraphs will propose a relatively simple, generalized model.  It will explain how the results in earlier sections of the report sow the seeds this model, and how future work could refine and develop this model into something more predictive.
+
+\subsubsection{The Model}
+
+This section will describe the model in question: how to define a set of hardware nodes in terms of parameters as well as relationships among them.
+
+Despite the complexities of hardware, this proposition asserts that a node can be abstracted to \gls{ram}, rated \gls{io} speeds, and the processor speed.  The experiments done in this report do not vary these parameters sufficiently to do an empirical model, but they provide a data point as well as a framework for developing other experiments to further refine this model.  This work has already suggested that the amount of memory may not be critical or useful in predicting hardware performance, leaving \gls{io} speeds and processor speed.  This work grouped them all as one.
+
+There has been a lot of work in trying to characterize networks, but really for a model like this, this proposition suggests the network can be characterized by the mean ping team between nodes.
+
+\subsubsection{Experiments that would Refine This Model}
+
+Naturally, trying other databases, like MongoDB, in Cassandra's place is one way to achieve further confidence.  In part, the motivation behind using the \gls{ycsb} was its portability for testing a multitude of distributed database applications.  Although the workloads for Cassandra were varied, and different databases are typically optimized and designed for particular workloads, a different database or databases would increase qualitative confidence that the model can be extended to a database not explicitly tested.
+
+In addition, the absolute values in the results of this work do not necessarily represent Cassandra at its best.  In the interest of replication, default values were used much more often than not.  Cassandra boasts a multitude of parameters with which one can vary in attempt to optimize performance, almost to the point where you are almost guaranteed to be running it sub-optimally without employing a Cassandra expert.
+
+%(CONTRIBUTION 2 –Implement and evaluate target applications using a distributed NoSQL database in IoT)
+%5.1          Overview 
+\subsection{Wifi Collection, Mapping and Crowd Detection}
+                Overview, application purpose
+\subsubsection{Data Schema}
+
+\subsubsection{Implementation – WiFiPi prototype}
+\subsubsection{Discussion}
+%5.3          CBIR
+%5.3.1      Data Schema
+%5.3.2      Implementation – MSACS
+%.3.3      Experimental results
+%5%.3.4      Discussion of results
+%5.4          Summary of Findings for Applications

@@ -1,0 +1,231 @@
+\contentsline {chapter}{List of Figures}{vii}{chapter*.2}
+\addvspace {10\p@ }
+\contentsline {chapter}{List of Tables}{ix}{chapter*.3}
+\addvspace {10\p@ }
+\contentsline {chapter}{Acknowledgements}{xii}{chapter*.4}
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {chapter}{\numberline {I.}Introduction}{1}{chapter.1}
+\addvspace {10\p@ }
+\contentsline {section}{\numberline {1.1}Background and Motivation}{1}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}Supply Chain Benefits of Limited Hardware}{2}{subsection.1.1.1}
+\contentsline {subsubsection}{Supply Chain - Costs}{2}{section*.5}
+\contentsline {subsubsection}{Supply Chain - Plausible Deniability}{3}{section*.6}
+\contentsline {subsection}{\numberline {1.1.2}Mobility}{3}{subsection.1.1.2}
+\contentsline {section}{\numberline {1.2}Problem Statement}{3}{section.1.2}
+\contentsline {section}{\numberline {1.3}Derived Research Questions}{4}{section.1.3}
+\contentsline {subsection}{\numberline {1.3.1}Connecting IoT, Distributed Databases, and Limited Hardware}{4}{subsection.1.3.1}
+\contentsline {subsubsection}{What is \gls {iot}? What is an IoT device?}{4}{section*.7}
+\contentsline {subsubsection}{Where does the Raspberry Pi fit into \gls {iot}?}{4}{section*.8}
+\contentsline {subsubsection}{What are some other representatives of limited hardware?}{4}{section*.9}
+\contentsline {subsubsection}{Where does a distributed database fit into \gls {iot}?}{5}{section*.10}
+\contentsline {subsubsection}{Where does networking fit into \gls {iot}?}{5}{section*.11}
+\contentsline {paragraph}{Why Test Wireless Links?}{5}{section*.12}
+\contentsline {subsection}{\numberline {1.3.2}Can a distributed database work on limited hardware?}{5}{subsection.1.3.2}
+\contentsline {subsubsection}{What is an appropriate database?}{5}{section*.13}
+\contentsline {subsubsection}{What is an appropriate benchmark?}{6}{section*.14}
+\contentsline {subsubsection}{Does the amount of \gls {ram} affect Cassandra's performance?}{6}{section*.15}
+\contentsline {subsubsection}{What are the implications of using limited hardware?}{6}{section*.16}
+\contentsline {subsubsection}{What effects on performance result from varying networking strategies?}{6}{section*.17}
+\contentsline {section}{\numberline {1.4}General Approach}{6}{section.1.4}
+\contentsline {section}{\numberline {1.5}Research Activity Overview}{7}{section.1.5}
+\contentsline {subsection}{\numberline {1.5.1}Sensitivity Testing}{7}{subsection.1.5.1}
+\contentsline {subsection}{\numberline {1.5.2}Bandwidth Testing}{7}{subsection.1.5.2}
+\contentsline {subsection}{\numberline {1.5.3}Platform Testing}{7}{subsection.1.5.3}
+\contentsline {subsection}{\numberline {1.5.4}Scalability Testing}{7}{subsection.1.5.4}
+\contentsline {section}{\numberline {1.6}Expected Contributions}{7}{section.1.6}
+\contentsline {subsection}{\numberline {1.6.1}Contribution 1}{8}{subsection.1.6.1}
+\contentsline {subsection}{\numberline {1.6.2}Contribution 2}{8}{subsection.1.6.2}
+\contentsline {subsection}{\numberline {1.6.3}Contribution 3}{8}{subsection.1.6.3}
+\contentsline {section}{\numberline {1.7}Organization}{8}{section.1.7}
+\addvspace {10\p@ }
+\contentsline {chapter}{\numberline {II.}Background and Related Works}{10}{chapter.2}
+\addvspace {10\p@ }
+\contentsline {section}{\numberline {2.1}Cassandra}{10}{section.2.1}
+\contentsline {section}{\numberline {2.2}Raspberry Pi 2}{11}{section.2.2}
+\contentsline {section}{\numberline {2.3}Small Cluster Computing}{11}{section.2.3}
+\contentsline {section}{\numberline {2.4}Benchmarking Distributed Databases}{12}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}Benchmarks}{12}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.2}\gls {ycsb}}{13}{subsection.2.4.2}
+\contentsline {subsubsection}{Benchmarking on Limited Hardware}{14}{section*.19}
+\contentsline {section}{\numberline {2.5}Networking Considerations}{14}{section.2.5}
+\contentsline {subsection}{\numberline {2.5.1}Physical Layer Considerations}{14}{subsection.2.5.1}
+\contentsline {paragraph}{Queuing Delay}{14}{section*.20}
+\contentsline {paragraph}{Propogation Delay}{14}{section*.21}
+\contentsline {paragraph}{Transmission Delay}{14}{section*.22}
+\contentsline {paragraph}{Processing Delay}{14}{section*.23}
+\contentsline {subsection}{\numberline {2.5.2}Link Layer Considerations}{14}{subsection.2.5.2}
+\contentsline {subsubsection}{Ethernet Protocol Considerations}{14}{section*.24}
+\contentsline {subsubsection}{802.11 Protocol Considerations}{15}{section*.25}
+\contentsline {section}{\numberline {2.6}Potential Uses}{15}{section.2.6}
+\contentsline {subsection}{\numberline {2.6.1}Application Space}{15}{subsection.2.6.1}
+\contentsline {subsection}{\numberline {2.6.2}WiFi Collection, Mapping and Analysis}{16}{subsection.2.6.2}
+\contentsline {subsubsection}{WiFi Sniffing, Collection}{16}{section*.29}
+\contentsline {subsubsection}{WiFi Mapping}{17}{section*.30}
+\contentsline {subsection}{\numberline {2.6.3}WiFi/Wireless Crowd Detection}{18}{subsection.2.6.3}
+\contentsline {subsection}{\numberline {2.6.4}CBIR and others and summary statement on application space}{19}{subsection.2.6.4}
+\contentsline {section}{\numberline {2.7}Representative Technologies}{19}{section.2.7}
+\contentsline {subsection}{\numberline {2.7.1}Cassandra}{19}{subsection.2.7.1}
+\contentsline {subsection}{\numberline {2.7.2}Raspberry Pi 2}{21}{subsection.2.7.2}
+\addvspace {10\p@ }
+\contentsline {chapter}{\numberline {III.}Cassandra Pilot Tests}{23}{chapter.3}
+\addvspace {10\p@ }
+\contentsline {section}{\numberline {3.1}Experimental Setup}{24}{section.3.1}
+\contentsline {section}{\numberline {3.2}Variance in Nature of the Links with Compression Algorithms}{24}{section.3.2}
+\addvspace {10\p@ }
+\contentsline {chapter}{\numberline {IV.}Methodology}{27}{chapter.4}
+\addvspace {10\p@ }
+\contentsline {section}{\numberline {4.1}Overview of Similar Experiment}{27}{section.4.1}
+\contentsline {section}{\numberline {4.2}Objective of This Set of Experiments}{29}{section.4.2}
+\contentsline {section}{\numberline {4.3}Expectations}{31}{section.4.3}
+\contentsline {section}{\numberline {4.4}System Boundaries}{31}{section.4.4}
+\contentsline {section}{\numberline {4.5}Experimental Limitations, Nuisance Factors, Known/Suspected Interactions}{31}{section.4.5}
+\contentsline {section}{\numberline {4.6}Coordination}{32}{section.4.6}
+\contentsline {subsection}{\numberline {4.6.1}Ethernet \gls {lan}}{32}{subsection.4.6.1}
+\contentsline {subsection}{\numberline {4.6.2}Wireless \gls {lan}}{32}{subsection.4.6.2}
+\contentsline {section}{\numberline {4.7}Treatments, Independent Variables}{32}{section.4.7}
+\contentsline {section}{\numberline {4.8}Factors}{32}{section.4.8}
+\contentsline {subsection}{\numberline {4.8.1}Hard Disk Storage: \gls {sd} Card}{32}{subsection.4.8.1}
+\contentsline {subsection}{\numberline {4.8.2}Database Size}{33}{subsection.4.8.2}
+\contentsline {subsection}{\numberline {4.8.3}Number of Operations Per Trial}{33}{subsection.4.8.3}
+\contentsline {subsection}{\numberline {4.8.4}Workloads}{35}{subsection.4.8.4}
+\contentsline {subsection}{\numberline {4.8.5}Configuration of Cassandra}{37}{subsection.4.8.5}
+\contentsline {subsection}{\numberline {4.8.6}Threads in the \gls {ycsb}}{37}{subsection.4.8.6}
+\contentsline {section}{\numberline {4.9}Assumptions}{38}{section.4.9}
+\contentsline {section}{\numberline {4.10}Experimental Setup}{39}{section.4.10}
+\contentsline {subsection}{\numberline {4.10.1}Virtual Node Setup}{40}{subsection.4.10.1}
+\contentsline {subsection}{\numberline {4.10.2}Ethernet \gls {lan} Setup}{40}{subsection.4.10.2}
+\contentsline {subsection}{\numberline {4.10.3}802.11 \gls {lan} Setup}{42}{subsection.4.10.3}
+\contentsline {section}{\numberline {4.11}Execution}{42}{section.4.11}
+\contentsline {section}{\numberline {4.12}Analysis}{43}{section.4.12}
+\contentsline {subsection}{\numberline {4.12.1}Response Variables}{43}{subsection.4.12.1}
+\contentsline {section}{\numberline {4.13}Cache Warm-Up Period and the Logic of Using the Median from This Point Forward}{43}{section.4.13}
+\addvspace {10\p@ }
+\contentsline {chapter}{\numberline {V.}Results and Evaluation}{46}{chapter.5}
+\addvspace {10\p@ }
+\contentsline {section}{\numberline {5.1}Results for Workload A}{46}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Comparing Existing Work: Virtual Machine vs the Reference Value}{46}{subsection.5.1.1}
+\contentsline {subsubsection}{Initial Observations}{46}{section*.50}
+\contentsline {subsubsection}{Ordinal Statistics}{47}{section*.53}
+\contentsline {subsubsection}{Analysis}{47}{section*.55}
+\contentsline {subsection}{\numberline {5.1.2}1GB RAM vs 2GB RAM vs 4GB RAM}{48}{subsection.5.1.2}
+\contentsline {subsubsection}{Initial Observations}{48}{section*.56}
+\contentsline {subsubsection}{Ordinal Statistics}{48}{section*.58}
+\contentsline {subsubsection}{Analysis}{48}{section*.61}
+\contentsline {subsection}{\numberline {5.1.3}Implementation on Raspberry Pi}{50}{subsection.5.1.3}
+\contentsline {subsubsection}{Initial Observations}{50}{section*.63}
+\contentsline {subsubsection}{Ordinal Statistics}{51}{section*.65}
+\contentsline {subsubsection}{Analysis}{51}{section*.67}
+\contentsline {subsection}{\numberline {5.1.4}Raspberry Pi vs Reference Value}{52}{subsection.5.1.4}
+\contentsline {subsubsection}{Initial Observations}{52}{section*.69}
+\contentsline {subsubsection}{Ordinal Statistics}{52}{section*.71}
+\contentsline {subsubsection}{Analysis}{52}{section*.72}
+\contentsline {subsection}{\numberline {5.1.5}Raspberry Pi vs Virtual Machine}{53}{subsection.5.1.5}
+\contentsline {subsubsection}{Initial Observations}{53}{section*.73}
+\contentsline {subsubsection}{Ordinal Statistics}{53}{section*.74}
+\contentsline {subsubsection}{Analysis}{54}{section*.75}
+\contentsline {subsection}{\numberline {5.1.6}Wireless Links Only}{55}{subsection.5.1.6}
+\contentsline {subsubsection}{Initial Observations}{55}{section*.78}
+\contentsline {subsubsection}{Ordinal Statistics}{55}{section*.80}
+\contentsline {subsubsection}{Analysis}{56}{section*.82}
+\contentsline {subsection}{\numberline {5.1.7}Wireless Links vs Wired Links}{56}{subsection.5.1.7}
+\contentsline {subsubsection}{Initial Observations}{56}{section*.84}
+\contentsline {subsubsection}{Ordinal Statistics}{57}{section*.87}
+\contentsline {subsubsection}{Analysis}{57}{section*.88}
+\contentsline {section}{\numberline {5.2}Results for Workload C}{59}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Comparing Existing Work: Virtual Machine vs the Reference Value}{59}{subsection.5.2.1}
+\contentsline {subsubsection}{Initial Observations}{59}{section*.91}
+\contentsline {subsubsection}{Ordinal Statistics}{59}{section*.94}
+\contentsline {subsubsection}{Analysis}{60}{section*.96}
+\contentsline {subsection}{\numberline {5.2.2}1GB RAM vs 2GB RAM vs 4GB RAM}{60}{subsection.5.2.2}
+\contentsline {subsubsection}{Initial Observations}{60}{section*.97}
+\contentsline {subsubsection}{Ordinal Statistics}{61}{section*.99}
+\contentsline {subsubsection}{Analysis}{61}{section*.102}
+\contentsline {subsection}{\numberline {5.2.3}Implementation on Raspberry Pi}{63}{subsection.5.2.3}
+\contentsline {subsubsection}{Initial Observations}{63}{section*.104}
+\contentsline {subsubsection}{Ordinal Statistics}{64}{section*.106}
+\contentsline {subsubsection}{Analysis}{64}{section*.108}
+\contentsline {subsection}{\numberline {5.2.4}Raspberry Pi vs Reference Value}{65}{subsection.5.2.4}
+\contentsline {subsubsection}{Initial Observations}{65}{section*.110}
+\contentsline {subsubsection}{Ordinal Statistics}{65}{section*.112}
+\contentsline {subsubsection}{Analysis}{65}{section*.113}
+\contentsline {subsection}{\numberline {5.2.5}Raspberry Pi vs Virtual Machine}{66}{subsection.5.2.5}
+\contentsline {subsubsection}{Initial Observations}{66}{section*.114}
+\contentsline {subsubsection}{Ordinal Statistics}{66}{section*.115}
+\contentsline {subsubsection}{Analysis}{67}{section*.116}
+\contentsline {subsection}{\numberline {5.2.6}Wireless Links Only}{68}{subsection.5.2.6}
+\contentsline {subsubsection}{Initial Observations}{68}{section*.119}
+\contentsline {subsubsection}{Ordinal Statistics}{68}{section*.121}
+\contentsline {subsubsection}{Analysis}{69}{section*.123}
+\contentsline {subsection}{\numberline {5.2.7}Wireless Links vs Wired Links}{69}{subsection.5.2.7}
+\contentsline {subsubsection}{Initial Observations}{69}{section*.125}
+\contentsline {subsubsection}{Ordinal Statistics}{70}{section*.128}
+\contentsline {subsubsection}{Analysis}{70}{section*.129}
+\contentsline {section}{\numberline {5.3}Results for Workload E}{72}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Comparing Existing Work: Virtual Machine vs the Reference Value}{72}{subsection.5.3.1}
+\contentsline {subsubsection}{Initial Observations}{72}{section*.132}
+\contentsline {subsubsection}{Ordinal Statistics}{72}{section*.135}
+\contentsline {subsubsection}{Analysis}{73}{section*.137}
+\contentsline {subsection}{\numberline {5.3.2}1GB RAM vs 2GB RAM vs 4GB RAM}{73}{subsection.5.3.2}
+\contentsline {subsubsection}{Initial Observations}{73}{section*.138}
+\contentsline {subsubsection}{Ordinal Statistics}{74}{section*.140}
+\contentsline {subsubsection}{Analysis}{74}{section*.143}
+\contentsline {subsection}{\numberline {5.3.3}Implementation on Raspberry Pi}{76}{subsection.5.3.3}
+\contentsline {subsubsection}{Initial Observations}{76}{section*.145}
+\contentsline {subsubsection}{Ordinal Statistics}{77}{section*.147}
+\contentsline {subsubsection}{Analysis}{77}{section*.149}
+\contentsline {subsection}{\numberline {5.3.4}Raspberry Pi vs Reference Value}{78}{subsection.5.3.4}
+\contentsline {subsubsection}{Initial Observations}{78}{section*.151}
+\contentsline {subsubsection}{Ordinal Statistics}{78}{section*.153}
+\contentsline {subsubsection}{Analysis}{78}{section*.154}
+\contentsline {subsection}{\numberline {5.3.5}Raspberry Pi vs Virtual Machine}{79}{subsection.5.3.5}
+\contentsline {subsubsection}{Initial Observations}{79}{section*.155}
+\contentsline {subsubsection}{Ordinal Statistics}{79}{section*.156}
+\contentsline {subsubsection}{Analysis}{80}{section*.157}
+\contentsline {subsection}{\numberline {5.3.6}Wireless Links Only}{81}{subsection.5.3.6}
+\contentsline {subsubsection}{Initial Observations}{81}{section*.160}
+\contentsline {subsubsection}{Ordinal Statistics}{81}{section*.162}
+\contentsline {subsubsection}{Analysis}{82}{section*.164}
+\contentsline {subsection}{\numberline {5.3.7}Wireless Links vs Wired Links}{82}{subsection.5.3.7}
+\contentsline {subsubsection}{Initial Observations}{82}{section*.166}
+\contentsline {subsubsection}{Ordinal Statistics}{83}{section*.169}
+\contentsline {subsubsection}{Analysis}{83}{section*.170}
+\contentsline {section}{\numberline {5.4}Results for Workload I}{85}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}1GB RAM vs 2GB RAM vs 4GB RAM}{85}{subsection.5.4.1}
+\contentsline {subsubsection}{Initial Observations}{85}{section*.173}
+\contentsline {subsubsection}{Ordinal Statistics}{85}{section*.175}
+\contentsline {subsubsection}{Analysis}{85}{section*.178}
+\contentsline {subsection}{\numberline {5.4.2}Implementation on Raspberry Pi}{88}{subsection.5.4.2}
+\contentsline {subsubsection}{Initial Observations}{88}{section*.180}
+\contentsline {subsubsection}{Ordinal Statistics}{88}{section*.182}
+\contentsline {subsubsection}{Analysis}{88}{section*.184}
+\contentsline {subsection}{\numberline {5.4.3}Raspberry Pi vs Virtual Machine}{89}{subsection.5.4.3}
+\contentsline {subsubsection}{Initial Observations}{89}{section*.186}
+\contentsline {subsubsection}{Ordinal Statistics}{89}{section*.187}
+\contentsline {subsubsection}{Analysis}{90}{section*.188}
+\contentsline {subsection}{\numberline {5.4.4}Wireless Links Only}{91}{subsection.5.4.4}
+\contentsline {subsubsection}{Initial Observations}{91}{section*.191}
+\contentsline {subsubsection}{Ordinal Statistics}{92}{section*.193}
+\contentsline {subsubsection}{Analysis}{92}{section*.195}
+\contentsline {subsection}{\numberline {5.4.5}Wireless Links vs Wired Links}{92}{subsection.5.4.5}
+\contentsline {subsubsection}{Initial Observations}{92}{section*.197}
+\contentsline {subsubsection}{Ordinal Statistics}{92}{section*.200}
+\contentsline {subsubsection}{Analysis}{93}{section*.201}
+\addvspace {10\p@ }
+\contentsline {chapter}{\numberline {VI.}Conclusion and Future Work}{96}{chapter.6}
+\addvspace {10\p@ }
+\contentsline {section}{\numberline {6.1}Conclusion}{96}{section.6.1}
+\contentsline {subsection}{\numberline {6.1.1}Research Question 1}{96}{subsection.6.1.1}
+\contentsline {subsection}{\numberline {6.1.2}Research Question 2}{97}{subsection.6.1.2}
+\contentsline {subsection}{\numberline {6.1.3}Research Question 3}{97}{subsection.6.1.3}
+\contentsline {subsection}{\numberline {6.1.4}Research Question 4}{98}{subsection.6.1.4}
+\contentsline {section}{\numberline {6.2}Future Work}{98}{section.6.2}
+\contentsline {subsection}{\numberline {6.2.1}Generalized Model}{98}{subsection.6.2.1}
+\contentsline {subsubsection}{Overview/Introduction/Motivation}{98}{section*.204}
+\contentsline {subsubsection}{The Model}{100}{section*.205}
+\contentsline {subsubsection}{Experiments that would Refine This Model}{100}{section*.206}
+\contentsline {subsection}{\numberline {6.2.2}Wifi Collection, Mapping and Crowd Detection}{101}{subsection.6.2.2}
+\contentsline {subsubsection}{Data Schema}{101}{section*.207}
+\contentsline {subsubsection}{Implementation – WiFiPi prototype}{101}{section*.208}
+\contentsline {subsubsection}{Discussion}{101}{section*.209}
+\contentsline {chapter}{Bibliography}{102}{chapter*.210}

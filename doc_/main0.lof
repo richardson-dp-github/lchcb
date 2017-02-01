@@ -1,0 +1,42 @@
+\contentsline {figure}{\numberline {1}{\ignorespaces Venn Diagram of Application Space\relax }}{15}{figure.caption.26}
+\contentsline {figure}{\numberline {2}{\ignorespaces \gls {iot} Application...Although this isn't a rule, this represents a nominal "\gls {iot}" application. Some measurement of interest, such as temperature is sensed, that raw data is stored and sent afar, and if desired, the user may also query for some kind of feedback or indication.\relax }}{15}{figure.caption.27}
+\contentsline {figure}{\numberline {3}{\ignorespaces \gls {iot} Application with Thicker Clients...Depending on the application, using a distributed database on thicker clients in-situ may suitably replace a remote database operating in a remote location. From an operational standpoint, the pipeline may be unreliable, resulting in a loss of data. From a security standpoint, this pipeline may be subject to undesired third-party monitoring.\relax }}{16}{figure.caption.28}
+\contentsline {figure}{\numberline {4}{\ignorespaces Varying Compression Methods: Writes\relax }}{24}{figure.caption.32}
+\contentsline {figure}{\numberline {5}{\ignorespaces Varying Compression Methods: Reads\relax }}{25}{figure.caption.33}
+\contentsline {figure}{\numberline {6}{\ignorespaces Compression Methods Sorted by Best Performance: Wired \gls {lan} Case\relax }}{25}{figure.caption.34}
+\contentsline {figure}{\numberline {7}{\ignorespaces Compression Methods Sorted by Best Performance: Wireless \gls {lan} Case\relax }}{26}{figure.caption.35}
+\contentsline {figure}{\numberline {8}{\ignorespaces Cross Section of Results Imported from \cite {Abramova2014}. This figure shows the execution time reported for 10,000 operations of Workload A over three given configurations: a network with only one (1) node, a network with 3 nodes, and a network with 6 nodes.\relax }}{28}{figure.caption.37}
+\contentsline {figure}{\numberline {9}{\ignorespaces Cross Section of Results Imported from \cite {Abramova2014}. This figure shows the execution time reported for 10,000 operations of Workload C over three given configurations: a network with only one (1) node, a network with 3 nodes, and a network with 6 nodes.\relax }}{29}{figure.caption.38}
+\contentsline {figure}{\numberline {10}{\ignorespaces Cross Section of Results Imported from \cite {Abramova2014}. This figure shows the execution time reported for 10,000 operations of Workload E over three given configurations: a network with only one (1) node, a network with 3 nodes, and a network with 6 nodes.\relax }}{30}{figure.caption.39}
+\contentsline {figure}{\numberline {11}{\ignorespaces Two sample runs, adjusting the trials such that only 1000 operations of Workload A to a given trial.\relax }}{34}{figure.caption.41}
+\contentsline {figure}{\numberline {12}{\ignorespaces A series of trials for 1GB, 2GB, and 4GB \gls {ram} virtual machines. The inset demonstrates that any pattern that could significantly distinguish one trial from another, such as the oscillation seen in \ref {fig:fig02} is integrated such that, after the cache warm-up period, the relative position of the trial does not predict the relative outcome.\relax }}{35}{figure.caption.42}
+\contentsline {figure}{\numberline {13}{\ignorespaces Topology and Wiring for Ethernet Setup\relax }}{42}{figure.caption.48}
+\contentsline {figure}{\numberline {14}{\ignorespaces \relax }}{46}{figure.caption.51}
+\contentsline {figure}{\numberline {15}{\ignorespaces \relax }}{47}{figure.caption.52}
+\contentsline {figure}{\numberline {16}{\ignorespaces \relax }}{50}{figure.caption.57}
+\contentsline {figure}{\numberline {17}{\ignorespaces \relax }}{51}{figure.caption.64}
+\contentsline {figure}{\numberline {18}{\ignorespaces \relax }}{53}{figure.caption.70}
+\contentsline {figure}{\numberline {19}{\ignorespaces \relax }}{55}{figure.caption.79}
+\contentsline {figure}{\numberline {20}{\ignorespaces \relax }}{57}{figure.caption.85}
+\contentsline {figure}{\numberline {21}{\ignorespaces \relax }}{58}{figure.caption.86}
+\contentsline {figure}{\numberline {22}{\ignorespaces \relax }}{60}{figure.caption.92}
+\contentsline {figure}{\numberline {23}{\ignorespaces \relax }}{61}{figure.caption.93}
+\contentsline {figure}{\numberline {24}{\ignorespaces \relax }}{63}{figure.caption.98}
+\contentsline {figure}{\numberline {25}{\ignorespaces \relax }}{64}{figure.caption.105}
+\contentsline {figure}{\numberline {26}{\ignorespaces \relax }}{66}{figure.caption.111}
+\contentsline {figure}{\numberline {27}{\ignorespaces \relax }}{68}{figure.caption.120}
+\contentsline {figure}{\numberline {28}{\ignorespaces \relax }}{70}{figure.caption.126}
+\contentsline {figure}{\numberline {29}{\ignorespaces \relax }}{71}{figure.caption.127}
+\contentsline {figure}{\numberline {30}{\ignorespaces \relax }}{73}{figure.caption.133}
+\contentsline {figure}{\numberline {31}{\ignorespaces \relax }}{74}{figure.caption.134}
+\contentsline {figure}{\numberline {32}{\ignorespaces \relax }}{76}{figure.caption.139}
+\contentsline {figure}{\numberline {33}{\ignorespaces \relax }}{77}{figure.caption.146}
+\contentsline {figure}{\numberline {34}{\ignorespaces \relax }}{79}{figure.caption.152}
+\contentsline {figure}{\numberline {35}{\ignorespaces \relax }}{81}{figure.caption.161}
+\contentsline {figure}{\numberline {36}{\ignorespaces \relax }}{83}{figure.caption.167}
+\contentsline {figure}{\numberline {37}{\ignorespaces \relax }}{84}{figure.caption.168}
+\contentsline {figure}{\numberline {38}{\ignorespaces \relax }}{87}{figure.caption.174}
+\contentsline {figure}{\numberline {39}{\ignorespaces \relax }}{88}{figure.caption.181}
+\contentsline {figure}{\numberline {40}{\ignorespaces \relax }}{91}{figure.caption.192}
+\contentsline {figure}{\numberline {41}{\ignorespaces \relax }}{94}{figure.caption.198}
+\contentsline {figure}{\numberline {42}{\ignorespaces \relax }}{95}{figure.caption.199}

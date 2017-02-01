@@ -1,0 +1,511 @@
+% Appendix A
+
+\chapter{Host Machine Hardware Information} % Main appendix title
+
+\label{lshw} % For referencing this appendix elsewhere, use \ref{AppendixA}
+%\setstretch{1.0}
+The following describes the details of the host machine.
+\begin{minted}[breaklines]{text}
+
+daniel@daniel-ThinkPad-W541:~\$ sudo lshw
+[sudo] password for daniel: 
+daniel-thinkpad-w541      
+    description: Notebook
+    product: 20EGS25R00 (LENOVO\_MT\_20EG)
+    vendor: LENOVO
+    version: ThinkPad W541
+    serial: MJ0301F4
+    width: 64 bits
+    capabilities: smbios-2.7 dmi-2.7 vsyscall32
+    configuration: administrator\_password=disabled chassis=notebook family=ThinkPad W541 power-on\_password=disabled sku=LENOVO\_MT\_20EG uuid=0114DF39-5754-CB11-BDED-DE35A19757E6
+  *-core
+       description: Motherboard
+       product: 20EGS25R00
+       vendor: LENOVO
+       physical id: 0
+       version: Not Defined
+       serial: W1KS58Z11GD
+       slot: Not Available
+     *-cpu
+          description: CPU
+          product: Intel(R) Core(TM) i7-4910MQ CPU @ 2.90GHz
+          vendor: Intel Corp.
+          physical id: 0
+          bus info: cpu@0
+          version: Intel(R) Core(TM) i7-4910MQ CPU @ 2.90GHz
+          serial: None
+          slot: CPU Socket - U3E1
+          size: 2900MHz
+          capacity: 3900MHz
+          width: 64 bits
+          clock: 100MHz
+          capabilities: x86-64 fpu fpu\_exception wp vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp constant\_tsc arch\_perfmon pebs bts rep\_good nopl xtopology nonstop\_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds\_cpl vmx smx est tm2 ssse3 sdbg fma cx16 xtpr pdcm pcid sse4\_1 sse4\_2 x2apic movbe popcnt tsc\_deadline\_timer aes xsave avx f16c rdrand lahf\_lm abm epb tpr\_shadow vnmi flexpriority ept vpid fsgsbase tsc\_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt dtherm ida arat pln pts cpufreq
+          configuration: cores=4 enabledcores=4 threads=8
+        *-cache:0
+             description: L1 cache
+             physical id: 2
+             slot: L1-Cache
+             size: 32KiB
+             capacity: 32KiB
+             capabilities: asynchronous internal write-back instruction
+             configuration: level=1
+        *-cache:1
+             description: L2 cache
+             physical id: 3
+             slot: L2-Cache
+             size: 256KiB
+             capacity: 256KiB
+             capabilities: asynchronous internal write-back unified
+             configuration: level=2
+        *-cache:2
+             description: L3 cache
+             physical id: 4
+             slot: L3-Cache
+             size: 8MiB
+             capacity: 8MiB
+             capabilities: asynchronous internal write-back unified
+             configuration: level=3
+     *-cache
+          description: L1 cache
+          physical id: 1
+          slot: L1-Cache
+          size: 32KiB
+          capacity: 32KiB
+          capabilities: asynchronous internal write-back data
+          configuration: level=1
+     *-memory
+          description: System Memory
+          physical id: 5
+          slot: System board or motherboard
+          size: 32GiB
+        *-bank:0
+             description: SODIMM DDR3 Synchronous 1600 MHz (0.6 ns)
+             product: M471B1G73QH0-YK0
+             vendor: Samsung
+             physical id: 0
+             serial: 12D86CDE
+             slot: ChannelA-DIMM0
+             size: 8GiB
+             width: 64 bits
+             clock: 1600MHz (0.6ns)
+        *-bank:1
+             description: SODIMM DDR3 Synchronous 1600 MHz (0.6 ns)
+             product: M471B1G73QH0-YK0
+             vendor: Samsung
+             physical id: 1
+             serial: 12D86CE2
+             slot: ChannelA-DIMM1
+             size: 8GiB
+             width: 64 bits
+             clock: 1600MHz (0.6ns)
+        *-bank:2
+             description: SODIMM DDR3 Synchronous 1600 MHz (0.6 ns)
+             product: M471B1G73QH0-YK0
+             vendor: Samsung
+             physical id: 2
+             serial: 12D84361
+             slot: ChannelB-DIMM0
+             size: 8GiB
+             width: 64 bits
+             clock: 1600MHz (0.6ns)
+        *-bank:3
+             description: SODIMM DDR3 Synchronous 1600 MHz (0.6 ns)
+             product: M471B1G73QH0-YK0
+             vendor: Samsung
+             physical id: 3
+             serial: 12D86627
+             slot: ChannelB-DIMM1
+             size: 8GiB
+             width: 64 bits
+             clock: 1600MHz (0.6ns)
+     *-firmware
+          description: BIOS
+          vendor: LENOVO
+          physical id: 41
+          version: GNET71WW (2.19 )
+          date: 02/05/2015
+          size: 128KiB
+          capacity: 11MiB
+          capabilities: pci pnp upgrade shadowing cdboot bootselect acpi usb biosbootspecification uefi
+     *-pci
+          description: Host bridge
+          product: Xeon E3-1200 v3/4th Gen Core Processor DRAM Controller
+          vendor: Intel Corporation
+          physical id: 100
+          bus info: pci@0000:00:00.0
+          version: 06
+          width: 32 bits
+          clock: 33MHz
+        *-pci:0
+             description: PCI bridge
+             product: Xeon E3-1200 v3/4th Gen Core Processor PCI Express x16 Controller
+             vendor: Intel Corporation
+             physical id: 1
+             bus info: pci@0000:00:01.0
+             version: 06
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pm msi pciexpress normal\_decode bus\_master cap\_list
+             configuration: driver=pcieport
+             resources: irq:26 ioport:4000(size=4096) memory:b0000000-b10fffff ioport:80000000(size=301989888)
+           *-display
+                description: VGA compatible controller
+                product: GK106GLM [Quadro K2100M]
+                vendor: NVIDIA Corporation
+                physical id: 0
+                bus info: pci@0000:01:00.0
+                version: a1
+                width: 64 bits
+                clock: 33MHz
+                capabilities: pm msi pciexpress vga\_controller bus\_master cap\_list rom
+                configuration: driver=nouveau latency=0
+                resources: irq:30 memory:b0000000-b0ffffff memory:80000000-8fffffff memory:90000000-91ffffff ioport:4000(size=128) memory:b1000000-b107ffff
+        *-display
+             description: VGA compatible controller
+             product: 4th Gen Core Processor Integrated Graphics Controller
+             vendor: Intel Corporation
+             physical id: 2
+             bus info: pci@0000:00:02.0
+             version: 06
+             width: 64 bits
+             clock: 33MHz
+             capabilities: msi pm vga\_controller bus\_master cap\_list rom
+             configuration: driver=i915 latency=0
+             resources: irq:31 memory:b1400000-b17fffff memory:a0000000-afffffff ioport:5000(size=64)
+        *-multimedia:0
+             description: Audio device
+             product: Xeon E3-1200 v3/4th Gen Core Processor HD Audio Controller
+             vendor: Intel Corporation
+             physical id: 3
+             bus info: pci@0000:00:03.0
+             version: 06
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pm msi pciexpress bus\_master cap\_list
+             configuration: driver=snd\_hda\_intel latency=0
+             resources: irq:29 memory:b2930000-b2933fff
+        *-usb:0
+             description: USB controller
+             product: 8 Series/C220 Series Chipset Family USB xHCI
+             vendor: Intel Corporation
+             physical id: 14
+             bus info: pci@0000:00:14.0
+             version: 04
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pm msi xhci bus\_master cap\_list
+             configuration: driver=xhci\_hcd latency=0
+             resources: irq:27 memory:b2920000-b292ffff
+           *-usbhost:0
+                product: xHCI Host Controller
+                vendor: Linux 4.4.0-47-generic xhci-hcd
+                physical id: 0
+                bus info: usb@4
+                logical name: usb4
+                version: 4.04
+                capabilities: usb-3.00
+                configuration: driver=hub slots=6 speed=5000Mbit/s
+           *-usbhost:1
+                product: xHCI Host Controller
+                vendor: Linux 4.4.0-47-generic xhci-hcd
+                physical id: 1
+                bus info: usb@3
+                logical name: usb3
+                version: 4.04
+                capabilities: usb-2.00
+                configuration: driver=hub slots=15 speed=480Mbit/s
+              *-usb:0 UNCLAIMED
+                   description: Smart card reader
+                   product: EMV Smartcard Reader
+                   vendor: Generic
+                   physical id: 5
+                   bus info: usb@3:5
+                   version: 1.20
+                   capabilities: usb-2.01
+                   configuration: maxpower=50mA speed=12Mbit/s
+              *-usb:1
+                   description: Mouse
+                   product: USB Optical Mouse
+                   vendor: Logitech
+                   physical id: 6
+                   bus info: usb@3:6
+                   version: 72.00
+                   capabilities: usb-2.00
+                   configuration: driver=usbhid maxpower=100mA speed=2Mbit/s
+        *-communication:0
+             description: Communication controller
+             product: 8 Series/C220 Series Chipset Family MEI Controller \#1
+             vendor: Intel Corporation
+             physical id: 16
+             bus info: pci@0000:00:16.0
+             version: 04
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pm msi bus\_master cap\_list
+             configuration: driver=mei\_me latency=0
+             resources: irq:32 memory:b2939000-b293900f
+        *-communication:1
+             description: Serial controller
+             product: 8 Series/C220 Series Chipset Family KT Controller
+             vendor: Intel Corporation
+             physical id: 16.3
+             bus info: pci@0000:00:16.3
+             version: 04
+             width: 32 bits
+             clock: 66MHz
+             capabilities: pm msi 16550 bus\_master cap\_list
+             configuration: driver=serial latency=0
+             resources: irq:17 ioport:50b0(size=8) memory:b2940000-b2940fff
+        *-network
+             description: Ethernet interface
+             product: Ethernet Connection I217-LM
+             vendor: Intel Corporation
+             physical id: 19
+             bus info: pci@0000:00:19.0
+             logical name: eth0
+             version: 04
+             serial: 54:ee:75:6b:49:34
+             capacity: 1Gbit/s
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pm msi bus\_master cap\_list ethernet physical tp 10bt 10bt-fd 100bt 100bt-fd 1000bt-fd autonegotiation
+             configuration: autonegotiation=on broadcast=yes driver=e1000e driverversion=3.2.6-k firmware=0.13-3 latency=0 link=no multicast=yes port=twisted pair
+             resources: irq:34 memory:b2900000-b291ffff memory:b293f000-b293ffff ioport:5080(size=32)
+        *-usb:1
+             description: USB controller
+             product: 8 Series/C220 Series Chipset Family USB EHCI \#2
+             vendor: Intel Corporation
+             physical id: 1a
+             bus info: pci@0000:00:1a.0
+             version: 04
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pm debug ehci bus\_master cap\_list
+             configuration: driver=ehci-pci latency=0
+             resources: irq:16 memory:b293e000-b293e3ff
+           *-usbhost
+                product: EHCI Host Controller
+                vendor: Linux 4.4.0-47-generic ehci\_hcd
+                physical id: 1
+                bus info: usb@1
+                logical name: usb1
+                version: 4.04
+                capabilities: usb-2.00
+                configuration: driver=hub slots=3 speed=480Mbit/s
+              *-usb
+                   description: USB hub
+                   vendor: Intel Corp.
+                   physical id: 1
+                   bus info: usb@1:1
+                   version: 0.04
+                   capabilities: usb-2.00
+                   configuration: driver=hub slots=6 speed=480Mbit/s
+        *-multimedia:1
+             description: Audio device
+             product: 8 Series/C220 Series Chipset High Definition Audio Controller
+             vendor: Intel Corporation
+             physical id: 1b
+             bus info: pci@0000:00:1b.0
+             version: 04
+             width: 64 bits
+             clock: 33MHz
+             capabilities: pm msi pciexpress bus\_master cap\_list
+             configuration: driver=snd\_hda\_intel latency=0
+             resources: irq:33 memory:b2934000-b2937fff
+        *-pci:1
+             description: PCI bridge
+             product: 8 Series/C220 Series Chipset Family PCI Express Root Port \#1
+             vendor: Intel Corporation
+             physical id: 1c
+             bus info: pci@0000:00:1c.0
+             version: d4
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal\_decode bus\_master cap\_list
+             configuration: driver=pcieport
+             resources: irq:16
+        *-pci:2
+             description: PCI bridge
+             product: 8 Series/C220 Series Chipset Family PCI Express Root Port \#2
+             vendor: Intel Corporation
+             physical id: 1c.1
+             bus info: pci@0000:00:1c.1
+             version: d4
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal\_decode bus\_master cap\_list
+             configuration: driver=pcieport
+             resources: irq:17 memory:b2800000-b28fffff
+           *-network
+                description: Wireless interface
+                product: Wireless 7260
+                vendor: Intel Corporation
+                physical id: 0
+                bus info: pci@0000:03:00.0
+                logical name: wlan0
+                version: 83
+                serial: a4:c4:94:5d:cb:04
+                width: 64 bits
+                clock: 33MHz
+                capabilities: pm msi pciexpress bus\_master cap\_list ethernet physical wireless
+                configuration: broadcast=yes driver=iwlwifi driverversion=4.4.0-47-generic firmware=16.242414.0 ip=192.168.1.75 latency=0 link=yes multicast=yes wireless=IEEE 802.11abgn
+                resources: irq:35 memory:b2800000-b2801fff
+        *-pci:3
+             description: PCI bridge
+             product: 8 Series/C220 Series Chipset Family PCI Express Root Port \#3
+             vendor: Intel Corporation
+             physical id: 1c.2
+             bus info: pci@0000:00:1c.2
+             version: d4
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal\_decode bus\_master cap\_list
+             configuration: driver=pcieport
+             resources: irq:18 ioport:3000(size=4096) memory:b2000000-b27fffff ioport:b1800000(size=8388608)
+        *-pci:4
+             description: PCI bridge
+             product: 8 Series/C220 Series Chipset Family PCI Express Root Port \#5
+             vendor: Intel Corporation
+             physical id: 1c.4
+             bus info: pci@0000:00:1c.4
+             version: d4
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pci pciexpress msi pm normal\_decode bus\_master cap\_list
+             configuration: driver=pcieport
+             resources: irq:16 ioport:2000(size=4096) memory:b8000000-ce0fffff ioport:d0000000(size=570425344)
+        *-usb:2
+             description: USB controller
+             product: 8 Series/C220 Series Chipset Family USB EHCI \#1
+             vendor: Intel Corporation
+             physical id: 1d
+             bus info: pci@0000:00:1d.0
+             version: 04
+             width: 32 bits
+             clock: 33MHz
+             capabilities: pm debug ehci bus\_master cap\_list
+             configuration: driver=ehci-pci latency=0
+             resources: irq:23 memory:b293d000-b293d3ff
+           *-usbhost
+                product: EHCI Host Controller
+                vendor: Linux 4.4.0-47-generic ehci\_hcd
+                physical id: 1
+                bus info: usb@2
+                logical name: usb2
+                version: 4.04
+                capabilities: usb-2.00
+                configuration: driver=hub slots=3 speed=480Mbit/s
+              *-usb
+                   description: USB hub
+                   vendor: Intel Corp.
+                   physical id: 1
+                   bus info: usb@2:1
+                   version: 0.04
+                   capabilities: usb-2.00
+                   configuration: driver=hub slots=8 speed=480Mbit/s
+        *-isa
+             description: ISA bridge
+             product: QM87 Express LPC Controller
+             vendor: Intel Corporation
+             physical id: 1f
+             bus info: pci@0000:00:1f.0
+             version: 04
+             width: 32 bits
+             clock: 33MHz
+             capabilities: isa bus\_master cap\_list
+             configuration: driver=lpc\_ich latency=0
+             resources: irq:0
+        *-storage
+             description: SATA controller
+             product: 8 Series/C220 Series Chipset Family 6-port SATA Controller 1 [AHCI mode]
+             vendor: Intel Corporation
+             physical id: 1f.2
+             bus info: pci@0000:00:1f.2
+             version: 04
+             width: 32 bits
+             clock: 66MHz
+             capabilities: storage msi pm ahci\_1.0 bus\_master cap\_list
+             configuration: driver=ahci latency=0
+             resources: irq:28 ioport:50a8(size=8) ioport:50bc(size=4) ioport:50a0(size=8) ioport:50b8(size=4) ioport:5060(size=32) memory:b293c000-b293c7ff
+        *-serial UNCLAIMED
+             description: SMBus
+             product: 8 Series/C220 Series Chipset Family SMBus Controller
+             vendor: Intel Corporation
+             physical id: 1f.3
+             bus info: pci@0000:00:1f.3
+             version: 04
+             width: 64 bits
+             clock: 33MHz
+             configuration: latency=0
+             resources: memory:b2938000-b29380ff ioport:efa0(size=32)
+     *-scsi:0
+          physical id: 2
+          logical name: scsi0
+          capabilities: emulated
+        *-disk
+             description: ATA Disk
+             product: HGST HTS725050A7
+             physical id: 0.0.0
+             bus info: scsi@0:0.0.0
+             logical name: /dev/sda
+             version: B840
+             serial: RCE55ACE0VG6PM
+             size: 465GiB (500GB)
+             capabilities: partitioned partitioned:dos
+             configuration: ansiversion=5 logicalsectorsize=512 sectorsize=4096 signature=d28bfe82
+           *-volume:0
+                description: Windows NTFS volume
+                physical id: 1
+                bus info: scsi@0:0.0.0,1
+                logical name: /dev/sda1
+                version: 3.1
+                serial: bc9d-71f4
+                size: 497MiB
+                capacity: 499MiB
+                capabilities: primary bootable ntfs initialized
+                configuration: clustersize=4096 created=2016-01-14 14:06:03 filesystem=ntfs label=System state=clean
+           *-volume:1
+                description: Extended partition
+                physical id: 3
+                bus info: scsi@0:0.0.0,3
+                logical name: /dev/sda3
+                size: 448GiB
+                capacity: 448GiB
+                capabilities: primary extended partitioned partitioned:extended
+              *-logicalvolume:0
+                   description: Linux swap / Solaris partition
+                   physical id: 5
+                   logical name: /dev/sda5
+                   capacity: 31GiB
+                   capabilities: nofs
+              *-logicalvolume:1
+                   description: Linux filesystem partition
+                   physical id: 6
+                   logical name: /dev/sda6
+                   logical name: /
+                   capacity: 416GiB
+                   configuration: mount.fstype=ext4 mount.options=rw,relatime,errors=remount-ro,data=ordered state=mounted
+     *-scsi:1
+          physical id: 3
+          logical name: scsi5
+          capabilities: emulated
+        *-cdrom
+             description: DVD-RAM writer
+             product: DVD-RAM UJ8G2
+             vendor: MATSHITA
+             physical id: 0.0.0
+             bus info: scsi@5:0.0.0
+             logical name: /dev/cdrom
+             logical name: /dev/cdrw
+             logical name: /dev/dvd
+             logical name: /dev/dvdrw
+             logical name: /dev/sr0
+             version: 1.00
+             capabilities: removable audio cd-r cd-rw dvd dvd-r dvd-ram
+             configuration: ansiversion=5 status=nodisc
+  *-battery
+       product: Batt Device Name
+       vendor: Batt Manufacture
+       physical id: 1
+       slot: Front
+\end{minted}
