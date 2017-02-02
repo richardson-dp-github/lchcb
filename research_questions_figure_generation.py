@@ -18,7 +18,7 @@ def research_question_1_figure_1_utility_function(wl='a'):
                                x_column='nn',
                                y_column='[OVERALL] RunTime(ms)',
                                s_column=None,
-                               title='Execution Time for 10k operations, Workload {}'.format(wl.capitalize()),
+                               title='Execution Time, Workload {}'.format(wl.capitalize()),
                                mode='markers',
                                filename='figures/wl{}_fig1.html'.format(wl),
                                image_filename='figures/wl{}_fig1'.format(wl),
@@ -67,7 +67,7 @@ def research_question_1_figure_2_3_utility_fn(csv_file, title,
 # Experiment to see how the varying the number of operations per trial affects the results.
 def research_question_1_figure_2():
     research_question_1_figure_2_3_utility_fn(csv_file='experiment_11_magnify_cash_effect',
-                                              title='Execution Time for 1k operations: {} Node(s), Workload {}'.format(1, 'A'),
+                                              title='Execution Time',
                                               filename='figures/wl{}_fig2.html'.format('a'),
                                               image_filename='figures/wl{}_fig2'.format('a'),
                                               save_image_as_svg=True,
@@ -76,7 +76,7 @@ def research_question_1_figure_2():
 
 def research_question_1_figure_3():
     research_question_1_figure_2_3_utility_fn(csv_file='combined_results.csv',
-                                              title='Execution Time for 10k operations: {} Node(s), Workload {}'.format(1, 'A'),
+                                              title='Execution Time',
                                               d={'nm': 'nodal',
                                                  'nt': 'vm',
                                                  'nn': 1,
@@ -93,7 +93,7 @@ def research_question_1_figure_3():
 def research_question_figure_4_utility_function(workload='a',
                                                 ):
     csv_file='combined_results_revised.csv'
-    title='Execution Time for 10k operations: Workload {}'.format(workload.capitalize())
+    title='Execution Time, Workload {}'.format(workload.capitalize())
 
     df = pd.read_csv(csv_file)
     new_column_name = 'NumberOfNodes'
@@ -171,8 +171,7 @@ def research_question_1_figure_5_utility_function(wl='a'):
                                    x_column='nn',
                                    y_column='[OVERALL] RunTime(ms)',
                                    s_column='nt-ram',
-                                   title='YCSB Workload {}, 10k operations, '
-                                         'Comparison Against Existing Work'.format(i.capitalize()),
+                                   title='Execution Time, Workload {}'.format(i.capitalize()),
                                    mode='marker',
                                    filename='figures/wl{}_fig5.html'.format(wl),
                                    image_filename='figures/wl{}_fig5'.format(wl),
@@ -230,7 +229,7 @@ def research_question_1_figure_6_utility_function(wl='a'):
                                    x_column='nn',
                                    y_column='[OVERALL] RunTime(ms)',
                                    s_column='nt-ram',
-                                   title='Median Execution Time for 10k operations: Workload {}'.format(i.capitalize()),
+                                   title='Execution Time, Workload {}'.format(i.capitalize()),
                                    mode='marker',
                                    filename='figures/wl{}_fig6.html'.format(wl),
                                    image_filename='figures/wl{}_fig6'.format(wl),
@@ -280,8 +279,7 @@ def research_question_1_figure_7_utility_function(wl='a'):
                                    x_column='nn',
                                    y_column='[OVERALL] RunTime(ms)',
                                    s_column='nm',
-                                   title='Workload {} on Ethernet and Wireless: '
-                                         'Median Execution Time for 10k operations'.format(i.capitalize()),
+                                   title='Execution Time, Workload {}'.format(i.capitalize()),
                                    mode='marker',
                                    show_zero_line_on_y_axis=True,
                                    filename='figures/wl{}_fig7.html'.format(wl),
@@ -325,7 +323,7 @@ def research_question_1_figure_8_utility_function(wl='a'):
                                    y_column='[OVERALL] RunTime(ms)',
                                    s_column=None,
                                    show_zero_line_on_y_axis=True,
-                                   title='Execution Time for 10k operations, Wireless LAN: Workload {}'.format(i),
+                                   title='Execution Time, Workload {}'.format(i),
                                    filename='figures/wl{}_fig8.html'.format(wl),
                                    image_filename='figures/wl{}_fig8'.format(wl),
                                    image_type='svg',
@@ -376,9 +374,7 @@ def research_question_1_figure_9_utility_fn(workload='a',
                                    x_column='nm',
                                    y_column='[OVERALL] RunTime(ms)',
                                    s_column='nn',
-                                   title='Workload {} on Ethernet and Wireless: '
-                                         'Standard Deviation in Execution Time '
-                                         'for 10k operations'.format(workload.capitalize()),
+                                   title='Workload {} Execution Time'.format(workload.capitalize()),
                                    mode='marker',
                                    show_zero_line_on_y_axis=True,
                                    filename='figures/wl{}_fig9.html'.format(i),
@@ -436,7 +432,7 @@ def research_question_1_figure_10_utility_function(wl='a'):
                                    y_column='[OVERALL] RunTime(ms)',
                                    s_column=None,
                                    show_zero_line_on_y_axis=True,
-                                   title='Execution Time for 10k operations, Wired LAN: Workload {}'.format(i),
+                                   title='Execution Time, Workload {}'.format(i),
                                    filename='figures/wl{}_fig10.html'.format(wl),
                                    image_filename='figures/wl{}_fig10'.format(wl),
                                    image_type='svg',
@@ -489,7 +485,7 @@ def research_question_1_figure_11_utility_function(wl='a'):
                                    y_column='[OVERALL] RunTime(ms)',
                                    s_column=None,
                                    show_zero_line_on_y_axis=True,
-                                   title='Execution Time for 10k operations, Wired LAN: Workload {}'.format(i),
+                                   title='Execution Time, Workload {}'.format(i),
                                    filename='figures/wl{}_fig11.html'.format(wl),
                                    image_filename='figures/wl{}_fig11'.format(wl),
                                    image_type='svg',

@@ -293,54 +293,63 @@ def initial_observations_text(comparison_description, workload):
 # This will be just a dictionary with the text of all initial observations.
 def get_caption(figure_id, workload):
 
+    figure_1_caption = 'This scatterplot compares the values from \ref{Abramova2014TestingCassandra} to the median result of Workload {} executed on the virtual machine.'.format(workload.capitalize())
+    figure_4_caption = 'Execution time for virtual machines with 1GB, 2GB, and 4GB of \gls{ram}.  The first 9 trials have been removed in order to filter out the trials representing cache effect and thus represents the steady state.'
+    figure_5_caption = 'This compares the 2GB virtual machine with the corresponding value from \ref{Abramova2014TestingCassandra}.'
+    figure_9_caption = 'Standard deviation of execution time in milliseconds.  There is a significant increase when going from the wired to the wireless configuration.'
+    figure_6_caption = 'Comparison among the Raspberry Pi nodes (rp-1GB), the results reported in \ref{Abramova2014TestingCassandra}, and the virtual nodes with 1GB of \gls{ram}.'
+    figure_7_caption = 'Comparison between links: Ethernet wired versus 802.11 wireless.  As the cluster sizes increase, these show a tendency to diverge.'
+    figure_8_caption = 'Results of wireless testing.  There seems to be a steady climb in execution time as the cluster size increases.  Any oscillation cannot be explained with current analysis and would require additional experimentation.'
+    figure_10_caption = 'Results of limited hardware, the Raspberry Pi, on an Ethernet \gls{lan}.  Execution time is plotted over cluster size.'
+
     caption_dict = {
         1: {
-            'a': '',
-            'c': '',
-            'e': '',
-            'i': ''
+            'a': figure_1_caption,
+            'c': figure_1_caption,
+            'e': figure_1_caption,
+            'i': figure_1_caption
         },
         4: {
-            'a': '',
-            'c': '',
-            'e': '',
-            'i': ''
+            'a': figure_4_caption,
+            'c': figure_4_caption,
+            'e': figure_4_caption,
+            'i': figure_4_caption
         },
         5: {
-            'a': '',
-            'c': '',
-            'e': '',
-            'i': ''
+            'a': figure_5_caption,
+            'c': figure_5_caption,
+            'e': figure_5_caption,
+            'i': figure_5_caption
         },
         6: {
-            'a': '',
-            'c': '',
-            'e': '',
-            'i': ''
+            'a': figure_6_caption,
+            'c': figure_6_caption,
+            'e': figure_6_caption,
+            'i': figure_6_caption
         },
         7: {
-            'a': '',
-            'c': '',
-            'e': '',
-            'i': ''
+            'a': figure_7_caption,
+            'c': figure_7_caption,
+            'e': figure_7_caption,
+            'i': figure_7_caption
         },
         8: {
-            'a': '',
-            'c': '',
-            'e': '',
-            'i': ''
+            'a': figure_8_caption,
+            'c': figure_8_caption,
+            'e': figure_8_caption,
+            'i': figure_8_caption
         },
         9: {
-            'a': '',
-            'c': '',
-            'e': '',
-            'i': ''
+            'a': figure_9_caption,
+            'c': figure_9_caption,
+            'e': figure_9_caption,
+            'i': figure_9_caption
         },
         10: {
-            'a': '',
-            'c': '',
-            'e': '',
-            'i': ''
+            'a': figure_10_caption,
+            'c': figure_10_caption,
+            'e': figure_10_caption,
+            'i': figure_10_caption
         }
 
     }
