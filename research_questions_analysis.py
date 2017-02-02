@@ -695,6 +695,10 @@ def speedup_analysis_tables(csv_file, comparison_description, workload,
 
         s = '\n\n' + insert0 + '\n\n' + insert1 + '\n\n'
 
+    elif comparison_description in ['rp_v_ref', 'vm_v_ref']:
+        s = ''
+
+
     return s
 
 
