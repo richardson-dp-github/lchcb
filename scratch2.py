@@ -167,7 +167,7 @@ run_all_graphs_for_workload_e()
 #for i in ['2', '3', '4']:
 #    csa.generate_cassandra_stress_graphs(i)
 
-#convert_all_svgs_to_pdf()
+convert_all_svgs_to_pdf()
 
 '''
 workload = 'e'

@@ -49,6 +49,97 @@ def return_embedded_latex_tables(latex_table_as_string='',
     return xx
 
 
+def return_results_for_abramova_reference_sections(section, workload):
+
+
+    label_for_new_column='dif_from_ref'
+
+    s = ''
+    # First report initial observations
+    #  except that there is no appropriate graph...
+
+    # Here, we'll have to call both the graph and the table.
+    df = return_df_that_includes_differences(main_csv_file='combined_results_revised.csv',
+                                             reference_csv_file='abramova_results.csv',
+                                             trial_list=None,
+                                             measurement_of_interest='[OVERALL] RunTime(ms)',
+                                             desired_index=None,
+                                             desired_columns=None,
+                                             filter_for_nominator=['vm', 'nodal', '2GB'],
+                                             filter_for_denominator=['ref', 'unk', '2GB'],
+                                             label_for_new_column=label_for_new_column)
+
+
+    # Include and generate the table to insert here...
+
+    nn = [1, 3, 6]
+    wl = workload
+    db = 1000
+
+    df_summary = df[label_for_new_column].loc[nn, wl, db]
+
+    df_summary_for_individual_cluster_sizes = df_summary.unstack(level='nn')
+
+    df_summary_stats_for_individual_cluster_sizes = df_summary_for_individual_cluster_sizes.describe()
+    df_summary_stats_overall = df_summary.describe().rename('OVERALL')
+
+    df_summary_stats=df_summary_stats_for_individual_cluster_sizes.join(pd.DataFrame(df_summary_stats_overall))
+
+    label_for_assignment = 'abs_diffs_wl{}'.format(workload)
+    label_for_reference = '\\ref{{{}}}'.format('table:{}'.format(label_for_assignment))
+
+    insert_table = return_embedded_latex_tables(latex_table_as_string=df_summary_stats.to_latex(),
+                                                label=label_for_assignment,
+                                                caption='Calculated differences between the ends.')
+
+    # Second, calculate differences and do a linear regression
+
+    reference_to_paper = r'\cite{Abramova2014TestingCassandra}'
+
+    s += 'Here, as depicted in Figure {fig}, one can see that the virtual machine configured to represent the network' \
+         ' in {reference_to_paper} appears to perform at a significantly shorter execution time ' \
+         'compared to {reference_to_paper}.  ' \
+         'This is probably due to the fact that the network in the virtual ' \
+         ' environment was a node and did not experience any kind of significant propagation delay. ' \
+         'Table {table_ref} displays these results.  ' \
+         '' \
+         ''.format(
+                   reference_to_paper=reference_to_paper,
+                   fig='figures-wl{}_fig5.pdf'.format(workload),
+                   table_ref=label_for_reference)
+
+    for i in [1, 3, 6]:
+        nn = i
+        wl = workload
+        db = 1000
+        ref_val = df['ref', 'unk', '2GB'].loc([nn, wl, db])
+        s += 'For a cluster size of {node_size}, the configuration in {reference_to_paper} reported ' \
+             'a total execution time of {ref}' \
+             'The maximum point, {max_point}, fell {max_dif} away from the reference point of {ref}.  ' \
+             'The minimum point, {min_point}, fell {min_dif} away from the reference point.  ' \
+             'The mean distance from the reference was calculated to be {mean_dif}.' \
+             ''.format(node_size=i,
+                       ref=ref_val,
+                       reference_to_paper='',
+                       max_point='',
+                       min_point='',
+                       max_dif='',
+                       min_dif='',
+                       mean_dif='')
+
+    s += 'Overall, for all node cluster sizes' \
+         ', the maximum deviation from the reference was {max_dif}, and the minimum deviation from the ' \
+         'reference was {min_dif}, and the mean deviation from the reference was {mean_dif}.' \
+         ''.format(max_dif='',
+                   min_dif='',
+                   mean_dif='')
+
+
+    # Third, calculate speedup and do a linear regression
+
+    return s
+
+
 def return_desired_summary_statistics_table(
                                             csv_file='combined_results_revised.csv',
                                             measurement_of_interest = '[OVERALL] RunTime(ms)',
@@ -88,7 +179,12 @@ def insert_summary_statistics_table(comparison_description, workload):
 
     rest_of_vms = ''
 
-    for i in ['1GB', '4GB']:
+    if workload in ['i']:
+        x = ['1GB', '2GB', '4GB']
+    else:
+        x = ['1GB', '4GB']
+
+    for i in x:
         rest_of_vms += return_desired_summary_statistics_table(
                                             csv_file='combined_results_revised.csv',
                                             measurement_of_interest = '[OVERALL] RunTime(ms)',
@@ -164,29 +260,29 @@ def initial_observations_text(comparison_description, workload):
         'ram_v_ram': {
             'a': r'This section discusses testing and performance for memory sizes: 1GB, 2GB, and 4GB.  '
                  r'The results are displayed in Figure \ref{figures-wla_fig4}. '
-                 r'While it appears the varying the amount of memory has some effect on the results, there'
+                 r'While it appears the varying the amount of memory has some effect on the results, there '
                  r'does not seem to be a predictable pattern across nodes. '
                  r'An ANOVA test will determine if there is an effect, and a linear regression will further test'
                  r'for an effect. ',
             'c': r'This section discusses testing and performance for memory sizes: 1GB, 2GB, and 4GB.  '
                  r'The results are displayed in Figure \ref{figures-wlc_fig4}. '
-                 r'While it appears the varying the amount of memory has some effect on the results, there'
+                 r'While it appears the varying the amount of memory has some effect on the results, there '
                  r'does not seem to be a predictable pattern across nodes. '
-                 r'An ANOVA test will determine if there is an effect, and a linear regression will further test'
+                 r'An ANOVA test will determine if there is an effect, and a linear regression will further test '
                  r'for an effect. ',
             'e': r'The results are displayed in Figure \ref{figures-wle_fig4}.  '
-                 r'First of all, the performance for the a one-node cluster differs significantly between 1GB RAM and'
+                 r'First of all, the performance for the a one-node cluster differs significantly between 1GB RAM and '
                  r'all other cases.  '
-                 r'While this could be some kind of implementation error, it is best not to draw any conclusions from'
+                 r'While this could be some kind of implementation error, it is best not to draw any conclusions from '
                  r'this. '
                  r'It would be best to run these tests again, possibly switching the order to eliminate the possible '
                  r'effect of interference or a mix-up of data. '
-                 r'That one case aside, the amount of RAM seems to have had an effect on the results, but there does'
+                 r'That one case aside, the amount of RAM seems to have had an effect on the results, but there does '
                  r'not seem to be any predictive relationship that holds true across cluster sizes. ',
             'i': r'The results are displayed in Figure \ref{figures-wli_fig4}. '
                  r'Here there is a visible trend of 4GB RAM implying better performance results '
                  r'than both 1GB RAM and 2GB RAM.  '
-                 r'However, the relationship between 1GB RAM and 2GB RAM does not seem to be'
+                 r'However, the relationship between 1GB RAM and 2GB RAM does not seem to be '
                  r' predictable across cluster node sizes. '
         },
         'rp_only': {
@@ -293,11 +389,11 @@ def initial_observations_text(comparison_description, workload):
 # This will be just a dictionary with the text of all initial observations.
 def get_caption(figure_id, workload):
 
-    figure_1_caption = 'This scatterplot compares the values from \ref{{Abramova2014TestingCassandra}} to the median result of Workload {} executed on the virtual machine.'.format(workload.capitalize())
+    figure_1_caption = r'This scatterplot compares the values from \cite{Abramova2014TestingCassandra} to the median result of the workload executed on the virtual machine.'
     figure_4_caption = r'Execution time for virtual machines with 1GB, 2GB, and 4GB of \gls{ram}.  The first 9 trials have been removed in order to filter out the trials representing cache effect and thus represents the steady state.'
-    figure_5_caption = r'This compares the 2GB virtual machine with the corresponding value from \ref{Abramova2014TestingCassandra}.'
+    figure_5_caption = r'This compares the 2GB virtual machine with the corresponding value from \cite{Abramova2014TestingCassandra}.'
     figure_9_caption = r'Standard deviation of execution time in milliseconds.  There is a significant increase when going from the wired to the wireless configuration.'
-    figure_6_caption = r'Comparison among the Raspberry Pi nodes (rp-1GB), the results reported in \ref{Abramova2014TestingCassandra}, and the virtual nodes with 1GB of \gls{ram}.'
+    figure_6_caption = r'Comparison among the Raspberry Pi nodes (rp-1GB), the results reported in \cite{Abramova2014TestingCassandra}, and the virtual nodes with 1GB of \gls{ram}.'
     figure_7_caption = r'Comparison between links: Ethernet wired versus 802.11 wireless.  As the cluster sizes increase, these show a tendency to diverge.'
     figure_8_caption = r'Results of wireless testing.  There seems to be a steady climb in execution time as the cluster size increases.  Any oscillation cannot be explained with current analysis and would require additional experimentation.'
     figure_10_caption = r'Results of limited hardware, the Raspberry Pi, on an Ethernet \gls{lan}.  Execution time is plotted over cluster size.'
@@ -367,8 +463,6 @@ def ordinal_analysis_text(comparison_type):
         s[1] = 'For those that did fall, they fell within the 75/25 percentile range. '
         s[2] = 'This seems to suggest that the operation of the Raspberry Pi in this context is similar to that of a more' \
                'capable node. '
-
-
 
 
 
@@ -495,6 +589,9 @@ def update_analysis(comparison_description, workload):
                                  csv_file='combined_results_revised.csv')
     s += '\n'
 
+    if 'ref' in comparison_description:
+        s = '\n\n'
+
     return s
 
 
@@ -523,12 +620,16 @@ def return_single_results_section(workload):
         subsections = ['ram_v_ram','rp_only','rp_v_vm','wlan_only','wlan_v_eth']
     for i in subsections:
         s += r'\subsection{' + get_titles(comparison_type=i) + '}'
-        s += update_initial_observation(workload=workload, comparison_type=i)
-        s += '\n'
-        s += update_ordinal_statistics(comparison_type=i, workload=workload)
-        s += '\n'
-        s += update_analysis(comparison_description=i, workload=workload)
-        s += '\n'
+        if i in ['vm_v_ref']:
+            s += return_results_for_abramova_reference_sections(section=i,
+                                                                workload=workload)
+        else:
+            s += update_initial_observation(workload=workload, comparison_type=i)
+            s += '\n'
+            s += update_ordinal_statistics(comparison_type=i, workload=workload)
+            s += '\n'
+            s += update_analysis(comparison_description=i, workload=workload)
+            s += '\n'
 
 
     return s
@@ -538,6 +639,24 @@ def return_entire_results_section():
 
     s = '\n\n'
     s += r'\chapter{Results and Evaluation}'
+    s += '\n'
+    s += r'\label{results}'
+    s = '\n\n'
+    s += r'\section{Introduction and Overview}'
+    s += '\n'
+    s += r'This section will report and display the results from the resulting ' \
+         r'experiments described in \ref{Methodology}' \
+         r' For standard workloads A, C, an E, as well as custom workload I, the results will be displayed in both ' \
+         r'graph and table format.  First, the results of the virtual machine will be compared to its analogy in ' \
+         r'\cite{Abramova2014TestingCassandra}.  Second, the results among the varying \gls{ram} will be compared. ' \
+         r'Third, the results of implementing the workload on the Raspberry Pi will be reported.  ' \
+         r'Fourth, the Raspberry ' \
+         r'Pi results will be compared against the system in \cite{Abramova2014TestingCassandra}.  ' \
+         r'Fifth, the Raspberry ' \
+         r'Pi results will be compared against the corresponding virtual machine.  ' \
+         r'Sixth, the results from the wireless ' \
+         r'network, using the Raspberry Pi nodes, will be explored.  Finally, seventh, the wired and wireless results ' \
+         r'will be compared.  '
     s += '\n'
     for j in ['a', 'c', 'e', 'i']:
     # for j in ['i']:

@@ -5,6 +5,150 @@ from graph_utility import return_filtered_dataframe as rfd
 from graph_utility import calculate_summary as cs
 
 
+def map_reference_value(r,
+                        desired_index=None,
+                        cluster_sizes=None,
+                        workloads=None,
+                        database_sizes=None,
+                        marker_for_reference_trial='unk',
+                        level_for_trials=3):
+
+    if not desired_index:
+        desired_index = ['ref', 'unk', '2GB']
+
+    if not cluster_sizes:
+        cluster_sizes = [1, 3, 6]
+
+    if not workloads:
+        workloads = ['a', 'c', 'e']
+
+    if not database_sizes:
+        database_sizes = [1000]
+
+    for nn in cluster_sizes:
+        for wl in workloads:
+            for db in database_sizes:
+
+                r[desired_index[0],
+                  desired_index[1],
+                  desired_index[2]].loc[nn, wl, db] = r[desired_index[0],
+                                                        desired_index[1],
+                                                        desired_index[2]].loc[nn, wl, db, marker_for_reference_trial]
+
+    r.drop(labels='unk', level=level_for_trials, inplace=True)
+
+    return r
+
+# Return df with a speedup column
+def return_general_summary_table(main_csv_file='combined_results_revised.csv',
+                                 reference_csv_file='abramova_results.csv',
+                                 trial_list=None,
+                                 measurement_of_interest='[OVERALL] RunTime(ms)',
+                                 desired_index=None,
+                                 desired_columns=None,
+                                 desired_summary_function=np.median
+                                 ):
+
+    if not trial_list:
+        trial_list = range(10, 30+1)
+
+    if not desired_index:
+        desired_index = ['nn', 'wl', 'dbs']
+
+    if not desired_columns:
+        desired_columns = ['nt', 'nm', 'ram']
+
+    df = pd.read_csv(main_csv_file)
+
+    df = rfd(df=df, d={'t': trial_list})
+
+    df = df.append(pd.read_csv(reference_csv_file))
+
+    table = pd.pivot_table(df,
+                           values=measurement_of_interest,
+                           index=desired_index,
+                           columns=desired_columns,
+                           aggfunc=desired_summary_function)
+
+    return table
+
+
+# Return df with a speedup column
+def return_df_that_includes_speedup(main_csv_file='combined_results_revised.csv',
+                                    reference_csv_file='abramova_results.csv',
+                                    trial_list=None,
+                                    measurement_of_interest='[OVERALL] RunTime(ms)',
+                                    desired_index=None,
+                                    desired_columns=None,
+                                    filter_for_nominator=None,
+                                    filter_for_denominator=None,
+                                    label_for_new_column='su_rp_vm'):
+
+    if not filter_for_denominator:
+        filter_for_denominator = ['rp', 'eth', '1GB']
+
+    if not filter_for_nominator:
+        filter_for_nominator = ['vm', 'nodal', '1GB']
+
+    table = return_general_summary_table(main_csv_file=main_csv_file,
+                                         reference_csv_file=reference_csv_file,
+                                         trial_list=trial_list,
+                                         measurement_of_interest=measurement_of_interest,
+                                         desired_index=desired_index,
+                                         desired_columns=desired_columns,
+                                         desired_summary_function=np.median
+                                         )
+
+    table[label_for_new_column] = table[filter_for_nominator[0],
+                                        filter_for_nominator[1],
+                                        filter_for_nominator[2]] / table[filter_for_denominator[0],
+                                                                         filter_for_denominator[1],
+                                                                         filter_for_denominator[2]]
+
+    return table
+
+
+# Return df with a speedup column
+def return_df_that_includes_differences(main_csv_file='combined_results_revised.csv',
+                                        reference_csv_file='abramova_results.csv',
+                                        trial_list=None,
+                                        measurement_of_interest='[OVERALL] RunTime(ms)',
+                                        desired_index=None,
+                                        desired_columns=None,
+                                        filter_for_nominator=None,
+                                        filter_for_denominator=None,
+                                        label_for_new_column='su_rp_vm'):
+
+    if not filter_for_denominator:
+        filter_for_denominator = ['rp', 'eth', '1GB']
+
+    if not filter_for_nominator:
+        filter_for_nominator = ['vm', 'nodal', '1GB']
+
+    desired_index=['nn', 'wl', 'dbs', 't']
+
+    table = return_general_summary_table(main_csv_file=main_csv_file,
+                                         reference_csv_file=reference_csv_file,
+                                         trial_list=trial_list,
+                                         measurement_of_interest=measurement_of_interest,
+                                         desired_index=desired_index,
+                                         desired_columns=desired_columns,
+                                         desired_summary_function=np.median
+                                         )
+
+    table = map_reference_value(r=table)
+
+    # Temporarily requires three
+
+    table[label_for_new_column] = table[filter_for_nominator[0],
+                                        filter_for_nominator[1],
+                                        filter_for_nominator[2]] - table[filter_for_denominator[0],
+                                                                         filter_for_denominator[1],
+                                                                         filter_for_denominator[2]]
+
+    return table
+
+
 # This is to support the conclusion that RAM (within a certain range) does not have an effect
 #  on the overall performance of a distributed database such as Cassandra.
 def anova_for_variation_in_ram(csv_file='combined_results_revised.csv',
@@ -488,7 +632,11 @@ def speedup_analysis_tables(csv_file, comparison_description, workload,
 
     label='{}_{}'.format(comparison_description, workload)
 
+    reference_statement = ''  # initialize
+
     if comparison_description == 'ram_v_ram':
+
+        reference_statement = 'See Table \\ref{{{}}}.'.format('table:{}'.format(label))
 
         dd = {}
 
@@ -534,6 +682,8 @@ def speedup_analysis_tables(csv_file, comparison_description, workload,
 
     elif comparison_description in ['rp_only', 'wlan_only']:
 
+        reference_statement = 'See Table \\ref{{{}}}.'.format('table:{}'.format(label))
+
         dd = {}
 
         dd['slope'] = []
@@ -572,7 +722,7 @@ def speedup_analysis_tables(csv_file, comparison_description, workload,
         s = return_embedded_latex_tables(latex_table_as_string=dd.to_latex(index=False,
                                                                            columns=['slope', 'intercept',
                                                                                     'r_value', 'p_value', 'std_err']),
-                                         caption='Linear Regression over Cluster Size, Workload {}'.format(workload),
+                                         caption='Linear Regression over Cluster Size, Workload {}'.format(workload.capitalize()),
                                          label=label
                                          )
 
@@ -658,9 +808,9 @@ def speedup_analysis_tables(csv_file, comparison_description, workload,
         dd = pd.DataFrame(dd)
 
         if comparison_description in ['rp_v_vm']:
-            caption = 'Linear Regression over the effect of limited hardware, Workload {}'.format(workload.capitalize())
+            caption = 'Linear Regression over the effect of limited hardware, Workload {}.  The designation (NaN) indicates that data was not collected for this cluster size.  r- values in the high nineties indicate that there is a pronounced effect.  Lower r-values indicate a less pronounced effect, likely attributed to high variance.'.format(workload.capitalize())
         elif comparison_description in ['wlan_v_eth']:
-            caption = 'Linear Regression over the effect of 802.11 links, Workload {}'.format(workload.capitalize())
+            caption = 'Linear Regression over the effect of 802.11 links, Workload {}.  The designation (NaN) indicates that data was not collected for this cluster size.   r-values in the high nineties indicate that there is a pronounced effect.  Lower r-values indicate a less pronounced effect, likely attributed to high variance.'.format(workload.capitalize())
         else:
             caption = 'Something went wrong with the caption assignment.'
 
@@ -687,7 +837,7 @@ def speedup_analysis_tables(csv_file, comparison_description, workload,
                                 measurement_of_interest='[OVERALL] RunTime(ms)',
                                 csv_file=csv_file)
 
-
+        reference_statement = 'See Tables \\ref{{{}}} and \\ref{{{}}}.'.format('table:{}'.format(label), 'table:{}'.format(label_for_speedup))
 
         insert1 = return_embedded_latex_tables(latex_table_as_string=entire_speedup_table,
                                                caption=caption_for_speedup,
@@ -697,6 +847,8 @@ def speedup_analysis_tables(csv_file, comparison_description, workload,
 
     elif comparison_description in ['rp_v_ref', 'vm_v_ref']:
         s = ''
+
+    s = reference_statement + '\n\n' + s
 
 
     return s

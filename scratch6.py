@@ -21,29 +21,22 @@ import graph_utility as gu
 import generate_results as gr
 
 
-# Return df with speedup
-def return_df_that_includes_speedup():
-    df = pd.read_csv('combined_results_revised.csv')
+def return_arguments_from_list(x):
 
-    df = gu.return_filtered_dataframe(df=df, d={'t': range(10, 30+1)})
+    return str(x).replace(']', '').replace('[', '')
 
-    df = df.append(pd.read_csv('abramova_results.csv'))
 
-    table = pd.pivot_table(df,
-                           values='[OVERALL] RunTime(ms)',
-                           index=['nn','wl','dbs'],
-                           columns=['nt','nm','ram'],
-                           aggfunc=np.median)
-
-    table['su_rp_vm'] = table['vm', 'nodal', '1GB'] / table['rp', 'eth', '1GB']
-    table['su_rp_ref'] = table['ref', 'unk', '2GB'] / table['rp', 'eth', '1GB']
-    table['su_wlan_eth'] = table['rp', 'eth', '1GB'] / table['rp', 'wlan', '1GB']
-
-    return table
 
 
 gr.save_results_section()
 
+# print rqa.return_df_that_includes_differences()
+
+#r['ref', 'unk', '2GB'] = r['ref', 'unk', '2GB']
+
+
+
+# print r
 
 # rqfg.research_question_4_figure_8()
 
