@@ -2,7 +2,8 @@ import pandas as pd
 from graph_utility import return_filtered_dataframe as rfd
 
 
-def display_appropriate_interval_from_ms(ms=1000):
+def display_appropriate_interval_from_ms(ms=1000,
+                                         include_terminal_comma=True):
 
     s = ms, 'milliseconds'
 
@@ -33,13 +34,17 @@ def display_appropriate_interval_from_ms(ms=1000):
                   seconds_in_a_minute *
                   minutes_in_an_hour * hours_in_a_day * days_in_a_week), 'week(s)'
 
+    if include_terminal_comma:
+        comma = ','
+    else:
+        comma = ''
     phrase = ''
     if ms == 1:
         phrase = '1 millisecond'
     elif ms == s[0]:
         phrase = '{} milliseconds'.format(ms)
     else:
-        phrase = '{} milliseconds, or about {:.2g} {}'.format(ms, s[0], s[1])
+        phrase = '{} milliseconds, or about {:.2g} {}{}'.format(ms, s[0], s[1], comma)
 
 
     return phrase

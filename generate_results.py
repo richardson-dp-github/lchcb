@@ -2,6 +2,19 @@ import research_questions_analysis
 import pandas as pd
 from graph_utility import return_filtered_dataframe as rfd
 from research_questions_analysis import *
+from scratch5 import ram_vs_ram, \
+    raspberry_pi_versus_virtual_machine, wireless_links_only, \
+    wireless_links_versus_wired
+
+
+def return_standardized_label(figure_id=0,
+                              workload='a'):
+
+    return 'figures-wl{workload}_fig{figure_id}'.format(workload=workload, figure_id=figure_id)
+
+
+def latex_reference(label):
+    return r'\ref{' + label + '}'
 
 
 def decode_abbreviation_from_data_for_narrative(code):
@@ -38,7 +51,7 @@ def return_embedded_latex_tables(latex_table_as_string='',
     xx = ''
 
     x = ''
-    x += r'\begin{table}' + '\n'
+    x += r'\begin{table}[h!]' + '\n'
     x += latex_table_as_string
 
     x += '\caption{' + caption + '}' + '\n'
@@ -49,95 +62,6 @@ def return_embedded_latex_tables(latex_table_as_string='',
     return xx
 
 
-def return_results_for_abramova_reference_sections(section, workload):
-
-
-    label_for_new_column='dif_from_ref'
-
-    s = ''
-    # First report initial observations
-    #  except that there is no appropriate graph...
-
-    # Here, we'll have to call both the graph and the table.
-    df = return_df_that_includes_differences(main_csv_file='combined_results_revised.csv',
-                                             reference_csv_file='abramova_results.csv',
-                                             trial_list=None,
-                                             measurement_of_interest='[OVERALL] RunTime(ms)',
-                                             desired_index=None,
-                                             desired_columns=None,
-                                             filter_for_nominator=['vm', 'nodal', '2GB'],
-                                             filter_for_denominator=['ref', 'unk', '2GB'],
-                                             label_for_new_column=label_for_new_column)
-
-
-    # Include and generate the table to insert here...
-
-    nn = [1, 3, 6]
-    wl = workload
-    db = 1000
-
-    df_summary = df[label_for_new_column].loc[nn, wl, db]
-
-    df_summary_for_individual_cluster_sizes = df_summary.unstack(level='nn')
-
-    df_summary_stats_for_individual_cluster_sizes = df_summary_for_individual_cluster_sizes.describe()
-    df_summary_stats_overall = df_summary.describe().rename('OVERALL')
-
-    df_summary_stats=df_summary_stats_for_individual_cluster_sizes.join(pd.DataFrame(df_summary_stats_overall))
-
-    label_for_assignment = 'abs_diffs_wl{}'.format(workload)
-    label_for_reference = '\\ref{{{}}}'.format('table:{}'.format(label_for_assignment))
-
-    insert_table = return_embedded_latex_tables(latex_table_as_string=df_summary_stats.to_latex(),
-                                                label=label_for_assignment,
-                                                caption='Calculated differences between the ends.')
-
-    # Second, calculate differences and do a linear regression
-
-    reference_to_paper = r'\cite{Abramova2014TestingCassandra}'
-
-    s += 'Here, as depicted in Figure {fig}, one can see that the virtual machine configured to represent the network' \
-         ' in {reference_to_paper} appears to perform at a significantly shorter execution time ' \
-         'compared to {reference_to_paper}.  ' \
-         'This is probably due to the fact that the network in the virtual ' \
-         ' environment was a node and did not experience any kind of significant propagation delay. ' \
-         'Table {table_ref} displays these results.  ' \
-         '' \
-         ''.format(
-                   reference_to_paper=reference_to_paper,
-                   fig='figures-wl{}_fig5.pdf'.format(workload),
-                   table_ref=label_for_reference)
-
-    for i in [1, 3, 6]:
-        nn = i
-        wl = workload
-        db = 1000
-        ref_val = df['ref', 'unk', '2GB'].loc([nn, wl, db])
-        s += 'For a cluster size of {node_size}, the configuration in {reference_to_paper} reported ' \
-             'a total execution time of {ref}' \
-             'The maximum point, {max_point}, fell {max_dif} away from the reference point of {ref}.  ' \
-             'The minimum point, {min_point}, fell {min_dif} away from the reference point.  ' \
-             'The mean distance from the reference was calculated to be {mean_dif}.' \
-             ''.format(node_size=i,
-                       ref=ref_val,
-                       reference_to_paper='',
-                       max_point='',
-                       min_point='',
-                       max_dif='',
-                       min_dif='',
-                       mean_dif='')
-
-    s += 'Overall, for all node cluster sizes' \
-         ', the maximum deviation from the reference was {max_dif}, and the minimum deviation from the ' \
-         'reference was {min_dif}, and the mean deviation from the reference was {mean_dif}.' \
-         ''.format(max_dif='',
-                   min_dif='',
-                   mean_dif='')
-
-
-    # Third, calculate speedup and do a linear regression
-
-    return s
 
 
 def return_desired_summary_statistics_table(
@@ -504,17 +428,21 @@ def insert_figures(comparison_type, workload, width=5.5):
 
     text = ''
 
+    reference_labels = []
+
     for figure_id in figures_dict[comparison_type]:
 
         name_of_figure = 'figures-wl{workload}_fig{figure_id}.pdf'.format(workload=workload, figure_id=figure_id)
         label_for_figure = 'figures-wl{workload}_fig{figure_id}'.format(workload=workload, figure_id=figure_id)
         caption = get_caption(figure_id=figure_id, workload=workload)
 
-        text += r'\begin{figure}[h]' + '\n' \
+        text += r'\begin{figure}[h!]' + '\n' \
                 r'\includegraphics[width=' + str(width) + r'in]{Figures/' + name_of_figure + r'}' + '\n' \
                 r'\caption{' + caption + r'}' + '\n' \
                 r'\label{' + label_for_figure + r'}' + '\n' \
                 r'\end{figure}' + '\n' + '\n'
+
+        reference_labels.append(label_for_figure)
 
     return text
 
@@ -565,7 +493,258 @@ def get_sentences_to_refer_to_appropriate_summary_tables(comparison_description,
     return s
 
 
+def get_observations_paragraph_for_individual(cluster_sizes=None,
+                                              df_summary=None,
+                                              df_ref=None,
+                                              measurement_of_interest='[OVERALL] RunTime(ms)',
+                                              workload='a'):
 
+    s = ''
+
+    if not cluster_sizes:
+        cluster_sizes = [1, 3, 6]
+
+    for cluster_size in cluster_sizes:
+        nn = cluster_size
+        wl = workload
+        max_dif= df_summary[nn].loc['max']
+        min_dif= df_summary[nn].loc['min']
+        med_dif= df_summary[nn].loc['50%']
+        s += 'For a node cluster size of {cluster_size}, ' \
+             'the median execution time was {med_dif}, and ' \
+             'all execution times fell within {min_dif} and {max_dif}, inclusive.  ' \
+             ''.format(cluster_size=cluster_size,
+                       max_dif=display_appropriate_interval_from_ms(max_dif, include_terminal_comma=False),
+                       min_dif=display_appropriate_interval_from_ms(min_dif),
+                       med_dif=display_appropriate_interval_from_ms(med_dif, include_terminal_comma=False))
+
+    nn = 'OVERALL'
+    max_dif= df_summary[nn].loc['max']
+    min_dif= df_summary[nn].loc['min']
+    med_dif= df_summary[nn].loc['50%']
+    s += 'Overall, ' \
+         'the median execution time was {med_dif}, and all execution times fell within {min_dif} and {max_dif}.  \n' \
+         ''.format(cluster_size=cluster_size,
+                       max_dif=display_appropriate_interval_from_ms(max_dif, include_terminal_comma=False),
+                       min_dif=display_appropriate_interval_from_ms(min_dif),
+                       med_dif=display_appropriate_interval_from_ms(med_dif, include_terminal_comma=False))
+
+    return s
+
+
+def implementation_on_raspberry_pi(workload):
+
+    s = '\n'
+
+    # s += 'In a similar fashion, the tests were run on the Raspberry Pi to observe performance. ' \
+    #     'The spread of each of the tests can be seen in Figure 23 and Table 17. ' \
+    #     'The results can be seen in Figure 37. ' \
+    #     '\n\n' \
+    #     'As can be seen from Figure 37, the Raspberry Pi configuration takes considerably more execution time ' \
+    #     'than its virtual machine analogy, which is probably due to the physical nature of the links, and the ' \
+    #     'router acting as an intermediary as well as the limitations of the Raspberry Pi hardware. ' \
+    #     'However, it is worth noting that its analogy in [?] exhibits similar performance. ' \
+    #     '\n\n'
+
+    s = '\n\n'
+
+    figure_insert = insert_figures(comparison_type='rp_only', workload=workload)
+
+    s += figure_insert
+    s += 'This section summarizes the results from running Workload {workload} on Raspberry Pi clusters networked ' \
+         'via an Ethernet LAN.  ' \
+         ''.format(workload=workload)
+    ref_to_figure = 'The results are depicted in Figure {}. '.format(latex_reference(return_standardized_label(
+        figure_id=10,
+        workload=workload)))
+
+    s += ref_to_figure
+
+    label_for_assignment = 'rp_only_wl{}'.format(workload)
+    label_for_reference = '\\ref{{{}}}'.format('table:{}'.format(label_for_assignment))
+    reference_to_paper = r'\cite{Abramova2014TestingCassandra}'
+    desired_index=['nn', 'wl', 'dbs', 't']
+    measurement_of_interest='[OVERALL] RunTime(ms)'
+    label_for_new_column='rp_on_eth'
+    df = return_df_that_includes_differences(main_csv_file='combined_results_revised.csv',
+                                             reference_csv_file='abramova_results.csv',
+                                             trial_list=None,
+                                             measurement_of_interest=measurement_of_interest,
+                                             desired_index=None,
+                                             desired_columns=None,
+                                             filter_for_nominator=['rp', 'eth', '1GB'],
+                                             filter_for_denominator=['ref', 'unk', '2GB'],
+                                             label_for_new_column=label_for_new_column)
+
+    df = return_general_summary_table(desired_index=desired_index,
+                                      reference_csv_file=None)
+
+    df = pd.DataFrame(df['rp', 'eth', '1GB'].rename(label_for_new_column))
+
+    df = get_summary_table(df=df,
+                           label_for_new_column=label_for_new_column,
+                           nn=[1, 2, 3, 4, 5, 6],
+                           wl=workload)
+
+    s += get_observations_paragraph_for_individual(cluster_sizes=[1, 2, 3, 4, 5, 6],
+                                                  df_summary=df,
+                                                  df_ref=return_reference_data_frame(),
+                                                  measurement_of_interest='[OVERALL] RunTime(ms)',
+                                                  workload=workload)
+
+    insert_table = return_embedded_latex_tables(latex_table_as_string=df.to_latex(),
+                                                label=label_for_assignment,
+                                                caption='Summary of Workload {workload} '
+                                                        'executed on Raspberry Pi clusters on an Ethernet LAN '
+                                                        ''
+                                                        ''.format(workload=workload))
+
+    s += insert_table
+
+    s += 'The full summary of the differences are reported in Table {}.  '.format(label_for_reference)
+
+
+
+
+    s += '\n\n'
+
+
+
+
+    # for cluster_size in [1, 3, 6]:
+    #     s += 'For a node network of {cluster_size}, ' \
+    #         'the experimental values fell between {} and {}, inclusive, and all values fell ' \
+    #         'within {} of the reference value {}.  ' \
+    #         ''.format(cluster_size=cluster_size)
+
+    return s
+
+
+def raspberry_pi_versus_reference_value(workload):
+    s = '\n\n'
+
+    figure_insert = insert_figures(comparison_type='rp_v_ref', workload=workload)
+
+    s += figure_insert
+
+    ref_to_figure = 'The results are depicted in Figure {}. '.format(latex_reference(return_standardized_label(
+        figure_id=6,
+        workload=workload)))
+
+    s += 'It is of interest to compare the performance of the Raspberry Pi to that of the reported value. '
+
+    s += ref_to_figure
+
+    label_for_assignment = 'abs_diffs_rp_ref_wl{}'.format(workload)
+    label_for_reference = '\\ref{{{}}}'.format('table:{}'.format(label_for_assignment))
+    reference_to_paper = r'\cite{Abramova2014TestingCassandra}'
+
+    measurement_of_interest='[OVERALL] RunTime(ms)'
+    label_for_new_column='dif_from_ref'
+    df = return_df_that_includes_differences(main_csv_file='combined_results_revised.csv',
+                                             reference_csv_file='abramova_results.csv',
+                                             trial_list=None,
+                                             measurement_of_interest=measurement_of_interest,
+                                             desired_index=None,
+                                             desired_columns=None,
+                                             filter_for_nominator=['rp', 'eth', '1GB'],
+                                             filter_for_denominator=['ref', 'unk', '2GB'],
+                                             label_for_new_column=label_for_new_column)
+
+    df = get_summary_table(df=df,
+                           label_for_new_column=label_for_new_column,
+                           nn=[1, 3, 6],
+                           wl=workload)
+
+    s += get_observations_paragraph_for_reference(cluster_sizes=[1, 3, 6],
+                                                  df_summary_of_differentials=df,
+                                                  df_ref=return_reference_data_frame(),
+                                                  measurement_of_interest='[OVERALL] RunTime(ms)',
+                                                  workload=workload)
+
+    insert_table = return_embedded_latex_tables(latex_table_as_string=df.to_latex(),
+                                                label=label_for_assignment,
+                                                caption='Summary of the absolute value of the differences '
+                                                        'between the empirical execution'
+                                                        ' time on the Raspberry Pi clusters '
+                                                        'and the corresponding execution time reported in {}'
+                                                        ''.format(reference_to_paper))
+
+    s += insert_table
+
+    s += 'The full summary of the differences are reported in Table {}.  '.format(label_for_reference)
+
+
+
+
+    s += '\n\n'
+
+
+
+    return s
+
+def comparing_existing_work_vm_versus_ref_val(workload):
+    s = '\n\n'
+
+    figure_insert = insert_figures(comparison_type='vm_v_ref', workload=workload)
+
+    s += figure_insert
+
+    ref_to_figure = 'The results are depicted in Figure {}. '.format(latex_reference(return_standardized_label(
+        figure_id=5,
+        workload=workload)))
+
+    s += 'It is of interest to compare the performance of the virtual machine to that of the reported value. '
+
+    s += ref_to_figure
+
+    label_for_assignment = 'abs_diffs_vm_ref_wl{}'.format(workload)
+    label_for_reference = '\\ref{{{}}}'.format('table:{}'.format(label_for_assignment))
+    reference_to_paper = r'\cite{Abramova2014TestingCassandra}'
+
+    measurement_of_interest='[OVERALL] RunTime(ms)'
+    label_for_new_column='dif_from_ref'
+    df = return_df_that_includes_differences(main_csv_file='combined_results_revised.csv',
+                                             reference_csv_file='abramova_results.csv',
+                                             trial_list=None,
+                                             measurement_of_interest=measurement_of_interest,
+                                             desired_index=None,
+                                             desired_columns=None,
+                                             filter_for_nominator=['vm', 'nodal', '2GB'],
+                                             filter_for_denominator=['ref', 'unk', '2GB'],
+                                             label_for_new_column=label_for_new_column)
+
+    df = get_summary_table(df=df,
+                           label_for_new_column=label_for_new_column,
+                           nn=[1, 3, 6],
+                           wl=workload)
+
+    s += get_observations_paragraph_for_reference(cluster_sizes=[1, 3, 6],
+                                                  df_summary_of_differentials=df,
+                                                  df_ref=return_reference_data_frame(),
+                                                  measurement_of_interest='[OVERALL] RunTime(ms)',
+                                                  workload=workload)
+
+    insert_table = return_embedded_latex_tables(latex_table_as_string=df.to_latex(),
+                                                label=label_for_assignment,
+                                                caption='Summary of the absolute value of the differences '
+                                                        'between the empirical execution'
+                                                        ' time on the Virtual Machine clusters '
+                                                        'and the corresponding execution time reported in {}'
+                                                        ''.format(reference_to_paper))
+
+    s += insert_table
+
+    s += 'The full summary of the differences are reported in Table {}.  '.format(label_for_reference)
+
+
+
+
+    s += '\n\n'
+
+
+
+    return s
 
 def update_initial_observation(comparison_type, workload):
     s = '\n'
@@ -621,8 +800,20 @@ def return_single_results_section(workload):
     for i in subsections:
         s += r'\subsection{' + get_titles(comparison_type=i) + '}'
         if i in ['vm_v_ref']:
-            s += return_results_for_abramova_reference_sections(section=i,
-                                                                workload=workload)
+            s += comparing_existing_work_vm_versus_ref_val(workload=workload)
+        elif i in ['rp_only']:
+            s += implementation_on_raspberry_pi(workload=workload)
+        elif i in ['wlan_v_eth']:
+            s += wireless_links_versus_wired(workload=workload)
+        elif i in ['ram_v_ram']:
+            s += ram_vs_ram(workload=workload)
+        elif i in ['rp_v_vm']:
+            s += raspberry_pi_versus_virtual_machine(workload=workload)
+        elif i in ['rp_v_ref']:
+            s += raspberry_pi_versus_reference_value(workload=workload)
+        elif i in ['wlan_only']:
+            s += wireless_links_only(workload=workload)
+
         else:
             s += update_initial_observation(workload=workload, comparison_type=i)
             s += '\n'
@@ -641,7 +832,7 @@ def return_entire_results_section():
     s += r'\chapter{Results and Evaluation}'
     s += '\n'
     s += r'\label{results}'
-    s = '\n\n'
+    s += '\n\n'
     s += r'\section{Introduction and Overview}'
     s += '\n'
     s += r'This section will report and display the results from the resulting ' \

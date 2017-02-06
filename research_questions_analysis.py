@@ -2,7 +2,10 @@ from scipy import stats
 import numpy as np
 import pandas as pd
 from graph_utility import return_filtered_dataframe as rfd
+from generate_conclusion import display_appropriate_interval_from_ms
 from graph_utility import calculate_summary as cs
+
+
 
 
 def map_reference_value(r,
@@ -62,7 +65,8 @@ def return_general_summary_table(main_csv_file='combined_results_revised.csv',
 
     df = rfd(df=df, d={'t': trial_list})
 
-    df = df.append(pd.read_csv(reference_csv_file))
+    if reference_csv_file:
+        df = df.append(pd.read_csv(reference_csv_file))
 
     table = pd.pivot_table(df,
                            values=measurement_of_interest,
@@ -71,6 +75,74 @@ def return_general_summary_table(main_csv_file='combined_results_revised.csv',
                            aggfunc=desired_summary_function)
 
     return table
+
+
+
+def return_reference_data_frame():
+
+    df_ref = pd.read_csv('abramova_results.csv')
+
+    df_ref = df_ref.set_index(['nn', 'wl'])
+
+    return df_ref
+
+
+def get_summary_table(df,
+                      label_for_new_column,
+                      nn,
+                      wl,
+                      db=1000):
+
+    if not nn:
+        nn = [1, 3, 6]
+
+    df_summary = df[label_for_new_column].loc[nn, wl, db]
+
+    df_summary_for_individual_cluster_sizes = df_summary.unstack(level='nn')
+
+    df_summary_stats_for_individual_cluster_sizes = df_summary_for_individual_cluster_sizes.describe()
+    df_summary_stats_overall = df_summary.describe().rename('OVERALL')
+
+    df_summary_stats = df_summary_stats_for_individual_cluster_sizes.join(pd.DataFrame(df_summary_stats_overall))
+
+    return df_summary_stats
+
+
+def get_observations_paragraph_for_reference(cluster_sizes=None,
+                                             df_summary_of_differentials=None,
+                                             df_ref=None,
+                                             measurement_of_interest='[OVERALL] RunTime(ms)',
+                                             workload='a'):
+
+    s = ''
+
+    if not cluster_sizes:
+        cluster_sizes = [1, 3, 6]
+
+    for cluster_size in cluster_sizes:
+        nn = cluster_size
+        wl = workload
+        ref_val = df_ref[measurement_of_interest].loc[nn, wl]
+        max_dif= df_summary_of_differentials[nn].loc['max']
+        min_dif= df_summary_of_differentials[nn].loc['min']
+        mean_dif= df_summary_of_differentials[nn].loc['mean']
+        s += 'For a node cluster size of {cluster_size}, ' \
+             'the experimental values fell within {max_dif} of the value reported, which was {ref_val}.  ' \
+             ''.format(cluster_size=cluster_size,
+                       max_dif=display_appropriate_interval_from_ms(max_dif),
+                       ref_val=display_appropriate_interval_from_ms(ref_val, include_terminal_comma=False))
+
+    nn = 'OVERALL'
+    max_dif= df_summary_of_differentials[nn].loc['max']
+    min_dif= df_summary_of_differentials[nn].loc['min']
+    mean_dif= df_summary_of_differentials[nn].loc['mean']
+    s += 'Overall, ' \
+         'the experimental values fell within {max_dif} of the corresponding reference value.  \n' \
+         ''.format(cluster_size=cluster_size,
+                   max_dif=display_appropriate_interval_from_ms(max_dif),
+                   ref_val=display_appropriate_interval_from_ms(ref_val, include_terminal_comma=False))
+
+    return s
 
 
 # Return df with a speedup column
@@ -140,11 +212,11 @@ def return_df_that_includes_differences(main_csv_file='combined_results_revised.
 
     # Temporarily requires three
 
-    table[label_for_new_column] = table[filter_for_nominator[0],
+    table[label_for_new_column] = abs(table[filter_for_nominator[0],
                                         filter_for_nominator[1],
                                         filter_for_nominator[2]] - table[filter_for_denominator[0],
                                                                          filter_for_denominator[1],
-                                                                         filter_for_denominator[2]]
+                                                                         filter_for_denominator[2]])
 
     return table
 
