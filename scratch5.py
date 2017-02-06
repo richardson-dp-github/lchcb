@@ -180,8 +180,7 @@ def comparing_existing_work_vm_versus_ref_val(section, workload):
     return s
 '''
 
-def ram_vs_ram(workload):
-    return '\n\n\n'
+
 
 
 
@@ -195,9 +194,7 @@ def raspberry_pi_versus_virtual_machine(workload):
     return s
 
 
-def wireless_links_only(workload):
-    s = ''
-    return s
+
 
 
 def wireless_links_versus_wired(workload):

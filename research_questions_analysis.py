@@ -594,7 +594,7 @@ def summary_statistics_varying_RAM_for_1_3_and_6_node_configurations(wl='a'):
                   ''.format(n, total_min, total_max, total_range)
         x += return_embedded_latex_tables(return_summary_statistics_for_vms(nn=n, wl=wl),
                                               caption=caption,
-                                              label='summary_statistics_for_{}_config'.format(n))
+                                              label='summary_statistics_for_{}_config_varying_ram_wl{}'.format(n, wl))
     return x
 
 

@@ -2,8 +2,8 @@ import research_questions_analysis
 import pandas as pd
 from graph_utility import return_filtered_dataframe as rfd
 from research_questions_analysis import *
-from scratch5 import ram_vs_ram, \
-    raspberry_pi_versus_virtual_machine, wireless_links_only, \
+from scratch5 import  \
+    raspberry_pi_versus_virtual_machine, \
     wireless_links_versus_wired
 
 
@@ -313,7 +313,7 @@ def initial_observations_text(comparison_description, workload):
 # This will be just a dictionary with the text of all initial observations.
 def get_caption(figure_id, workload):
 
-    figure_1_caption = r'This scatterplot compares the values from \cite{Abramova2014TestingCassandra} to the median result of the workload executed on the virtual machine.'
+    figure_1_caption = r'This plot shows the execution times imported from \cite{Abramova2014TestingCassandra}.'
     figure_4_caption = r'Execution time for virtual machines with 1GB, 2GB, and 4GB of \gls{ram}.  The first 9 trials have been removed in order to filter out the trials representing cache effect and thus represents the steady state.'
     figure_5_caption = r'This compares the 2GB virtual machine with the corresponding value from \cite{Abramova2014TestingCassandra}.'
     figure_9_caption = r'Standard deviation of execution time in milliseconds.  There is a significant increase when going from the wired to the wireless configuration.'
@@ -619,6 +619,72 @@ def implementation_on_raspberry_pi(workload):
 
     return s
 
+def wireless_links_only(workload):
+    s = ''
+
+    s = '\n\n'
+
+    figure_insert = insert_figures(comparison_type='wlan_only', workload=workload)
+
+    s += figure_insert
+    s += 'This section summarizes the results from running Workload {workload} on Raspberry Pi clusters networked ' \
+         'via an Wireless LAN.  ' \
+         ''.format(workload=workload)
+    ref_to_figure = 'The results are depicted in Figure {}. '.format(latex_reference(return_standardized_label(
+        figure_id=8,
+        workload=workload)))
+
+    s += ref_to_figure
+
+    label_for_assignment = 'wlan_only_wl{}'.format(workload)
+    label_for_reference = '\\ref{{{}}}'.format('table:{}'.format(label_for_assignment))
+    reference_to_paper = r'\cite{Abramova2014TestingCassandra}'
+    desired_index=['nn', 'wl', 'dbs', 't']
+    measurement_of_interest='[OVERALL] RunTime(ms)'
+    label_for_new_column='rp_on_eth'
+    df = return_df_that_includes_differences(main_csv_file='combined_results_revised.csv',
+                                             reference_csv_file='abramova_results.csv',
+                                             trial_list=None,
+                                             measurement_of_interest=measurement_of_interest,
+                                             desired_index=None,
+                                             desired_columns=None,
+                                             filter_for_nominator=['rp', 'eth', '1GB'],
+                                             filter_for_denominator=['ref', 'unk', '2GB'],
+                                             label_for_new_column=label_for_new_column)
+
+    df = return_general_summary_table(desired_index=desired_index,
+                                      reference_csv_file=None)
+
+    df = pd.DataFrame(df['rp', 'wlan', '1GB'].rename(label_for_new_column))
+
+    df = get_summary_table(df=df,
+                           label_for_new_column=label_for_new_column,
+                           nn=[1, 2, 3, 4, 5, 6],
+                           wl=workload)
+
+    s += get_observations_paragraph_for_individual(cluster_sizes=[1, 2, 3, 4, 5, 6],
+                                                  df_summary=df,
+                                                  df_ref=return_reference_data_frame(),
+                                                  measurement_of_interest='[OVERALL] RunTime(ms)',
+                                                  workload=workload)
+
+    insert_table = return_embedded_latex_tables(latex_table_as_string=df.to_latex(),
+                                                label=label_for_assignment,
+                                                caption='Summary of Workload {workload} '
+                                                        'executed on Raspberry Pi clusters on an Wireless LAN '
+                                                        ''
+                                                        ''.format(workload=workload.capitalize()))
+
+    s += insert_table
+
+    s += 'The full summary of the differences are reported in Table {}.  '.format(label_for_reference)
+
+
+
+
+    s += '\n\n'
+
+    return s
 
 def raspberry_pi_versus_reference_value(workload):
     s = '\n\n'
@@ -683,6 +749,7 @@ def raspberry_pi_versus_reference_value(workload):
 
     return s
 
+
 def comparing_existing_work_vm_versus_ref_val(workload):
     s = '\n\n'
 
@@ -743,6 +810,34 @@ def comparing_existing_work_vm_versus_ref_val(workload):
     s += '\n\n'
 
 
+
+    return s
+
+
+def ram_vs_ram(workload):
+
+    s = '\n\n'
+
+    figure_insert = insert_figures(comparison_type='ram_v_ram', workload=workload)
+
+    s += figure_insert
+
+    ref_to_figure = 'The results are depicted in Figure {}. '.format(latex_reference(return_standardized_label(
+        figure_id=4,
+        workload=workload)))
+
+    s += ref_to_figure
+
+    s += '\n\n'
+
+    s += summary_statistics_varying_RAM_for_1_3_and_6_node_configurations(wl=workload)
+
+    s += 'The results are summarized in Tables {}, {}, and {}.  ' \
+         ''.format(latex_reference('table:summary_statistics_for_{}_config_varying_ram_wl{}'.format(1, workload)),
+                   latex_reference('table:summary_statistics_for_{}_config_varying_ram_wl{}'.format(3, workload)),
+                   latex_reference('table:summary_statistics_for_{}_config_varying_ram_wl{}'.format(6, workload)))
+
+    s += '\n\n\n\n'
 
     return s
 
